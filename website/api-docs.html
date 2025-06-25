@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation - VARAi Commerce Studio</title>
+    <link rel="stylesheet" href="/css/varai-design-system.css">
+    <link rel="stylesheet" href="/css/enterprise-enhancements.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <script src="/js/theme-manager.js" defer></script>
+    <script src="/js/enterprise-enhancements.js" defer></script>
+    <script src="/js/main.js" defer></script>
+    <style>
+        .api-docs-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .api-endpoint {
+            background: var(--varai-card);
+            border: 1px solid var(--varai-gray-200);
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            overflow: hidden;
+        }
+        
+        .api-endpoint-header {
+            background: var(--varai-gray-50);
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--varai-gray-200);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .api-method {
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+        }
+        
+        .api-method.get { background: #10B981; color: white; }
+        .api-method.post { background: #3B82F6; color: white; }
+        .api-method.put { background: #F59E0B; color: white; }
+        .api-method.delete { background: #EF4444; color: white; }
+        
+        .api-endpoint-body {
+            padding: 1.5rem;
+        }
+        
+        .code-block {
+            background: var(--varai-gray-900);
+            color: var(--varai-gray-100);
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.875rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        
+        .parameter-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        
+        .parameter-table th,
+        .parameter-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--varai-gray-200);
+        }
+        
+        .parameter-table th {
+            background: var(--varai-gray-50);
+            font-weight: 600;
+        }
+        
+        .required {
+            color: var(--varai-error);
+            font-weight: 600;
+        }
+        
+        .optional {
+            color: var(--varai-gray-500);
+        }
+        
+        .nav-sidebar {
+            position: fixed;
+            left: 0;
+            top: 80px;
+            width: 280px;
+            height: calc(100vh - 80px);
+            background: var(--varai-card);
+            border-right: 1px solid var(--varai-gray-200);
+            padding: 2rem 1rem;
+            overflow-y: auto;
+        }
+        
+        .nav-sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .nav-sidebar li {
+            margin: 0.5rem 0;
+        }
+        
+        .nav-sidebar a {
+            color: var(--varai-foreground);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            display: block;
+            transition: background-color 0.2s;
+        }
+        
+        .nav-sidebar a:hover {
+            background: var(--varai-gray-100);
+        }
+        
+        .main-content {
+            margin-left: 300px;
+            padding: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-sidebar {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="varai-navbar">
+        <div class="varai-container">
+            <nav class="varai-flex varai-items-center varai-justify-between">
+                <a href="/index.html" class="varai-navbar-brand">VARAi Commerce Studio</a>
+                <button class="varai-mobile-menu-toggle" aria-label="Toggle navigation menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="varai-navbar-nav varai-d-none varai-d-md-flex varai-items-center" style="gap: 2rem;">
+                    <a href="/index.html" class="varai-nav-link">Home</a>
+                    <a href="/products.html" class="varai-nav-link">Products</a>
+                    <a href="/solutions.html" class="varai-nav-link">Solutions</a>
+                    <a href="/pricing.html" class="varai-nav-link">Pricing</a>
+                    <a href="/company.html" class="varai-nav-link">Company</a>
+                    <a href="/api-docs.html" class="varai-nav-link varai-nav-link-active">API Docs</a>
+                    <a href="https://visioncraft-store-353252826752.us-central1.run.app" class="varai-nav-link" target="_blank">Demo Store</a>
+                </div>
+                <div class="varai-d-none varai-d-md-flex">
+                    <a href="/signup/index.html" class="varai-btn varai-btn-primary">Get Started</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="nav-sidebar">
+        <h3>API Documentation</h3>
+        <ul>
+            <li><a href="#getting-started">Getting Started</a></li>
+            <li><a href="#authentication">Authentication</a></li>
+            <li><a href="#store-integrations">Store Integrations</a></li>
+            <li><a href="#product-management">Product Management</a></li>
+            <li><a href="#order-management">Order Management</a></li>
+            <li><a href="#analytics">Analytics</a></li>
+            <li><a href="#webhooks">Webhooks</a></li>
+            <li><a href="#rate-limits">Rate Limits</a></li>
+            <li><a href="#errors">Error Handling</a></li>
+            <li><a href="#sdks">SDKs & Libraries</a></li>
+        </ul>
+    </div>
+
+    <main class="main-content">
+        <div class="api-docs-container">
+            <!-- Getting Started -->
+            <section id="getting-started">
+                <h1>VARAi Commerce Studio API Documentation</h1>
+                <p class="varai-text-lg varai-text-muted varai-mb-6">
+                    Welcome to the VARAi Commerce Studio API. Our REST API allows you to integrate directly with our platform to manage stores, products, orders, and analytics programmatically.
+                </p>
+
+                <div class="varai-card varai-p-6 varai-mb-6">
+                    <h3>Base URL</h3>
+                    <div class="code-block">https://api.varai.ai/v1</div>
+                    
+                    <h3>Quick Start</h3>
+                    <p>Get started with our API in minutes:</p>
+                    <ol>
+                        <li>Sign up for a VARAi Commerce Studio account</li>
+                        <li>Generate your API key from the dashboard</li>
+                        <li>Make your first API call</li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- Authentication -->
+            <section id="authentication">
+                <h2>Authentication</h2>
+                <p>The VARAi API uses API key authentication. Include your API key in the Authorization header of all requests.</p>
+
+                <div class="api-endpoint">
+                    <div class="api-endpoint-header">
+                        <span class="api-method get">GET</span>
+                        <span>/auth/verify</span>
+                    </div>
+                    <div class="api-endpoint-body">
+                        <h4>Verify API Key</h4>
+                        <p>Test your API key and get account information.</p>
+                        
+                        <h5>Headers</h5>
+                        <table class="parameter-table">
+                            <thead>
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>Type</th>
+                                    <th>Required</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Authorization</td>
+                                    <td>string</td>
+                                    <td class="required">Required</td>
+                                    <td>Bearer {your_api_key}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h5>Example Request</h5>
+                        <div class="code-block">curl -X GET "https://api.varai.ai/v1/auth/verify" \
+  -H "Authorization: Bearer your_api_key_here"</div>
+
+                        <h5>Example Response</h5>
+                        <div class="code-block">{
+  "success": true,
+  "account": {
+    "id": "acc_123456789",
+    "name": "Your Company",
+    "plan": "professional",
+    "api_version": "v1"
+  }
+}</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Store Integrations -->
+            <section id="store-integrations">
+                <h2>Store Integrations</h2>
+                <p>Connect and manage e-commerce platform integrations including Shopify, Magento, BigCommerce, WooCommerce, and VisionCraft stores.</p>
+
+                <div class="api-endpoint">
+                    <div class="api-endpoint-header">
+                        <span class="api-method post">POST</span>
+                        <span>/stores/connect</span>
+                    </div>
+                    <div class="api-endpoint-body">
+                        <h4>Connect Store</h4>
+                        <p>Connect a new e-commerce store to your VARAi account.</p>
+                        
+                        <h5>Request Body</h5>
+                        <table class="parameter-table">
+                            <thead>
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>Type</th>
+                                    <th>Required</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>platform</td>
+                                    <td>string</td>
+                                    <td class="required">Required</td>
+                                    <td>Platform type: shopify, magento, bigcommerce, woocommerce, visioncraft</td>
+                                </tr>
+                                <tr>
+                                    <td>store_url</td>
+                                    <td>string</td>
+                                    <td class="required">Required</td>
+                                    <td>Store URL (e.g., mystore.myshopify.com)</td>
+                                </tr>
+                                <tr>
+                                    <td>api_key</td>
+                                    <td>string</td>
+                                    <td class="optional">Optional</td>
+                                    <td>API key for platform authentication</td>
+                                </tr>
+                                <tr>
+                                    <td>access_token</td>
+                                    <td>string</td>
+                                    <td class="optional">Optional</td>
+                                    <td>OAuth access token for supported platforms</td>
+                                </tr>
+                                <tr>
+                                    <td>store_name</td>
+                                    <td>string</td>
+                                    <td class="optional">Optional</td>
+                                    <td>Display name for the store</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h5>Example Request</h5>
+                        <div class="code-block">curl -X POST "https://api.varai.ai/v1/stores/connect" \
+  -H "Authorization: Bearer your_api_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "platform": "shopify",
+    "store_url": "mystore.myshopify.com",
+    "access_token": "shpat_xxxxxxxxxxxxx",
+    "store_name": "My Awesome Store"
+  }'</div>
+
+                        <h5>Example Response</h5>
+                        <div class="code-block">{
+  "success": true,
+  "platform": "shopify",
+  "store_id": "store_123456789",
+  "store_name": "My Awesome Store",
+  "message": "Store connected successfully",
+  "integration_status": "active"
+}</div>
+                    </div>
+                </div>
+
+                <div class="api-endpoint">
+                    <div class="api-endpoint-header">
+                        <span class="api-method get">GET</span>
+                        <span>/stores</span>
+                    </div>
+                    <div class="api-endpoint-body">
+                        <h4>List Connected Stores</h4>
+                        <p>Retrieve all stores connected to your account.</p>
+
+                        <h5>Example Response</h5>
+                        <div class="code-block">{
+  "success": true,
+  "stores": [
+    {
+      "store_id": "store_123456789",
+      "platform": "shopify",
+      "store_name": "My Awesome Store",
+      "store_url": "mystore.myshopify.com",
+      "status": "active",
+      "connected_at": "2025-06-23T10:30:00Z",
+      "last_sync": "2025-06-23T10:45:00Z"
+    }
+  ],
+  "total": 1
+}</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Product Management -->
+            <section id="product-management">
+                <h2>Product Management</h2>
+                <p>Manage products across all connected stores with AI-powered recommendations and optimization.</p>
+
+                <div class="api-endpoint">
+                    <div class="api-endpoint-header">
+                        <span class="api-method get">GET</span>
+                        <span>/products</span>
+                    </div>
+                    <div class="api-endpoint-body">
+                        <h4>List Products</h4>
+                        <p>Retrieve products from connected stores with filtering and pagination.</p>
+                        
+                        <h5>Query Parameters</h5>
+                        <table class="parameter-table">
+                            <thead>
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>Type</th>
+                                    <th>Required</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>store_id</td>
+                                    <td>string</td>
+                                    <td class="optional">Optional</td>
+                                    <td>Filter by specific store</td>
+                                </tr>
+                                <tr>
+                                    <td>category</td>
+                                    <td>string</td>
+                                    <td class="optional">Optional</td>
+                                    <td>Filter by product category</td>
+                                </tr>
+                                <tr>
+                                    <td>limit</td>
+                                    <td>integer</td>
+                                    <td class="optional">Optional</td>
+                                    <td>Number of products to return (default: 50, max: 200)</td>
+                                </tr>
+                                <tr>
+                                    <td>offset</td>
+                                    <td>integer</td>
+                                    <td class="optional">Optional</td>
+                                    <td>Number of products to skip (default: 0)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h5>Example Response</h5>
+                        <div class="code-block">{
+  "success": true,
+  "products": [
+    {
+      "product_id": "prod_123456789",
+      "store_id": "store_123456789",
+      "title": "Premium Wireless Headphones",
+      "description": "High-quality wireless headphones with noise cancellation",
+      "price": 299.99,
+      "currency": "USD",
+      "sku": "WH-1000XM4",
+      "category": "Electronics",
+      "images": [
+        "https://cdn.example.com/product1.jpg"
+      ],
+      "inventory": 45,
+      "status": "active",
+      "ai_recommendations": {
+        "price_optimization": "Consider reducing price by 5% to increase sales",
+        "seo_score": 85,
+        "conversion_potential": "high"
+      }
+    }
+  ],
+  "pagination": {
+    "total": 150,
+    "limit": 50,
+    "offset": 0,
+    "has_more": true
+  }
+}</div>
+                    </div>
+                </div>
+
+                <div class="api-endpoint">
+                    <div class="api-endpoint-header">
+                        <span class="api-method post">POST</span>
+                        <span>/products/optimize</span>
+                    </div>
+                    <div class="api-endpoint-body">
+                        <h4>AI Product Optimization</h4>
+                        <p>Get AI-powered recommendations for product optimization including pricing, descriptions, and SEO.</p>
+                        
+                        <h5>Request Body</h5>
+                        <table class="parameter-table">
+                            <thead>
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>Type</th>
+                                    <th>Required</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>product_id</td>
+                                    <td>string</td>
+                                    <td class="required">Required</td>
+                                    <td>Product ID to optimize</td>
+                                </tr>
+                                <tr>
+                                    <td>optimization_type</td>
+                                    <td>array</td>
+                                    <td class="optional">Optional</td>
+                                    <td>Types: ["pricing", "description", "seo", "images"]</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h5>Example Response</h5>
+                        <div class="code-block">{
+  "success": true,
+  "product_id": "prod_123456789",
+  "optimizations": {
+    "pricing": {
+      "current_price": 299.99,
+      "recommended_price": 284.99,
+      "confidence": 0.87,
+      "reasoning": "Market analysis suggests 5% price reduction could increase sales by 15%"
+    },
+    "description": {
+      "current_length": 45,
+      "recommended_improvements": [
+        "Add more technical specifications",
+        "Include use case scenarios",
+        "Highlight unique selling points"
+      ]
+    },
+    "seo": {
+      "current_score": 85,
+      "recommended_keywords": ["wireless headphones", "noise cancelling", "premium audio"],
+      "title_optimization": "Premium Wireless Noise-Cancelling Headphones - Studio Quality"
+    }
+  }
+}</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Order Management -->
+            <section id="order-management">
+                <h2>Order Management</h2>
+                <p>Track and manage orders across all connected stores with real-time synchronization.</p>
+
+                <div class="api-endpoint">
+                    <div class="api-endpoint-header">
+                        <span class="api-method get">GET</span>
+                        <span>/orders</span>
+                    </div>
+                    <div class="api-endpoint-body">
+                        <h4>List Orders</h4>
+                        <p>Retrieve orders from connected stores with filtering options.</p>
+                        
+                        <h5>Query Parameters</h5>
+                        <table class="parameter-table">
+                            <thead>
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>Type</th>
+                                    <th>Required</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>store_id</td>
+                                    <td>string</td>
+                                    <td class="optional">Optional</td>
+                                    <td>Filter by specific store</td>
+                                </tr>
+                                <tr>
+                                    <td>status</td>
+                                    <td>string</td>
+                                    <td class="optional">Optional</td>
+                                    <td>Order status: pending, processing, shipped, delivered, cancelled</td>
+                                </tr>
+                                <tr>
+                                    <td>date_from</td>
+                                    <td>string</td>
+                                    <td class="optional">Optional</td>
+                                    <td>Start date (ISO 8601 format)</td>
+                                </tr>
+                                <tr>
+                                    <td>date_to</td>
+                                    <td>string</td>
+                                    <td class="optional">Optional</td>
+                                    <td>End date (ISO 8601 format)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h5>Example Response</h5>
+                        <div class="code-block">{
+  "success": true,
+  "orders": [
+    {
+      "order_id": "order_123456789",
+      "store_id": "store_123456789",
+      "order_number": "#1001",
+      "customer": {
+        "name": "John Doe",
+        "email": "john@example.com"
+      },
+      "total": 299.99,
+      "currency": "USD",
+      "status": "processing",
+      "items": [
+        {
+          "product_id": "prod_123456789",
+          "title": "Premium Wireless Headphones",
+          "quantity": 1,
+          "price": 299.99
+        }
+      ],
+      "created_at": "2025-06-23T10:30:00Z",
+      "updated_at": "2025-06-23T10:45:00Z"
+    }
+  ],
+  "pagination": {
+    "total": 25,
+    "limit": 50,
+    "offset": 0,
+    "has_more": false
+  }
+}</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Analytics -->
+            <section id="analytics">
+                <h2>Analytics</h2>
+                <p>Access comprehensive analytics and insights across all your connected stores.</p>
+
+                <div class="api-endpoint">
+                    <div class="api-endpoint-header">
+                        <span class="api-method get">GET</span>
+                        <span>/analytics/dashboard</span>
+                    </div>
+                    <div class="api-endpoint-body">
+                        <h4>Dashboard Analytics</h4>
+                        <p>Get key performance metrics for your stores.</p>
+                        
+                        <h5>Query Parameters</h5>
+                        <table class="parameter-table">
+                            <thead>
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>Type</th>
+                                    <th>Required</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>period</td>
+                                    <td>string</td>
+                                    <td class="optional">Optional</td>
+                                    <td>Time period: 7d, 30d, 90d, 1y (default: 30d)</td>
+                                </tr>
+                                <tr>
+                                    <td>store_id</td>
+                                    <td>string</td>
+                                    <td class="optional">Optional</td>
+                                    <td>Filter by specific store</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h5>Example Response</h5>
+                        <div class="code-block">{
+  "success": true,
+  "period": "30d",
+  "metrics": {
+    "total_revenue": 15750.50,
+    "total_orders": 52,
+    "average_order_value": 302.89,
+    "conversion_rate": 3.2,
+    "top_products": [
+      {
+        "product_id": "prod_123456789",
+        "title": "Premium Wireless Headphones",
+        "sales": 15,
+        "revenue": 4499.85
+      }
+    ],
+    "revenue_trend": [
+      {"date": "2025-06-01", "revenue": 1250.00},
+      {"date": "2025-06-02", "revenue": 1450.00}
+    ]
+  }
+}</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Webhooks -->
+            <section id="webhooks">
+                <h2>Webhooks</h2>
+                <p>Set up webhooks to receive real-time notifications about events in your stores.</p>
+
+                <div class="api-endpoint">
+                    <div class="api-endpoint-header">
+                        <span class="api-method post">POST</span>
+                        <span>/webhooks</span>
+                    </div>
+                    <div class="api-endpoint-body">
+                        <h4>Create Webhook</h4>
+                        <p>Register a webhook endpoint to receive event notifications.</p>
+                        
+                        <h5>Request Body</h5>
+                        <table class="parameter-table">
+                            <thead>
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>Type</th>
+                                    <th>Required</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>url</td>
+                                    <td>string</td>
+                                    <td class="required">Required</td>
+                                    <td>Webhook endpoint URL</td>
+                                </tr>
+                                <tr>
+                                    <td>events</td>
+                                    <td>array</td>
+                                    <td class="required">Required</td>
+                                    <td>Events to subscribe to: order.created, order.updated, product.updated</td>
+                                </tr>
+                                <tr>
+                                    <td>secret</td>
+                                    <td>string</td>
+                                    <td class="optional">Optional</td>
+                                    <td>Secret for webhook signature verification</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h5>Available Events</h5>
+                        <ul>
+                            <li><code>order.created</code> - New order placed</li>
+                            <li><code>order.updated</code> - Order status changed</li>
+                            <li><code>product.created</code> - New product added</li>
+                            <li><code>product.updated</code> - Product information changed</li>
+                            <li><code>store.connected</code> - New store connected</li>
+                            <li><code>store.disconnected</code> - Store disconnected</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Rate Limits -->
+            <section id="rate-limits">
+                <h2>Rate Limits</h2>
+                <p>The VARAi API implements rate limiting to ensure fair usage and optimal performance.</p>
+
+                <div class="varai-card varai-p-6">
+                    <h3>Rate Limit Tiers</h3>
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>Plan</th>
+                                <th>Requests per minute</th>
+                                <th>Requests per hour</th>
+                                <th>Burst limit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Starter</td>
+                                <td>60</td>
+                                <td>1,000</td>
+                                <td>100</td>
+                            </tr>
+                            <tr>
+                                <td>Professional</td>
+                                <td>300</td>
+                                <td>10,000</td>
+                                <td>500</td>
+                            </tr>
+                            <tr>
+                                <td>Enterprise</td>
+                                <td>1,000</td>
+                                <td>50,000</td>
+                                <td>2,000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Rate Limit Headers</h3>
+                    <p>All API responses include rate limit information in the headers:</p>
+                    <div class="code-block">X-RateLimit-Limit: 300
+X-RateLimit-Remaining: 299
+X-RateLimit-Reset: 1640995200</div>
+                </div>
+            </section>
+
+            <!-- Error Handling -->
+            <section id="errors">
+                <h2>Error Handling</h2>
+                <p>The VARAi API uses conventional HTTP response codes and returns detailed error information in JSON format.</p>
+
+                <div class="varai-card varai-p-6">
+                    <h3>HTTP Status Codes</h3>
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>200</td>
+                                <td>OK - Request successful</td>
+                            </tr>
+                            <tr>
+                                <td>201</td>
+                                <td>Created - Resource created successfully</td>
+                            </tr>
+                            <tr>
+                                <td>400</td>
+                                <td>Bad Request - Invalid request parameters</td>
+                            </tr>
+                            <tr>
+                                <td>401</td>
+                                <td>Unauthorized - Invalid or missing API key</td>
+                            </tr>
+<!-- Error Handling continued -->
+                            <tr>
+                                <td>403</td>
+                                <td>Forbidden - Insufficient permissions</td>
+                            </tr>
+                            <tr>
+                                <td>404</td>
+                                <td>Not Found - Resource not found</td>
+                            </tr>
+                            <tr>
+                                <td>429</td>
+                                <td>Too Many Requests - Rate limit exceeded</td>
+                            </tr>
+                            <tr>
+                                <td>500</td>
+                                <td>Internal Server Error - Server error</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Error Response Format</h3>
+                    <div class="code-block">{
+  "success": false,
+  "error": {
+    "code": "INVALID_API_KEY",
+    "message": "The provided API key is invalid or has expired",
+    "details": {
+      "field": "authorization",
+      "suggestion": "Please check your API key and ensure it's correctly formatted"
+    }
+  },
+  "request_id": "req_123456789"
+}</div>
+                </div>
+            </section>
+
+            <!-- SDKs -->
+            <section id="sdks">
+                <h2>SDKs & Libraries</h2>
+                <p>Official SDKs and libraries to integrate with the VARAi API in your preferred programming language.</p>
+
+                <div class="varai-card varai-p-6">
+                    <h3>Official SDKs</h3>
+                    <div class="varai-grid varai-grid-cols-1 varai-md-grid-cols-2 varai-gap-6 varai-mt-4">
+                        <div class="varai-card varai-p-4">
+                            <h4>JavaScript/Node.js</h4>
+                            <div class="code-block">npm install @varai/commerce-studio</div>
+                            <div class="code-block">const { VaraiClient } = require('@varai/commerce-studio');
+
+const client = new VaraiClient({
+  apiKey: 'your_api_key_here'
+});
+
+// Connect a store
+const store = await client.stores.connect({
+  platform: 'shopify',
+  store_url: 'mystore.myshopify.com',
+  access_token: 'shpat_xxxxx'
+});</div>
+                        </div>
+
+                        <div class="varai-card varai-p-4">
+                            <h4>Python</h4>
+                            <div class="code-block">pip install varai-commerce-studio</div>
+                            <div class="code-block">from varai import VaraiClient
+
+client = VaraiClient(api_key='your_api_key_here')
+
+# Connect a store
+store = client.stores.connect(
+    platform='shopify',
+    store_url='mystore.myshopify.com',
+    access_token='shpat_xxxxx'
+)</div>
+                        </div>
+
+                        <div class="varai-card varai-p-4">
+                            <h4>PHP</h4>
+                            <div class="code-block">composer require varai/commerce-studio</div>
+                            <div class="code-block">use Varai\CommerceStudio\Client;
+
+$client = new Client('your_api_key_here');
+
+// Connect a store
+$store = $client->stores()->connect([
+    'platform' => 'shopify',
+    'store_url' => 'mystore.myshopify.com',
+    'access_token' => 'shpat_xxxxx'
+]);</div>
+                        </div>
+
+                        <div class="varai-card varai-p-4">
+                            <h4>Ruby</h4>
+                            <div class="code-block">gem install varai-commerce-studio</div>
+                            <div class="code-block">require 'varai/commerce_studio'
+
+client = Varai::CommerceStudio::Client.new(
+  api_key: 'your_api_key_here'
+)
+
+# Connect a store
+store = client.stores.connect(
+  platform: 'shopify',
+  store_url: 'mystore.myshopify.com',
+  access_token: 'shpat_xxxxx'
+)</div>
+                        </div>
+                    </div>
+
+                    <h3>Community Libraries</h3>
+                    <p>Community-maintained libraries and integrations:</p>
+                    <ul>
+                        <li><strong>Go</strong>: <code>github.com/varai/go-commerce-studio</code></li>
+                        <li><strong>Java</strong>: <code>com.varai:commerce-studio-java</code></li>
+                        <li><strong>.NET</strong>: <code>Varai.CommerceStudio</code></li>
+                        <li><strong>Rust</strong>: <code>varai-commerce-studio</code></li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Support -->
+            <section id="support">
+                <h2>Support & Resources</h2>
+                <div class="varai-grid varai-grid-cols-1 varai-md-grid-cols-2 varai-gap-6">
+                    <div class="varai-card varai-p-6">
+                        <h3>Developer Resources</h3>
+                        <ul>
+                            <li><a href="/dashboard/" class="varai-link">Developer Dashboard</a></li>
+                            <li><a href="https://github.com/varai/commerce-studio-examples" class="varai-link">Code Examples</a></li>
+                            <li><a href="/api-docs.html#postman" class="varai-link">Postman Collection</a></li>
+                            <li><a href="https://status.varai.ai" class="varai-link">API Status</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="varai-card varai-p-6">
+                        <h3>Get Help</h3>
+                        <ul>
+                            <li><a href="mailto:api-support@varai.ai" class="varai-link">API Support</a></li>
+                            <li><a href="https://discord.gg/varai" class="varai-link">Developer Community</a></li>
+                            <li><a href="https://docs.varai.ai/faq" class="varai-link">FAQ</a></li>
+                            <li><a href="/company.html#contact" class="varai-link">Contact Sales</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="varai-card varai-p-6 varai-mt-6">
+                    <h3>API Changelog</h3>
+                    <div class="varai-mb-4">
+                        <h4>v1.2.0 - June 2025</h4>
+                        <ul>
+                            <li>Added AI product optimization endpoints</li>
+                            <li>Enhanced webhook event types</li>
+                            <li>Improved error response format</li>
+                        </ul>
+                    </div>
+                    <div class="varai-mb-4">
+                        <h4>v1.1.0 - May 2025</h4>
+                        <ul>
+                            <li>Added BigCommerce and WooCommerce support</li>
+                            <li>Introduced analytics endpoints</li>
+                            <li>Added rate limiting headers</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>v1.0.0 - April 2025</h4>
+                        <ul>
+                            <li>Initial API release</li>
+                            <li>Store integration endpoints</li>
+                            <li>Product and order management</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="varai-footer">
+        <div class="varai-container">
+            <div class="varai-grid varai-grid-cols-1 varai-md-grid-cols-4 varai-gap-8">
+                <div>
+                    <h3 class="varai-footer-title">VARAi Commerce Studio</h3>
+                    <p class="varai-text-muted">AI-powered e-commerce platform for the future of retail.</p>
+                </div>
+                <div>
+                    <h4 class="varai-footer-subtitle">Product</h4>
+                    <ul class="varai-footer-links">
+                        <li><a href="/products.html">Features</a></li>
+                        <li><a href="/pricing.html">Pricing</a></li>
+                        <li><a href="/api-docs.html">API</a></li>
+                        <li><a href="/integrations.html">Integrations</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="varai-footer-subtitle">Developers</h4>
+                    <ul class="varai-footer-links">
+                        <li><a href="/api-docs.html">Documentation</a></li>
+                        <li><a href="https://github.com/varai">GitHub</a></li>
+                        <li><a href="https://discord.gg/varai">Community</a></li>
+                        <li><a href="/api-docs.html#support">Support</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="varai-footer-subtitle">Company</h4>
+                    <ul class="varai-footer-links">
+                        <li><a href="/company.html">About</a></li>
+                        <li><a href="/company.html#careers">Careers</a></li>
+                        <li><a href="/company.html#contact">Contact</a></li>
+                        <li><a href="/privacy.html">Privacy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="varai-footer-bottom">
+                <p>&copy; 2025 VARAi Commerce Studio. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('.nav-sidebar a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Copy code blocks to clipboard
+        document.querySelectorAll('.code-block').forEach(block => {
+            block.style.cursor = 'pointer';
+            block.title = 'Click to copy';
+            block.addEventListener('click', function() {
+                navigator.clipboard.writeText(this.textContent).then(() => {
+                    const originalBg = this.style.backgroundColor;
+                    this.style.backgroundColor = 'var(--varai-success)';
+                    setTimeout(() => {
+                        this.style.backgroundColor = originalBg;
+                    }, 200);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

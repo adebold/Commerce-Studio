@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VARAi Commerce Studio - Demo Login</title>
+    <link rel="stylesheet" href="css/varai-design-system.css">
+    <link rel="stylesheet" href="css/enterprise-enhancements.css">
+    <style>
+        .demo-login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+        }
+        
+        .demo-login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .demo-logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .demo-subtitle {
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+        
+        .demo-accounts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .demo-account-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+        
+        .demo-account-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+        }
+        
+        .account-role {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .account-email {
+            color: #667eea;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        
+        .account-description {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .demo-features {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+        
+        .demo-features h3 {
+            color: #333;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #555;
+        }
+        
+        .demo-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .demo-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .demo-btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .demo-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .demo-btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        
+        .demo-btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #28a745;
+            margin-right: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .demo-login-card {
+                padding: 2rem;
+                margin: 1rem;
+            }
+            
+            .demo-accounts {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-login-container">
+        <div class="demo-login-card">
+            <div class="demo-logo">VARAi Commerce Studio</div>
+            <div class="demo-subtitle">
+                <span class="status-indicator"></span>
+                Demo Environment - Testing & Development
+            </div>
+            
+            <div class="demo-features">
+                <h3>🚀 Complete BOPIS & Demo Data Implementation</h3>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <span>✅</span>
+                        <span>Buy Online, Pick-up In Store</span>
+                    </div>
+                    <div class="feature-item">
+                        <span>✅</span>
+                        <span>Store Location Management</span>
+                    </div>
+                    <div class="feature-item">
+                        <span>✅</span>
+                        <span>Inventory Tracking</span>
+                    </div>
+                    <div class="feature-item">
+                        <span>✅</span>
+                        <span>Pickup Scheduling</span>
+                    </div>
+                    <div class="feature-item">
+                        <span>✅</span>
+                        <span>Order Status Tracking</span>
+                    </div>
+                    <div class="feature-item">
+                        <span>✅</span>
+                        <span>Demo Data Seeding</span>
+                    </div>
+                    <div class="feature-item">
+                        <span>✅</span>
+                        <span>Multi-Role Testing</span>
+                    </div>
+                    <div class="feature-item">
+                        <span>✅</span>
+                        <span>Product Catalog</span>
+                    </div>
+                </div>
+            </div>
+            
+            <h2 style="color: #333; margin-bottom: 1.5rem;">Demo User Accounts</h2>
+            
+            <div class="demo-accounts">
+                <div class="demo-account-card" onclick="loginAs('admin')">
+                    <div class="account-role">
+                        👑 Super Admin
+                    </div>
+                    <div class="account-email">admin@varai.com</div>
+                    <div class="account-description">
+                        Full system access, user management, analytics, and platform configuration
+                    </div>
+                </div>
+                
+                <div class="demo-account-card" onclick="loginAs('manager')">
+                    <div class="account-role">
+                        📊 Brand Manager
+                    </div>
+                    <div class="account-email">manager@varai.com</div>
+                    <div class="account-description">
+                        Brand management, product catalog, inventory oversight, and store operations
+                    </div>
+                </div>
+                
+                <div class="demo-account-card" onclick="loginAs('client')">
+                    <div class="account-role">
+                        🏢 Client Admin
+                    </div>
+                    <div class="account-email">client@varai.com</div>
+                    <div class="account-description">
+                        Store management, BOPIS operations, customer service, and local inventory
+                    </div>
+                </div>
+                
+                <div class="demo-account-card" onclick="loginAs('viewer')">
+                    <div class="account-role">
+                        👁️ Viewer
+                    </div>
+                    <div class="account-email">viewer@varai.com</div>
+                    <div class="account-description">
+                        Read-only access to dashboards, reports, and system status monitoring
+                    </div>
+                </div>
+                <!-- E-commerce Platform Demo Accounts -->
+                <div class="demo-account-card" onclick="loginAs('shopify-merchant')" style="border: 2px solid #96bf48;">
+                    <div class="account-role">
+                        🛒 Shopify Merchant
+                    </div>
+                    <div class="account-email">shopify@varai.com</div>
+                    <div class="account-description">
+                        Shopify store owner with Vertex AI integration, product recommendations, and webhook management
+                    </div>
+                    <div style="margin-top: 0.5rem; font-size: 0.8rem; color: #96bf48; font-weight: bold;">
+                        ✅ API Connected • Vertex AI Assistant • Product Sync
+                    </div>
+                </div>
+                
+                <div class="demo-account-card" onclick="loginAs('magento-merchant')" style="border: 2px solid #ec6737;">
+                    <div class="account-role">
+                        🏪 Magento Merchant
+                    </div>
+                    <div class="account-email">magento@varai.com</div>
+                    <div class="account-description">
+                        Magento store administrator with multi-store support, advanced catalog management, and module integration
+                    </div>
+                    <div style="margin-top: 0.5rem; font-size: 0.8rem; color: #ec6737; font-weight: bold;">
+                        ✅ API Connected • Multi-store • Advanced Catalog
+                    </div>
+                </div>
+            </div>
+            
+            <div class="demo-actions">
+                <a href="https://visioncraft-store-353252826752.us-central1.run.app" class="demo-btn demo-btn-primary" target="_blank">
+                    🛍️ VisionCraft Demo Store
+                </a>
+                <a href="dashboard/index.html" class="demo-btn demo-btn-secondary">
+                    📊 Admin Dashboard
+                </a>
+                <a href="index.html" class="demo-btn demo-btn-secondary">
+                    🏠 Main Website
+                </a>
+            </div>
+            
+            <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #e0e0e0; color: #666; font-size: 0.9rem;">
+                <p><strong>Demo Data Available:</strong></p>
+                <p>• 4 Store Locations with Real Inventory</p>
+                <p>• 8 Product Categories with Realistic Data</p>
+                <p>• Sample BOPIS Reservations & Order History</p>
+                <p>• Complete Analytics & Reporting Data</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function loginAs(role) {
+            const credentials = {
+                admin: { email: 'admin@varai.com', password: 'SuperAdmin123!', name: 'Super Admin' },
+                manager: { email: 'manager@varai.com', password: 'Manager123!', name: 'Brand Manager' },
+                client: { email: 'client@varai.com', password: 'Client123!', name: 'Client Admin' },
+                viewer: { email: 'viewer@varai.com', password: 'Viewer123!', name: 'Viewer' },
+                'shopify-merchant': {
+                    email: 'shopify@varai.com',
+                    password: 'Shopify123!',
+                    name: 'Shopify Merchant',
+                    platform: 'shopify',
+                    storeUrl: 'demo-store.myshopify.com',
+                    features: ['Vertex AI Assistant', 'Product Recommendations', 'Webhook Integration']
+                },
+                'magento-merchant': {
+                    email: 'magento@varai.com',
+                    password: 'Magento123!',
+                    name: 'Magento Merchant',
+                    platform: 'magento',
+                    storeUrl: 'demo-store.magento.com',
+                    features: ['Multi-store Support', 'Advanced Catalog', 'Module Integration']
+                }
+            };
+            
+            const user = credentials[role];
+            if (!user) {
+                alert('Invalid role selected');
+                return;
+            }
+            
+            // Store demo login info
+            localStorage.setItem('demo-user', JSON.stringify({
+                ...user,
+                role: role,
+                loginTime: new Date().toISOString(),
+                isDemoUser: true
+            }));
+            
+            // Show login success with platform-specific info
+            let successMessage = `🎉 Demo Login Successful!\n\nLogged in as: ${user.name}\nEmail: ${user.email}\nRole: ${role}`;
+            
+            if (user.platform) {
+                successMessage += `\nPlatform: ${user.platform.charAt(0).toUpperCase() + user.platform.slice(1)}`;
+                successMessage += `\nStore URL: ${user.storeUrl}`;
+                successMessage += `\nFeatures: ${user.features.join(', ')}`;
+            }
+            
+            successMessage += `\n\nYou now have access to role-specific features and demo data.`;
+            alert(successMessage);
+            
+            // Redirect to dashboard
+            window.location.href = 'dashboard/index.html';
+        }
+        
+        // Check if already logged in
+        document.addEventListener('DOMContentLoaded', function() {
+            const demoUser = localStorage.getItem('demo-user');
+            if (demoUser) {
+                const user = JSON.parse(demoUser);
+                const loginTime = new Date(user.loginTime);
+                const now = new Date();
+                const hoursSinceLogin = (now - loginTime) / (1000 * 60 * 60);
+                
+                // Auto-logout after 24 hours
+                if (hoursSinceLogin > 24) {
+                    localStorage.removeItem('demo-user');
+                } else {
+                    // Show current session info
+                    const sessionInfo = document.createElement('div');
+                    sessionInfo.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        background: rgba(40, 167, 69, 0.9);
+                        color: white;
+                        padding: 1rem;
+                        border-radius: 8px;
+                        font-size: 0.9rem;
+                        z-index: 1000;
+                    `;
+                    sessionInfo.innerHTML = `
+                        <strong>Active Session</strong><br>
+                        ${user.name} (${user.email})<br>
+                        <button onclick="logout()" style="background: white; color: #28a745; border: none; padding: 0.25rem 0.5rem; border-radius: 4px; margin-top: 0.5rem; cursor: pointer;">Logout</button>
+                    `;
+                    document.body.appendChild(sessionInfo);
+                }
+            }
+        });
+        
+        function logout() {
+            localStorage.removeItem('demo-user');
+            location.reload();
+        }
+        
+        // Demo data seeding function
+        function seedDemoData() {
+            alert('🌱 Demo Data Seeding\n\nThis would run the demo data seeding script:\n\n• Create demo user accounts\n• Set up store locations\n• Add product inventory\n• Generate sample orders\n• Create analytics data\n\nRun: ./scripts/seed-demo-data.sh');
+        }
+        
+        // Add demo data seeding button
+        document.addEventListener('DOMContentLoaded', function() {
+            const seedButton = document.createElement('button');
+            seedButton.textContent = '🌱 Seed Demo Data';
+            seedButton.className = 'demo-btn demo-btn-secondary';
+            seedButton.onclick = seedDemoData;
+            seedButton.style.marginTop = '1rem';
+            
+            const actionsDiv = document.querySelector('.demo-actions');
+            actionsDiv.appendChild(seedButton);
+        });
+    </script>
+</body>
+</html>

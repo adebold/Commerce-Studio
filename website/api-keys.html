@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Key Management - VARAi Commerce Studio</title>
+    <meta name="description" content="Manage your VARAi Commerce Studio API keys - generate, view, and manage your public and private API keys for secure platform integration.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/varai-design-system.css">
+    <link rel="stylesheet" href="/css/enterprise-enhancements.css">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        .api-key-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .api-key-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .api-key-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--varai-primary), var(--varai-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+        
+        .api-key-section {
+            background: var(--varai-card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--varai-border);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .api-key-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem;
+            background: var(--varai-bg);
+            border-radius: 12px;
+            border: 1px solid var(--varai-border);
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .api-key-item:hover {
+            border-color: var(--varai-primary);
+            box-shadow: 0 2px 10px rgba(0, 123, 255, 0.1);
+        }
+        
+        .api-key-info {
+            flex: 1;
+        }
+        
+        .api-key-label {
+            font-weight: 600;
+            color: var(--varai-text);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .api-key-value {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            background: var(--varai-code-bg);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--varai-border);
+            font-size: 0.9rem;
+            color: var(--varai-code-text);
+            word-break: break-all;
+            position: relative;
+        }
+        
+        .api-key-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-left: 1rem;
+        }
+        
+        .api-key-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-copy {
+            background: var(--varai-primary);
+            color: white;
+        }
+        
+        .btn-copy:hover {
+            background: var(--varai-primary-dark);
+            transform: translateY(-1px);
+        }
+        
+        .btn-regenerate {
+            background: var(--varai-warning);
+            color: white;
+        }
+        
+        .btn-regenerate:hover {
+            background: var(--varai-warning-dark);
+            transform: translateY(-1px);
+        }
+        
+        .btn-revoke {
+            background: var(--varai-danger);
+            color: white;
+        }
+        
+        .btn-revoke:hover {
+            background: var(--varai-danger-dark);
+            transform: translateY(-1px);
+        }
+        
+        .api-key-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-left: 1rem;
+        }
+        
+        .status-active {
+            background: rgba(40, 167, 69, 0.1);
+            color: var(--varai-success);
+            border: 1px solid rgba(40, 167, 69, 0.2);
+        }
+        
+        .status-inactive {
+            background: rgba(220, 53, 69, 0.1);
+            color: var(--varai-danger);
+            border: 1px solid rgba(220, 53, 69, 0.2);
+        }
+        
+        .api-key-meta {
+            font-size: 0.85rem;
+            color: var(--varai-text-muted);
+            margin-top: 0.5rem;
+        }
+        
+        .generate-section {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.05), rgba(108, 117, 125, 0.05));
+            border-radius: 12px;
+            border: 2px dashed var(--varai-border);
+        }
+        
+        .btn-generate {
+            background: linear-gradient(135deg, var(--varai-primary), var(--varai-secondary));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
+        }
+        
+        .security-notice {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .security-notice h3 {
+            color: var(--varai-warning);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .usage-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: var(--varai-card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--varai-border);
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--varai-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: var(--varai-text-muted);
+            font-size: 0.9rem;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--varai-card-bg);
+            padding: 2rem;
+            border-radius: 16px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--varai-text-muted);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--varai-text);
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--varai-border);
+            border-radius: 8px;
+            background: var(--varai-bg);
+            color: var(--varai-text);
+            font-size: 1rem;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--varai-primary);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+        
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--varai-success);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+        
+        .toast.show {
+            transform: translateX(0);
+        }
+        
+        @media (max-width: 768px) {
+            .api-key-item {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+            }
+            
+            .api-key-actions {
+                margin-left: 0;
+                justify-content: center;
+            }
+            
+            .usage-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="varai-nav">
+        <div class="varai-container">
+            <div class="varai-nav-brand">
+                <a href="/index.html" class="varai-nav-logo">
+                    <span class="varai-logo-text">VARAi</span>
+                    <span class="varai-logo-subtitle">Commerce Studio</span>
+                </a>
+            </div>
+            <div class="varai-nav-menu" id="navMenu">
+                <a href="/products.html" class="varai-nav-link">Products</a>
+                <a href="/solutions.html" class="varai-nav-link">Solutions</a>
+                <a href="/pricing.html" class="varai-nav-link">Pricing</a>
+                <a href="/api-docs.html" class="varai-nav-link">API Docs</a>
+                <a href="/company.html" class="varai-nav-link">Company</a>
+                <a href="/dashboard/" class="varai-btn varai-btn-primary">Dashboard</a>
+            </div>
+            <div class="varai-nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="api-key-container">
+        <!-- Header -->
+        <div class="api-key-header">
+            <h1><i class="fas fa-key"></i> API Key Management</h1>
+            <p class="varai-text-muted">Manage your VARAi Commerce Studio API keys for secure platform integration</p>
+        </div>
+
+        <!-- Security Notice -->
+        <div class="security-notice">
+            <h3><i class="fas fa-shield-alt"></i> Security Best Practices</h3>
+            <ul>
+                <li>Never share your private API keys in client-side code or public repositories</li>
+                <li>Use public keys for client-side integrations and private keys for server-side operations</li>
+                <li>Regenerate keys regularly and revoke unused keys immediately</li>
+                <li>Monitor your API usage and set up alerts for unusual activity</li>
+            </ul>
+        </div>
+
+        <!-- Usage Statistics -->
+        <div class="usage-stats">
+            <div class="stat-card">
+                <div class="stat-value" id="totalRequests">12,847</div>
+                <div class="stat-label">Total API Requests</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="monthlyRequests">3,421</div>
+                <div class="stat-label">This Month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="activeKeys">2</div>
+                <div class="stat-label">Active Keys</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="rateLimitRemaining">4,579</div>
+                <div class="stat-label">Rate Limit Remaining</div>
+            </div>
+        </div>
+
+        <!-- Public API Keys -->
+        <div class="api-key-section">
+            <h2><i class="fas fa-globe"></i> Public API Keys</h2>
+            <p class="varai-text-muted varai-mb-4">Public keys are safe to use in client-side applications and can be exposed in frontend code.</p>
+            
+            <div class="api-key-item">
+                <div class="api-key-info">
+                    <div class="api-key-label">
+                        <i class="fas fa-globe"></i>
+                        Production Public Key
+                        <span class="api-key-status status-active">
+                            <i class="fas fa-circle"></i>
+                            Active
+                        </span>
+                    </div>
+                    <div class="api-key-value" id="publicKey">pk_live_1234567890abcdef1234567890abcdef</div>
+                    <div class="api-key-meta">
+                        Created: June 15, 2025 • Last used: 2 hours ago • Requests: 8,421
+                    </div>
+                </div>
+                <div class="api-key-actions">
+                    <button class="api-key-btn btn-copy" onclick="copyToClipboard('publicKey')">
+                        <i class="fas fa-copy"></i>
+                        Copy
+                    </button>
+                    <button class="api-key-btn btn-regenerate" onclick="regenerateKey('public', 'production')">
+                        <i class="fas fa-sync-alt"></i>
+                        Regenerate
+                    </button>
+                </div>
+            </div>
+
+            <div class="api-key-item">
+                <div class="api-key-info">
+                    <div class="api-key-label">
+                        <i class="fas fa-flask"></i>
+                        Test Public Key
+                        <span class="api-key-status status-active">
+                            <i class="fas fa-circle"></i>
+                            Active
+                        </span>
+                    </div>
+                    <div class="api-key-value" id="testPublicKey">pk_test_abcdef1234567890abcdef1234567890</div>
+                    <div class="api-key-meta">
+                        Created: June 10, 2025 • Last used: 1 day ago • Requests: 1,247
+                    </div>
+                </div>
+                <div class="api-key-actions">
+                    <button class="api-key-btn btn-copy" onclick="copyToClipboard('testPublicKey')">
+                        <i class="fas fa-copy"></i>
+                        Copy
+                    </button>
+                    <button class="api-key-btn btn-regenerate" onclick="regenerateKey('public', 'test')">
+                        <i class="fas fa-sync-alt"></i>
+                        Regenerate
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Private API Keys -->
+        <div class="api-key-section">
+            <h2><i class="fas fa-lock"></i> Private API Keys</h2>
+            <p class="varai-text-muted varai-mb-4">Private keys provide full access to your account and should only be used in secure server-side environments.</p>
+            
+            <div class="api-key-item">
+                <div class="api-key-info">
+                    <div class="api-key-label">
+                        <i class="fas fa-lock"></i>
+                        Production Private Key
+                        <span class="api-key-status status-active">
+                            <i class="fas fa-circle"></i>
+                            Active
+                        </span>
+                    </div>
+                    <div class="api-key-value" id="privateKey">sk_live_••••••••••••••••••••••••••••••••</div>
+                    <div class="api-key-meta">
+                        Created: June 15, 2025 • Last used: 30 minutes ago • Requests: 4,174
+                    </div>
+                </div>
+                <div class="api-key-actions">
+                    <button class="api-key-btn btn-copy" onclick="revealAndCopy('privateKey', 'sk_live_9876543210fedcba9876543210fedcba')">
+                        <i class="fas fa-eye"></i>
+                        Reveal & Copy
+                    </button>
+                    <button class="api-key-btn btn-regenerate" onclick="regenerateKey('private', 'production')">
+                        <i class="fas fa-sync-alt"></i>
+                        Regenerate
+                    </button>
+                    <button class="api-key-btn btn-revoke" onclick="revokeKey('private', 'production')">
+                        <i class="fas fa-trash"></i>
+                        Revoke
+                    </button>
+                </div>
+            </div>
+
+            <div class="api-key-item">
+                <div class="api-key-info">
+                    <div class="api-key-label">
+                        <i class="fas fa-flask"></i>
+                        Test Private Key
+                        <span class="api-key-status status-active">
+                            <i class="fas fa-circle"></i>
+                            Active
+                        </span>
+                    </div>
+                    <div class="api-key-value" id="testPrivateKey">sk_test_••••••••••••••••••••••••••••••••</div>
+                    <div class="api-key-meta">
+                        Created: June 10, 2025 • Last used: 2 days ago • Requests: 753
+                    </div>
+                </div>
+                <div class="api-key-actions">
+                    <button class="api-key-btn btn-copy" onclick="revealAndCopy('testPrivateKey', 'sk_test_fedcba0987654321fedcba0987654321')">
+                        <i class="fas fa-eye"></i>
+                        Reveal & Copy
+                    </button>
+                    <button class="api-key-btn btn-regenerate" onclick="regenerateKey('private', 'test')">
+                        <i class="fas fa-sync-alt"></i>
+                        Regenerate
+                    </button>
+                    <button class="api-key-btn btn-revoke" onclick="revokeKey('private', 'test')">
+                        <i class="fas fa-trash"></i>
+                        Revoke
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Generate New Key -->
+        <div class="api-key-section">
+            <h2><i class="fas fa-plus-circle"></i> Generate New API Key</h2>
+            <div class="generate-section">
+                <h3>Need additional API keys?</h3>
+                <p class="varai-text-muted varai-mb-4">Generate new API keys for different environments or applications</p>
+                <button class="btn-generate" onclick="openGenerateModal()">
+                    <i class="fas fa-plus"></i>
+                    Generate New Key
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Generate Key Modal -->
+    <div class="modal" id="generateModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Generate New API Key</h3>
+                <button class="modal-close" onclick="closeGenerateModal()">&times;</button>
+            </div>
+            <form id="generateForm">
+                <div class="form-group">
+                    <label class="form-label" for="keyType">Key Type</label>
+                    <select class="form-input" id="keyType" required>
+                        <option value="">Select key type</option>
+                        <option value="public">Public Key (Client-side safe)</option>
+                        <option value="private">Private Key (Server-side only)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="environment">Environment</label>
+                    <select class="form-input" id="environment" required>
+                        <option value="">Select environment</option>
+                        <option value="production">Production</option>
+                        <option value="test">Test/Development</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="keyName">Key Name (Optional)</label>
+                    <input type="text" class="form-input" id="keyName" placeholder="e.g., Mobile App Key, Webhook Key">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn-generate" style="width: 100%;">
+                        <i class="fas fa-key"></i>
+                        Generate API Key
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">API key copied to clipboard!</span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="varai-footer">
+        <div class="varai-container">
+            <div class="varai-grid varai-grid-cols-1 varai-md-grid-cols-4 varai-gap-8">
+                <div>
+                    <h3 class="varai-footer-title">VARAi Commerce Studio</h3>
+                    <p class="varai-text-muted">AI-powered e-commerce platform for the future of retail.</p>
+                </div>
+                <div>
+                    <h4 class="varai-footer-subtitle">Product</h4>
+                    <ul class="varai-footer-links">
+                        <li><a href="/products.html">Features</a></li>
+                        <li><a href="/pricing.html">Pricing</a></li>
+                        <li><a href="/api-docs.html">API</a></li>
+                        <li><a href="/integrations.html">Integrations</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="varai-footer-subtitle">Developers</h4>
+                    <ul class="varai-footer-links">
+                        <li><a href="/api-docs.html">Documentation</a></li>
+                        <li><a href="/api-keys.html">API Keys</a></li>
+                        <li><a href="https://github.com/varai">GitHub</a></li>
+                        <li><a href="https://discord.gg/varai">Community</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="varai-footer-subtitle">Company</h4>
+                    <ul class="varai-footer-links">
+                        <li><a href="/company.html">About</a></li>
+                        <li><a href="/company.html#careers">Careers</a></li>
+                        <li><a href="/company.html#contact">Contact</a></li>
+                        <li><a href="/privacy.html">Privacy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="varai-footer-bottom">
+                <p>&copy; 2025 VARAi Commerce Studio. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Navigation toggle
+        document.getElementById('navToggle').addEventListener('click', function() {
+            document.getElementById('navMenu').classList.toggle('active');
+        });
+
+        // Copy to clipboard function
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('API key copied to clipboard!');
+            }).catch(() => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showToast('API key copied to clipboard!');
+            });
+        }
+
+        // Reveal and copy private key
+        function revealAndCopy(elementId, actualKey) {
+            const element = document.getElementById(elementId);
+            const originalText = element.textContent;
+            
+            // Reveal the key temporarily
+            element.textContent = actualKey;
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(actualKey).then(() => {
+                showToast('Private key revealed and copied to clipboard!');
+                
+                // Hide the key again after 3 seconds
+                setTimeout(() => {
+                    element.textContent = originalText;
+                }, 3000);
+            }).catch(() => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = actualKey;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showToast('Private key revealed and copied to clipboard!');
+                
+                setTimeout(() => {
+                    element.textContent = originalText;
+                }, 3000);
+            });
+        }
+
+        // Regenerate key
+        function regenerateKey(type, environment) {
+            if (confirm(`Are you sure you want to regenerate your ${environment} ${type} key? This action cannot be undone and will invalidate the current key.`)) {
+                // Simulate API call
+                showToast(`${type.charAt(0).toUpperCase() + type.slice(1)} key regenerated successfully!`);
+                
+                // Update the key display (simulate new key)
+                const timestamp = Date.now().toString(36);
+                const newKey = type === 'public' 
+                    ? `pk_${environment === 'production' ? 'live' : 'test'}_${timestamp}${'0'.repeat(32 - timestamp.length)}`
+                    : `sk_${environment === 'production' ? 'live' : 'test'}_${timestamp}${'0'.repeat(32 - timestamp.length)}`;
+                
+                // Find and update the appropriate key element
+                const keyElements = document.querySelectorAll('.api-key-value');
+                keyElements.forEach(el => {
+                    if (el.textContent.includes(type === 'public' ? 'pk_' : 'sk_') && 
+                        el.textContent.includes(environment === 'production' ? 'live' : 'test')) {
+                        if (type === 'private') {
+                            el.textContent = newKey.replace(/./g, '•').substring(0, 32);
+                        } else {
+                            el.textContent = newKey;
+                        }
+                    }
+                });
+            }
+        }
+
+        // Revoke key
+        function revokeKey(type, environment) {
+            if (confirm(`Are you sure you want to revoke your ${environment} ${type} key? This action cannot be undone and will immediately disable all applications using this key.`)) {
+                showToast(`${type.charAt(0).toUpperCase() + type.slice(1)} key revoked successfully!`);
+                
+                // Update status to inactive
+                const keyItems = document.querySelectorAll('.api-key-item');
+                keyItems.forEach(item => {
+                    const label = item.querySelector('.api-key-label');
+                    const value = item.querySelector('.api-key-value');
+                    if (label.textContent.includes(environment) && 
+                        value.textContent.includes(type === 'public' ? 'pk_' : 'sk_')) {
+                        const status = item.querySelector('.api-key-status');
+                        status.className = 'api-key-status status-inactive';
+                        status.innerHTML = '<i class="fas fa-circle"></i> Revoked';
+                    }
+                });
+                
+                // Update active keys count
+                const activeKeysElement = document.getElementById('activeKeys');
+                const currentCount = parseInt(activeKeysElement.textContent);
+                activeKeysElement.textContent = currentCount - 1;
+            }
+        }
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Modal functions
+        function openGenerateModal() {
+            document.getElementById('generateModal').style.display = 'block';
+        }
+
+        function closeGenerateModal() {
+            document.getElementById('generateModal').style.display = 'none';
+            document.getElementById('generateForm').reset();
+        }
+
+        // Handle
+// Handle form submission
+        document.getElementById('generateForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const keyType = document.getElementById('keyType').value;
+            const environment = document.getElementById('environment').value;
+            const keyName = document.getElementById('keyName').value;
+            
+            if (!keyType || !environment) {
+                showToast('Please fill in all required fields');
+                return;
+            }
+            
+            // Simulate API call to generate new key
+            const timestamp = Date.now().toString(36);
+            const prefix = keyType === 'public' ? 'pk_' : 'sk_';
+            const env = environment === 'production' ? 'live' : 'test';
+            const newKey = `${prefix}${env}_${timestamp}${'0'.repeat(32 - timestamp.length)}`;
+            
+            showToast(`New ${keyType} key generated successfully!`);
+            closeGenerateModal();
+            
+            // In a real application, you would refresh the page or update the key list
+            setTimeout(() => {
+                location.reload();
+            }, 2000);
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('generateModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeGenerateModal();
+            }
+        });
+
+        // Update usage statistics periodically (simulate real-time updates)
+        function updateStats() {
+            const stats = {
+                totalRequests: Math.floor(Math.random() * 1000) + 12000,
+                monthlyRequests: Math.floor(Math.random() * 500) + 3000,
+                activeKeys: 2,
+                rateLimitRemaining: Math.floor(Math.random() * 1000) + 4000
+            };
+            
+            Object.keys(stats).forEach(key => {
+                const element = document.getElementById(key);
+                if (element) {
+                    element.textContent = stats[key].toLocaleString();
+                }
+            });
+        }
+
+        // Update stats every 30 seconds
+        setInterval(updateStats, 30000);
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add any initialization code here
+            console.log('API Key Management page loaded');
+        });
+    </script>
+</body>
+</html>
