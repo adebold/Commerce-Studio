@@ -1,0 +1,21 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "d88807e41a989470ff66177d5cc69c13"
+name = "EyewearML"
+handle = "eyewearml"
+application_url = "https://eyewearml-shopify-7quzpkxit-vareye-ai.vercel.app/"
+embedded = true
+
+[webhooks]
+api_version = "2025-01"
+
+[auth]
+redirect_urls = [
+  "https://eyewearml-shopify-7quzpkxit-vareye-ai.vercel.app/api/callback"
+]
+
+[pos]
+embedded = false
+
+[build]
+include_config_on_deploy = true

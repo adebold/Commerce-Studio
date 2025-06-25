@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - SKU-Genie Store Demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/reports.css">
+    <style>
+        body {
+            padding-top: 56px;
+            background-color: #f8f9fa;
+        }
+        .navbar-brand {
+            font-weight: bold;
+        }
+        .report-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .chart-container {
+            height: 400px;
+            position: relative;
+            margin-top: 20px;
+        }
+        .filter-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            gap: 10px;
+        }
+        .filter-row .form-control, .filter-row .form-select {
+            flex: 1;
+        }
+        .filter-row .btn {
+            flex: 0 0 auto;
+        }
+        .modal-dialog {
+            max-width: 600px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">SKU-Genie</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="import.html">Import</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="reports.html">Reports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.htmlX">Dashboard</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <a href="#" class="btn btn-outline-light me-2">
+                        <i class="bi bi-person-circle"></i> Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <h1 class="mb-4">Reports</h1>
+        
+        <!-- Report Builder -->
+        <div class="report-container">
+            <ul class="nav nav-tabs" id="reportTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="builder-tab" data-bs-toggle="tab" data-bs-target="#builder" type="button" role="tab" aria-controls="builder" aria-selected="true">Builder</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="results-tab" data-bs-toggle="tab" data-bs-target="#results" type="button" role="tab" aria-controls="results" aria-selected="false">Results</button>
+                </li>
+            </ul>
+            
+            <div class="tab-content mt-3" id="reportTabsContent">
+                <!-- Builder Tab -->
+                <div class="tab-pane fade show active" id="builder" role="tabpanel" aria-labelledby="builder-tab">
+                    <!-- Report Configuration -->
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h5 class="mb-0">Report Configuration</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="reportTemplate" class="form-label">Report Template</label>
+                                    <select class="form-select" id="reportTemplate">
+                                        <option value="" selected>Select a template</option>
+                                        <option value="products">Products Report</option>
+                                        <option value="sales">Sales Report</option>
+                                        <option value="customers">Customers Report</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="savedConfig" class="form-label">Saved Configurations</label>
+                                    <select class="form-select" id="savedConfig">
+                                        <option value="" selected>Select a configuration</option>
+                                        <option value="config1">Monthly Sales</option>
+                                        <option value="config2">Top Products</option>
+                                        <option value="config3">Customer Insights</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Filters -->
+                    <div class="card mb-3">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Filters</h5>
+                            <button class="btn btn-sm btn-primary" id="addFilterBtn">
+                                <i class="bi bi-plus-circle"></i> Add Filter
+                            </button>
+                        </div>
+                        <div class="card-body" id="filtersContainer">
+                            <p class="text-muted" id="noFiltersMsg">No filters applied. Click "Add Filter" to add a filter.</p>
+                            <!-- Filter rows will be added here dynamically -->
+                        </div>
+                    </div>
+                    
+                    <!-- Grouping & Sorting -->
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h5 class="mb-0">Grouping & Sorting</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="groupBy" class="form-label">Group By</label>
+                                    <select class="form-select" id="groupBy">
+                                        <option value="" selected>None</option>
+                                        <option value="category">Category</option>
+                                        <option value="month">Month</option>
+                                        <option value="customer">Customer</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="sortBy" class="form-label">Sort By</label>
+                                    <select class="form-select" id="sortBy">
+                                        <option value="" selected>None</option>
+                                        <option value="name">Name</option>
+                                        <option value="date">Date</option>
+                                        <option value="amount">Amount</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3" id="sortOrderContainer" style="display: none;">
+                                    <label for="sortOrder" class="form-label">Sort Order</label>
+                                    <select class="form-select" id="sortOrder">
+                                        <option value="asc" selected>Ascending</option>
+                                        <option value="desc">Descending</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Visualization -->
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h5 class="mb-0">Visualization</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="btn-group w-100" role="group" aria-label="Visualization options">
+                                <input type="radio" class="btn-check" name="visualization" id="vizTable" value="table" checked>
+                                <label class="btn btn-outline-primary" for="vizTable">
+                                    <i class="bi bi-table"></i> Table
+                                </label>
+                                
+                                <input type="radio" class="btn-check" name="visualization" id="vizBar" value="bar">
+                                <label class="btn btn-outline-primary" for="vizBar">
+                                    <i class="bi bi-bar-chart"></i> Bar Chart
+                                </label>
+                                
+                                <input type="radio" class="btn-check" name="visualization" id="vizLine" value="line">
+                                <label class="btn btn-outline-primary" for="vizLine">
+                                    <i class="bi bi-graph-up"></i> Line Chart
+                                </label>
+                                
+                                <input type="radio" class="btn-check" name="visualization" id="vizPie" value="pie">
+                                <label class="btn btn-outline-primary" for="vizPie">
+                                    <i class="bi bi-pie-chart"></i> Pie Chart
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div class="d-flex justify-content-between">
+                        <button class="btn btn-secondary" id="saveConfigBtn">
+                            <i class="bi bi-save"></i> Save Configuration
+                        </button>
+                        <button class="btn btn-primary" id="generateReportBtn">
+                            <i class="bi bi-file-earmark-bar-graph"></i> Generate Report
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Results Tab -->
+                <div class="tab-pane fade" id="results" role="tabpanel" aria-labelledby="results-tab">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Report Results</h5>
+                            <button class="btn btn-sm btn-primary" id="refreshReportBtn">
+                                <i class="bi bi-arrow-clockwise"></i> Refresh
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div id="reportResults">
+                                <p class="text-center text-muted">No report data available. Generate a report to see results.</p>
+                            </div>
+                            <div class="chart-container" id="chartContainer" style="display: none;">
+                                <canvas id="reportChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Save Configuration Modal -->
+    <div class="modal fade" id="saveConfigModal" tabindex="-1" aria-labelledby="saveConfigModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="saveConfigModalLabel">Save Report Configuration</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="configName" class="form-label">Configuration Name</label>
+                        <input type="text" class="form-control" id="configName" placeholder="Enter a name for this configuration">
+                    </div>
+                    <div class="mb-3">
+                        <label for="configDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="configDescription" rows="3" placeholder="Enter a description (optional)"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveConfigConfirmBtn">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>SKU-Genie Store Demo</h5>
+                    <p>A demonstration of the SKU-Genie platform capabilities.</p>
+                </div>
+                <div class="col-md-3">
+                    <h5>Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="index.html" class="text-white">Home</a></li>
+                        <li><a href="import.html" class="text-white">Import</a></li>
+                        <li><a href="reports.html" class="text-white">Reports</a></li>
+                        <li><a href="dashboard.htmlX" class="text-white">Dashboard</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Contact</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-envelope"></i> info@skugenie.com</li>
+                        <li><i class="bi bi-telephone"></i> (555) 123-4567</li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="text-center">
+                <p>&copy; 2025 SKU-Genie. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <script src="js/reports.js"></script>
+</body>
+</html>

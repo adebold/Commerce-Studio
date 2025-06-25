@@ -1,0 +1,113 @@
+[
+  {
+    "id": "product-1",
+    "name": "Classic Rectangle Frame",
+    "brand": "Ray-Ban",
+    "brand_id": "brand_ray_ban",
+    "manufacturer_id": "manufacturer_luxottica_group",
+    "manufacturer_name": "Luxottica Group",
+    "price": 149.99,
+    "image": "https://images.unsplash.com/photo-1577803645773-f96470509666?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+    "description": "Classic rectangular frames with a timeless design that suits most face shapes.",
+    "specifications": {
+      "frame_type": "full-rim",
+      "frame_shape": "rectangle",
+      "frame_material": "acetate",
+      "frame_color": "black"
+    },
+    "ai_enhanced": {
+      "face_shape_compatibility_scores": {
+        "oval": 0.9,
+        "round": 0.8,
+        "square": 0.5,
+        "heart": 0.7,
+        "diamond": 0.6,
+        "oblong": 0.8
+      },
+      "style_keywords": ["classic", "professional", "versatile", "timeless", "refined"],
+      "feature_summary": "These full-rim rectangular frames are crafted from high-quality acetate in sleek black. The balanced proportions provide comfort and style for everyday wear.",
+      "style_description": "With a classic rectangular silhouette, these frames offer a sophisticated look suitable for both professional and casual settings. The timeless design flatters most face shapes, particularly round faces, by adding definition and structure. As expected from Ray-Ban, these frames deliver exceptional quality and craftsmanship that stands the test of time."
+    },
+    "inventory": {
+      "available": 25,
+      "locations": [
+        { "location_name": "Warehouse A", "quantity": 15 },
+        { "location_name": "Store B", "quantity": 10 }
+      ]
+    }
+  },
+  {
+    "id": "product-2",
+    "name": "Modern Round Frame",
+    "brand": "Warby Parker",
+    "brand_id": "brand_warby_parker",
+    "manufacturer_id": "manufacturer_warby_parker",
+    "manufacturer_name": "Warby Parker",
+    "price": 95.00,
+    "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+    "description": "Contemporary round frames with a lightweight feel and minimalist aesthetic.",
+    "specifications": {
+      "frame_type": "full-rim",
+      "frame_shape": "round",
+      "frame_material": "metal",
+      "frame_color": "gold"
+    },
+    "ai_enhanced": {
+      "face_shape_compatibility_scores": {
+        "oval": 0.8,
+        "round": 0.4,
+        "square": 0.9,
+        "heart": 0.7,
+        "diamond": 0.8,
+        "oblong": 0.7
+      },
+      "style_keywords": ["modern", "minimalist", "trendy", "artistic", "intellectual"],
+      "feature_summary": "These stylish round frames feature a sleek gold metal construction. The thin profile and minimalist design create a lightweight, comfortable fit.",
+      "style_description": "These round frames offer a modern take on a retro-inspired style. The gold finish adds warmth to the face while the clean lines create a sophisticated look. Particularly flattering for square or angular face shapes, these frames soften features while making a subtle fashion statement. True to Warby Parker's mission, they deliver designer quality at an accessible price point."
+    },
+    "inventory": {
+      "available": 18,
+      "locations": [
+        { "location_name": "Warehouse A", "quantity": 12 },
+        { "location_name": "Store B", "quantity": 6 }
+      ]
+    }
+  },
+  {
+    "id": "product-3",
+    "name": "Premium Cat-Eye Frame",
+    "brand": "Gucci",
+    "brand_id": "brand_gucci",
+    "manufacturer_id": "manufacturer_kering",
+    "manufacturer_name": "Kering",
+    "price": 299.99,
+    "image": "https://images.unsplash.com/photo-1513146581-976d6fdb6879?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+    "description": "Premium cat-eye frames with luxurious details and sophisticated styling.",
+    "specifications": {
+      "frame_type": "full-rim",
+      "frame_shape": "cat-eye",
+      "frame_material": "acetate",
+      "frame_color": "tortoise"
+    },
+    "ai_enhanced": {
+      "face_shape_compatibility_scores": {
+        "oval": 0.8,
+        "round": 0.9,
+        "square": 0.7,
+        "heart": 0.5,
+        "diamond": 0.9,
+        "oblong": 0.6
+      },
+      "style_keywords": ["luxurious", "glamorous", "statement", "fashion-forward", "elegant", "vintage-inspired"],
+      "feature_summary": "These premium cat-eye frames are crafted from high-quality acetate in a rich tortoise pattern. The upswept design and luxurious details enhance their sophisticated appeal.",
+      "style_description": "These cat-eye frames exude vintage glamour with a modern twist. The upswept silhouette enhances cheekbones and adds a feminine touch to any look. The tortoise pattern adds warmth and dimension, creating a luxurious aesthetic. With Gucci's signature approach to luxury, these frames blend bold design with premium materials and craftsmanship."
+    },
+    "inventory": {
+      "available": 8,
+      "locations": [
+        { "location_name": "Warehouse A", "quantity": 3 },
+        { "location_name": "Store B", "quantity": 5 }
+      ]
+    }
+  }
+]

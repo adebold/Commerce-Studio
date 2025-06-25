@@ -1,0 +1,41 @@
+{
+  "name": "varai-magento",
+  "version": "1.1.0",
+  "description": "VARAi integration for Magento 2",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "keywords": [
+    "magento",
+    "varai",
+    "eyewear",
+    "virtual-try-on"
+  ],
+  "author": "VARAi Team",
+  "license": "proprietary",
+  "devDependencies": {
+    "@babel/core": "^7.22.5",
+    "@babel/preset-env": "^7.22.5",
+    "babel-jest": "^29.5.0",
+    "jest": "^29.5.0",
+    "jest-environment-jsdom": "^29.5.0",
+    "jquery": "^3.7.0",
+    "knockout": "^3.5.1"
+  },
+  "dependencies": {},
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ]
+    ]
+  }
+}

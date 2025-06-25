@@ -1,0 +1,302 @@
+/* 
+ * EyewearML Store - Responsive Styles
+ * 
+ * This stylesheet contains the responsive design rules for the EyewearML store.
+ */
+
+/* ====== Large Devices (Desktops, less than 1200px) ====== */
+@media (max-width: 1199.98px) {
+  :root {
+    --container-width: 960px;
+  }
+  
+  .hero-text h1 {
+    font-size: 2.5rem;
+  }
+  
+  .compatibility-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-sm);
+  }
+  
+  .compatibility-grid .compatibility-item:nth-child(n+4) {
+    margin-top: var(--spacing-md);
+  }
+}
+
+/* ====== Medium Devices (Tablets, less than 992px) ====== */
+@media (max-width: 991.98px) {
+  :root {
+    --container-width: 720px;
+  }
+  
+  /* Layout adjustments */
+  .row {
+    flex-direction: column;
+  }
+  
+  [class*="col-"] {
+    max-width: 100%;
+  }
+  
+  /* Header adjustments */
+  .header-content {
+    flex-direction: column;
+    padding: var(--spacing-sm) 0;
+  }
+  
+  .logo {
+    margin-bottom: var(--spacing-sm);
+  }
+  
+  .main-nav ul {
+    justify-content: center;
+    margin-bottom: var(--spacing-sm);
+  }
+  
+  .search-bar {
+    width: 100%;
+  }
+  
+  /* Hero section */
+  .hero-content {
+    flex-direction: column;
+  }
+  
+  .hero-text, .hero-image {
+    width: 100%;
+  }
+  
+  .hero-image {
+    margin-top: var(--spacing-lg);
+  }
+  
+  /* Category grid */
+  .category-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  /* Product detail */
+  .product-actions {
+    flex-direction: column;
+  }
+  
+  .wishlist-btn {
+    width: 100%;
+    margin-top: var(--spacing-sm);
+  }
+  
+  /* Footer */
+  .footer-content {
+    flex-direction: column;
+  }
+  
+  .footer-section {
+    width: 100%;
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .footer-social {
+    justify-content: center;
+    margin-bottom: var(--spacing-md);
+  }
+}
+
+/* ====== Small Devices (Landscape Phones, less than 768px) ====== */
+@media (max-width: 767.98px) {
+  :root {
+    --container-width: 540px;
+  }
+  
+  body {
+    font-size: 15px;
+  }
+  
+  .hero {
+    padding: var(--spacing-xl) 0;
+  }
+  
+  .hero-text h1 {
+    font-size: 2rem;
+  }
+  
+  /* Product cards */
+  .product-card {
+    margin-bottom: var(--spacing-md);
+  }
+  
+  /* Product thumbnails */
+  .product-thumbnails {
+    justify-content: center;
+  }
+  
+  .thumbnail {
+    width: 60px;
+    height: 60px;
+  }
+  
+  /* Face shape compatibility */
+  .compatibility-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  /* Review summary */
+  .review-summary {
+    flex-direction: column;
+  }
+  
+  .average-rating {
+    margin-bottom: var(--spacing-md);
+  }
+  
+  /* AI Assistant */
+  .assistant-panel {
+    width: 100%;
+    height: 70vh;
+    right: 0;
+    bottom: 0;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+  }
+  
+  .assistant-toggle {
+    right: var(--spacing-md);
+  }
+}
+
+/* ====== Extra Small Devices (Portrait Phones, less than 576px) ====== */
+@media (max-width: 575.98px) {
+  :root {
+    --container-width: 100%;
+    --spacing-md: 0.75rem;
+    --spacing-lg: 1.25rem;
+    --spacing-xl: 1.75rem;
+    --spacing-xxl: 2.5rem;
+  }
+  
+  .container {
+    padding: 0 var(--spacing-sm);
+  }
+  
+  /* Navigation */
+  .main-nav ul {
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  /* Hero section */
+  .hero-text h1 {
+    font-size: 1.75rem;
+  }
+  
+  .hero-text p {
+    font-size: 1rem;
+  }
+  
+  /* Categories */
+  .category-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+  
+  .category-card {
+    height: 150px;
+  }
+  
+  /* Product details */
+  .product-info h1 {
+    font-size: 1.5rem;
+  }
+  
+  .product-price {
+    font-size: 1.25rem;
+  }
+  
+  .option-buttons {
+    flex-wrap: wrap;
+  }
+  
+  /* Face shape compatibility */
+  .compatibility-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .compatibility-item {
+    display: flex;
+    align-items: center;
+    text-align: left;
+  }
+  
+  .compatibility-score {
+    margin: 0 var(--spacing-md) 0 0;
+  }
+  
+  /* Reviews */
+  .rating-bar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  
+  .rating-progress {
+    margin: var(--spacing-xs) 0;
+    width: 100%;
+  }
+  
+  /* Pagination */
+  .pagination a {
+    width: 32px;
+    height: 32px;
+    margin: 0 var(--spacing-xs);
+  }
+}
+
+/* ====== Support for high DPI displays ====== */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* ====== Print Styles ====== */
+@media print {
+  body {
+    background-color: #fff;
+    font-size: 12pt;
+    color: #000;
+  }
+  
+  .header, .footer, .ai-assistant, .product-actions, .reviews {
+    display: none !important;
+  }
+  
+  a {
+    text-decoration: underline;
+    color: #000;
+  }
+  
+  a[href]:after {
+    content: " (" attr(href) ")";
+    font-size: 10pt;
+    color: #555;
+  }
+  
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+  
+  .product-detail, .product-gallery, .product-info {
+    page-break-inside: avoid;
+  }
+  
+  .container {
+    max-width: 100%;
+    padding: 0;
+  }
+}

@@ -1,0 +1,176 @@
+{% comment %}
+  @name: EyewearML Product Recommendations
+  @description: AI-powered eyewear recommendations with virtual try-on
+{% endcomment %}
+
+{% if product.type == "Eyewear" %}
+  <div class="eyewearml-recommendations" 
+       data-product-id="{{ product.id }}"
+       data-shop-id="{{ shop.id }}">
+    
+    {% # Virtual Try-On Button %}
+    <div class="eyewearml-try-on">
+      <button class="eyewearml-try-on-button"
+              data-frame-id="{{ product.id }}"
+              data-frame-name="{{ product.title }}"
+              data-frame-image="{{ product.featured_image | img_url: 'large' }}">
+        {{ 'Try On Virtually' | t }}
+      </button>
+    </div>
+
+    {% # Style Recommendations %}
+    <div class="eyewearml-style-recommendations"
+         data-style="{{ product.metafields.eyewearml.style }}"
+         data-brand="{{ product.vendor }}"
+         data-price="{{ product.price | money_without_currency }}">
+      <h3>{{ 'Similar Styles' | t }}</h3>
+      <div class="recommendations-grid"
+           data-items-per-row="{{ section.settings.items_per_row }}">
+        {% # Recommendations will be dynamically populated %}
+      </div>
+    </div>
+
+    {% # Recently Viewed %}
+    <div class="eyewearml-recently-viewed"
+         data-max-items="{{ section.settings.recently_viewed_max }}">
+      <h3>{{ 'Recently Viewed' | t }}</h3>
+      <div class="recently-viewed-grid">
+        {% # Recently viewed items will be dynamically populated %}
+      </div>
+    </div>
+  </div>
+
+  {% # Styles %}
+  <style>
+    .eyewearml-recommendations {
+      margin: 2rem 0;
+      padding: 1rem;
+    }
+
+    .eyewearml-try-on-button {
+      background-color: {{ section.settings.button_color }};
+      color: {{ section.settings.button_text_color }};
+      padding: 1rem 2rem;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      transition: opacity 0.2s ease;
+    }
+
+    .eyewearml-try-on-button:hover {
+      opacity: 0.9;
+    }
+
+    .recommendations-grid {
+      display: grid;
+      grid-template-columns: repeat({{ section.settings.items_per_row }}, 1fr);
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .recently-viewed-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    @media screen and (max-width: 768px) {
+      .recommendations-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+
+  {% # Scripts %}
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize EyewearML
+      window.EyewearML.init({
+        shopId: {{ shop.id | json }},
+        productId: {{ product.id | json }},
+        settings: {
+          itemsPerRow: {{ section.settings.items_per_row | json }},
+          recentlyViewedMax: {{ section.settings.recently_viewed_max | json }},
+          currency: {{ shop.currency | json }},
+          locale: {{ request.locale.iso_code | json }}
+        }
+      });
+
+      // Track product view
+      window.EyewearML.track('product_view', {
+        productId: {{ product.id | json }},
+        productType: {{ product.type | json }},
+        brand: {{ product.vendor | json }},
+        price: {{ product.price | money_without_currency | json }},
+        style: {{ product.metafields.eyewearml.style | json }}
+      });
+    });
+  </script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "EyewearML Recommendations",
+  "target": "section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "items_per_row",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 3,
+      "label": "Items per row"
+    },
+    {
+      "type": "range",
+      "id": "recently_viewed_max",
+      "min": 4,
+      "max": 12,
+      "step": 2,
+      "default": 6,
+      "label": "Maximum recently viewed items"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Try-On Button Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Try-On Button Text Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "select",
+      "id": "recommendation_algorithm",
+      "label": "Recommendation Algorithm",
+      "options": [
+        {
+          "value": "style_based",
+          "label": "Style Based"
+        },
+        {
+          "value": "hybrid",
+          "label": "Hybrid (Style + Collaborative)"
+        },
+        {
+          "value": "personalized",
+          "label": "Personalized"
+        }
+      ],
+      "default": "hybrid"
+    }
+  ],
+  "presets": [
+    {
+      "name": "EyewearML Recommendations",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

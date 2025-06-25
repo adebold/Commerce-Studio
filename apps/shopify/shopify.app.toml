@@ -1,0 +1,29 @@
+name = "VARAi Commerce Studio"
+client_id = "YOUR_CLIENT_ID"
+application_url = "https://commerce-studio-website-353252826752.us-central1.run.app/shopify"
+embedded = true
+
+[access_scopes]
+# App access scopes for VARAi Commerce Studio
+scopes = "write_products,read_products,write_script_tags,read_script_tags,write_themes,read_themes,write_customers,read_customers,write_orders,read_orders,write_checkouts,read_checkouts,write_analytics,read_analytics"
+
+[auth]
+redirect_urls = [
+    "https://commerce-studio-website-353252826752.us-central1.run.app/shopify/auth/callback",
+    "https://commerce-studio-website-353252826752.us-central1.run.app/shopify/auth/fallback"
+]
+
+[webhooks]
+api_version = "2024-01"
+
+[pos]
+embedded = false
+
+[build]
+automatically_update_urls_on_dev = true
+dev_store_url = "varai-commerce-studio-dev.myshopify.com"
+
+[app_proxy]
+url = "https://commerce-studio-website-353252826752.us-central1.run.app/shopify/proxy"
+subpath = "varai"
+prefix = "apps"

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+    bootstrap="tests/bootstrap.php"
+    backupGlobals="false"
+    colors="true"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+    verbose="true"
+    >
+    <testsuites>
+        <testsuite name="VARAi Test Suite">
+            <directory suffix="-test.php">./tests/</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">./includes</directory>
+            <exclude>
+                <directory>./vendor</directory>
+                <directory>./tests</directory>
+                <directory>./admin</directory>
+                <directory>./templates</directory>
+                <directory>./assets</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+    <php>
+        <env name="WP_TESTS_DIR" value="./vendor/wordpress/wordpress-tests-lib"/>
+        <env name="WP_CORE_DIR" value="./vendor/wordpress/wordpress"/>
+        <env name="WP_TESTS_DOMAIN" value="example.org"/>
+        <env name="WP_TESTS_EMAIL" value="admin@example.org"/>
+        <env name="WP_TESTS_TITLE" value="Test Blog"/>
+        <env name="WP_PHP_BINARY" value="php"/>
+        <env name="VARAI_TEST_MODE" value="true"/>
+    </php>
+</phpunit>

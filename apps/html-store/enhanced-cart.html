@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Cart - VARAi Webstore</title>
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Enhanced Cart UI Styles -->
+    <link rel="stylesheet" href="css/enhanced-cart-ui.css">
+    
+    <!-- Base styles -->
+    <style>
+        :root {
+            --primary-color: #3b82f6;
+            --primary-hover: #2563eb;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --error-light: #fef2f2;
+            --surface-color: #ffffff;
+            --surface-secondary: #f8fafc;
+            --surface-hover: #e2e8f0;
+            --surface-disabled: #d1d5db;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --text-tertiary: #9ca3af;
+            --text-disabled: #9ca3af;
+            --border-color: #e5e7eb;
+            --border-light: #f3f4f6;
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: var(--font-family);
+            background: #f9fafb;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .page-header h1 {
+            margin: 0 0 8px 0;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+        
+        .page-header p {
+            margin: 0;
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+        }
+        
+        .demo-controls {
+            max-width: 800px;
+            margin: 0 auto 30px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .demo-controls h3 {
+            margin: 0 0 16px 0;
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+        
+        .demo-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .demo-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--primary-color);
+            background: transparent;
+            color: var(--primary-color);
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .demo-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .demo-btn.primary {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .demo-btn.primary:hover {
+            background: var(--primary-hover);
+        }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <h1>Enhanced Cart Experience</h1>
+        <p>SPARC Phase 3 - Frontend Agent Implementation</p>
+    </div>
+    
+    <div class="demo-controls">
+        <h3>Demo Controls</h3>
+        <div class="demo-buttons">
+            <button class="demo-btn primary" onclick="addSampleItems()">Add Sample Items</button>
+            <button class="demo-btn" onclick="addVTOSession()">Add VTO Session</button>
+            <button class="demo-btn" onclick="toggleMode()">Toggle Pickup Mode</button>
+            <button class="demo-btn" onclick="clearCart()">Clear Cart</button>
+            <button class="demo-btn" onclick="simulateStoreSelection()">Select Sample Store</button>
+        </div>
+    </div>
+    
+    <!-- Enhanced Cart Container -->
+    <div class="cart-container">
+        <!-- Cart will be dynamically generated here -->
+    </div>
+    
+    <!-- Dependencies -->
+    <script src="js/services/api-integration.js"></script>
+    <script src="js/store-locator.js"></script>
+    <script src="js/vto-cart-integration.js"></script>
+    <script src="js/bopis.js"></script>
+    <script src="js/cart-bopis-integration.js"></script>
+    
+    <!-- Enhanced Cart UI -->
+    <script src="js/enhanced-cart-ui.js"></script>
+    
+    <!-- Demo Script -->
+    <script>
+        // Mock Cart Manager for demo
+        class MockCartManager {
+            constructor() {
+                this.items = [];
+                this.listeners = [];
+            }
+            
+            getItems() {
+                return this.items;
+            }
+            
+            addItem(item) {
+                const existingItem = this.items.find(i => i.id === item.id);
+                if (existingItem) {
+                    existingItem.quantity += item.quantity || 1;
+                } else {
+                    this.items.push({
+                        ...item,
+                        quantity: item.quantity || 1
+                    });
+                }
+                this.notifyListeners();
+            }
+            
+            updateQuantity(itemId, change) {
+                const item = this.items.find(i => i.id === itemId);
+                if (item) {
+                    item.quantity += change;
+                    if (item.quantity <= 0) {
+                        this.removeItem(itemId);
+                    } else {
+                        this.notifyListeners();
+                    }
+                }
+            }
+            
+            removeItem(itemId) {
+                this.items = this.items.filter(i => i.id !== itemId);
+                this.notifyListeners();
+            }
+            
+            clearCart() {
+                this.items = [];
+                this.notifyListeners();
+            }
+            
+            notifyListeners() {
+                document.dispatchEvent(new CustomEvent('cartUpdated'));
+            }
+        }
+        
+        // Mock Store Locator for demo
+        class MockStoreLocator {
+            async searchStores(params) {
+                // Simulate API delay
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                return [
+                    {
+                        id: 'store-1',
+                        name: 'VARAi Downtown',
+                        address: '123 Main St, Downtown, NY 10001',
+                        distance: 0.8,
+                        isOpen: true,
+                        services: ['bopis', 'eye-exam', 'repairs']
+                    },
+                    {
+                        id: 'store-2',
+                        name: 'VARAi Mall Location',
+                        address: '456 Shopping Center Dr, Mall Plaza, NY 10002',
+                        distance: 2.3,
+                        isOpen: true,
+                        services: ['bopis', 'eye-exam']
+                    },
+                    {
+                        id: 'store-3',
+                        name: 'VARAi Uptown',
+                        address: '789 Uptown Ave, Uptown, NY 10003',
+                        distance: 4.1,
+                        isOpen: false,
+                        services: ['bopis', 'repairs']
+                    }
+                ];
+            }
+        }
+        
+        // Mock VTO Integration for demo
+        class MockVTOIntegration {
+            displaySession(session) {
+                alert(`Viewing VTO Session: ${session.frameName} (${session.confidence}% confidence)`);
+            }
+        }
+        
+        // Mock BOPIS Manager for demo
+        class MockBOPISManager {
+            async createReservation(data) {
+                // Simulate API delay
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                return {
+                    id: 'res-' + Date.now(),
+                    confirmationNumber: 'VAR' + Math.random().toString(36).substr(2, 8).toUpperCase(),
+                    pickupTime: data.pickupTime,
+                    storeId: data.storeId,
+                    items: data.items,
+                    status: 'confirmed'
+                };
+            }
+        }
+        
+        // Initialize mock services
+        window.cartManager = new MockCartManager();
+        window.storeLocator = new MockStoreLocator();
+        window.vtoCartIntegration = new MockVTOIntegration();
+        window.bopisManager = new MockBOPISManager();
+        
+        // Initialize Enhanced Cart UI
+        let enhancedCartUI;
+        document.addEventListener('DOMContentLoaded', () => {
+            enhancedCartUI = new EnhancedCartUI();
+        });
+        
+        // Demo functions
+        function addSampleItems() {
+            const sampleItems = [
+                {
+                    id: 'frame-1',
+                    name: 'Classic Aviator',
+                    sku: 'AVT-001',
+                    price: 149.99,
+                    image: 'https://via.placeholder.com/80x80/3b82f6/ffffff?text=AVT',
+                    storeInventory: {
+                        'store-1': { quantity: 5 },
+                        'store-2': { quantity: 2 },
+                        'store-3': { quantity: 0 }
+                    }
+                },
+                {
+                    id: 'frame-2',
+                    name: 'Modern Rectangle',
+                    sku: 'REC-002',
+                    price: 199.99,
+                    image: 'https://via.placeholder.com/80x80/10b981/ffffff?text=REC',
+                    vtoData: {
+                        confidence: 87,
+                        sessionId: 'vto-session-1'
+                    },
+                    vtoSessionId: 'vto-session-1',
+                    storeInventory: {
+                        'store-1': { quantity: 3 },
+                        'store-2': { quantity: 4 },
+                        'store-3': { quantity: 1 }
+                    }
+                }
+            ];
+            
+            sampleItems.forEach(item => window.cartManager.addItem(item));
+        }
+        
+        function addVTOSession() {
+            const sessionData = {
+                sessionId: 'vto-session-' + Date.now(),
+                frameName: 'Designer Cat-Eye',
+                frameImage: 'https://via.placeholder.com/48x48/f59e0b/ffffff?text=CAT',
+                confidence: 92
+            };
+            
+            if (enhancedCartUI) {
+                enhancedCartUI.handleVTOSession(sessionData);
+            }
+        }
+        
+        function toggleMode() {
+            const pickupBtn = document.querySelector('[data-mode="pickup"]');
+            const deliveryBtn = document.querySelector('[data-mode="delivery"]');
+            
+            if (pickupBtn && deliveryBtn) {
+                if (pickupBtn.getAttribute('aria-pressed') === 'true') {
+                    deliveryBtn.click();
+                } else {
+                    pickupBtn.click();
+                }
+            }
+        }
+        
+        function clearCart() {
+            window.cartManager.clearCart();
+        }
+        
+        function simulateStoreSelection() {
+            const sampleStore = {
+                id: 'store-1',
+                name: 'VARAi Downtown',
+                address: '123 Main St, Downtown, NY 10001',
+                distance: 0.8,
+                isOpen: true,
+                services: ['bopis', 'eye-exam', 'repairs']
+            };
+            
+            if (enhancedCartUI) {
+                enhancedCartUI.selectStore(sampleStore);
+            }
+        }
+        
+        // Add some initial demo content
+        setTimeout(() => {
+            addSampleItems();
+        }, 1000);
+    </script>
+</body>
+</html>

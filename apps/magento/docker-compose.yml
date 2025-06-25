@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  magento:
+    image: alexcheng/magento2:2.4.6
+    ports:
+      - "80:80"
+      - "443:443"
+    links:
+      - mysql
+      - elasticsearch
+      - redis
+    env_file: .env
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_DATABASE=magento
+      - MYSQL_USER=magento
+      - MYSQL_PASSWORD=magento123
+      - MAGENTO_LANGUAGE=en_US
+      - MAGENTO_TIMEZONE=America/Toronto
+      - MAGENTO_DEFAULT_CURRENCY=USD
+      - MAGENTO_URL=http://localhost
+      - MAGENTO_BACKEND_FRONTNAME=admin
+      - MAGENTO_USE_SECURE=0
+      - MAGENTO_BASE_URL_SECURE=0
+      - MAGENTO_USE_SECURE_ADMIN=0
+      - ELASTICSEARCH_HOST=elasticsearch
+      - MAGENTO_ADMIN_FIRSTNAME=Admin
+      - MAGENTO_ADMIN_LASTNAME=User
+      - MAGENTO_ADMIN_EMAIL=admin@example.com
+      - MAGENTO_ADMIN_USERNAME=admin
+      - MAGENTO_ADMIN_PASSWORD=admin123
+    volumes:
+      - magento:/var/www/html
+      - ./:/var/www/html/app/code/EyewearML/Core:ro
+
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=magento
+      - MYSQL_USER=magento
+      - MYSQL_PASSWORD=magento123
+    volumes:
+      - mysql:/var/lib/mysql
+
+  elasticsearch:
+    image: elasticsearch:7.17.10
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elasticsearch:/usr/share/elasticsearch/data
+
+  redis:
+    image: redis:6.2
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis:/data
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      - PMA_HOST=mysql
+      - MYSQL_ROOT_PASSWORD=root
+
+volumes:
+  magento:
+  mysql:
+  elasticsearch:
+  redis:

@@ -1,0 +1,156 @@
+{
+  "metrics": {
+    "conversionRate": {
+      "value": 3.2,
+      "change": 0.5,
+      "trend": "up"
+    },
+    "avgOrderValue": {
+      "value": 142,
+      "change": 12,
+      "trend": "up"
+    },
+    "recommendationCTR": {
+      "value": 8.7,
+      "change": 1.2,
+      "trend": "up"
+    },
+    "activeTests": {
+      "value": 3,
+      "change": 0,
+      "trend": "neutral"
+    }
+  },
+  "tests": [
+    {
+      "id": "face-shape-compatibility",
+      "name": "Face Shape Compatibility",
+      "status": "running",
+      "startDate": "2025-04-01",
+      "endDate": "2025-05-01",
+      "confidence": 98,
+      "impact": {
+        "metric": "conversion",
+        "value": 24,
+        "trend": "up"
+      },
+      "variants": {
+        "control": {
+          "name": "Control",
+          "users": 5243,
+          "conversions": 157,
+          "conversionRate": 2.99
+        },
+        "treatment": {
+          "name": "Treatment",
+          "users": 5187,
+          "conversions": 192,
+          "conversionRate": 3.70
+        }
+      },
+      "dailyData": [
+        { "date": "2025-04-01", "control": 2.8, "treatment": 3.1 },
+        { "date": "2025-04-02", "control": 2.9, "treatment": 3.3 },
+        { "date": "2025-04-03", "control": 3.0, "treatment": 3.4 },
+        { "date": "2025-04-04", "control": 2.7, "treatment": 3.5 },
+        { "date": "2025-04-05", "control": 2.8, "treatment": 3.6 },
+        { "date": "2025-04-06", "control": 3.1, "treatment": 3.7 },
+        { "date": "2025-04-07", "control": 3.0, "treatment": 3.8 },
+        { "date": "2025-04-08", "control": 3.2, "treatment": 3.9 }
+      ]
+    },
+    {
+      "id": "product-recommendations",
+      "name": "Product Recommendations",
+      "status": "running",
+      "startDate": "2025-04-01",
+      "endDate": "2025-05-01",
+      "confidence": 95,
+      "impact": {
+        "metric": "aov",
+        "value": 18,
+        "trend": "up"
+      },
+      "variants": {
+        "control": {
+          "name": "Control",
+          "users": 5243,
+          "avgOrderValue": 127,
+          "ordersWithMultipleItems": 22
+        },
+        "treatment": {
+          "name": "Treatment",
+          "users": 5187,
+          "avgOrderValue": 150,
+          "ordersWithMultipleItems": 31
+        }
+      },
+      "dailyData": [
+        { "date": "2025-04-01", "control": 125, "treatment": 142 },
+        { "date": "2025-04-02", "control": 126, "treatment": 145 },
+        { "date": "2025-04-03", "control": 128, "treatment": 148 },
+        { "date": "2025-04-04", "control": 127, "treatment": 149 },
+        { "date": "2025-04-05", "control": 129, "treatment": 151 },
+        { "date": "2025-04-06", "control": 126, "treatment": 153 },
+        { "date": "2025-04-07", "control": 128, "treatment": 155 },
+        { "date": "2025-04-08", "control": 130, "treatment": 157 }
+      ]
+    },
+    {
+      "id": "virtual-try-on",
+      "name": "Virtual Try-On",
+      "status": "running",
+      "startDate": "2025-04-01",
+      "endDate": "2025-05-01",
+      "confidence": 72,
+      "impact": {
+        "metric": "engagement",
+        "value": 5,
+        "trend": "up"
+      },
+      "variants": {
+        "control": {
+          "name": "Control",
+          "users": 5243,
+          "avgTimeOnPage": 95,
+          "productViews": 2.1
+        },
+        "treatment": {
+          "name": "Treatment",
+          "users": 5187,
+          "avgTimeOnPage": 127,
+          "productViews": 2.8
+        }
+      },
+      "dailyData": [
+        { "date": "2025-04-01", "control": 94, "treatment": 120 },
+        { "date": "2025-04-02", "control": 95, "treatment": 122 },
+        { "date": "2025-04-03", "control": 93, "treatment": 125 },
+        { "date": "2025-04-04", "control": 96, "treatment": 126 },
+        { "date": "2025-04-05", "control": 95, "treatment": 128 },
+        { "date": "2025-04-06", "control": 97, "treatment": 130 },
+        { "date": "2025-04-07", "control": 96, "treatment": 132 },
+        { "date": "2025-04-08", "control": 98, "treatment": 135 }
+      ]
+    }
+  ],
+  "conversionFunnel": {
+    "stages": ["Product View", "Add to Cart", "Checkout", "Purchase"],
+    "control": [100, 22, 12, 3],
+    "treatment": [100, 28, 16, 4]
+  },
+  "faceShapeAnalytics": {
+    "distribution": {
+      "shapes": ["Oval", "Round", "Square", "Heart", "Diamond", "Oblong"],
+      "percentages": [32, 24, 18, 12, 8, 6]
+    },
+    "conversionRates": {
+      "shapes": ["Oval", "Round", "Square", "Heart", "Diamond", "Oblong"],
+      "rates": [3.5, 3.2, 3.8, 2.9, 3.1, 3.3]
+    },
+    "compatibilityConversion": {
+      "scores": ["90-100%", "80-89%", "70-79%", "60-69%", "50-59%", "<50%"],
+      "rates": [4.8, 3.9, 3.2, 2.5, 1.8, 1.2]
+    }
+  }
+}

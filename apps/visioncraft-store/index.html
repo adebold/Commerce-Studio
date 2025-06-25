@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VisionCraft - AI-Powered Eyewear Store</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav a:hover {
+            color: #667eea;
+        }
+        
+        .hero {
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .products {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            margin-bottom: 2rem;
+        }
+        
+        .products h2 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 2rem;
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #999;
+        }
+        
+        .product-name {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+        
+        .product-price {
+            color: #667eea;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .product-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 25px;
+            padding: 0.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .search-bar input {
+            border: none;
+            outline: none;
+            padding: 0.5rem 1rem;
+            flex: 1;
+            font-size: 1rem;
+        }
+        
+        .search-bar button {
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .filter-controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-controls select {
+            padding: 0.5rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        
+        .product-info {
+            margin-bottom: 1rem;
+        }
+        
+        .product-sku {
+            color: #999;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        .bopis-section {
+            border-top: 1px solid #e0e0e0;
+            padding-top: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .bopis-section h4 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+        
+        .store-availability {
+            margin-bottom: 1rem;
+        }
+        
+        .store-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            background: #f8f9fa;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .store-option:hover {
+            background: #e9ecef;
+        }
+        
+        .store-option.selected {
+            background: #e3f2fd;
+            border: 2px solid #667eea;
+        }
+        
+        .store-name {
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .stock-status {
+            font-size: 0.9rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .stock-status.in-stock {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .stock-status.low-stock {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .stock-status.out-of-stock {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .bopis-btn {
+            width: 100%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .bopis-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .bopis-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* BOPIS Modal Styles */
+        .bopis-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        
+        .bopis-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .bopis-modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .bopis-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .bopis-modal-header h3 {
+            color: #667eea;
+            margin: 0;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+        }
+        
+        .bopis-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .pickup-times {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .time-slot {
+            padding: 0.5rem;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .time-slot:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        
+        .time-slot.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .submit-reservation {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: transform 0.3s;
+        }
+        
+        .submit-reservation:hover {
+            transform: translateY(-2px);
+        }
+        
+        .demo-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            text-align: center;
+        }
+        
+        .demo-section h2 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .demo-button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s;
+            margin: 0.5rem;
+        }
+        
+        .demo-button:hover {
+            transform: translateY(-2px);
+        }
+        
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 2rem;
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                gap: 1rem;
+            }
+        }
+        
+        /* Store Locator Styles */
+        .store-locator-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            margin-bottom: 2rem;
+        }
+        
+        .store-locator-content h2 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .store-locator-content p {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #666;
+        }
+        
+        .store-search {
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+        
+        .search-input-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .search-input-group input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .search-input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .search-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .search-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .search-filters {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filter-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+        
+        .filter-checkbox input {
+            margin: 0;
+        }
+        
+        .store-results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .store-results-header h3 {
+            color: #667eea;
+            margin: 0;
+        }
+        
+        .store-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .store-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .store-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
+        }
+        
+        .store-card.selected {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+        
+        .store-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        
+        .store-header h4 {
+            margin: 0;
+            color: #333;
+            font-size: 1.1rem;
+        }
+        
+        .store-distance {
+            background: #667eea;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .store-address {
+            color: #666;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+        
+        .store-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-tag {
+            background: #f0f0f0;
+            color: #666;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .feature-tag.bopis {
+            background: #28a745;
+            color: white;
+        }
+        
+        .feature-tag.open {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .store-hours {
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .store-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .store-action-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+        
+        .store-action-btn.primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .store-action-btn.primary:hover {
+            background: #5a6fd8;
+        }
+        
+        .store-action-btn.secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .store-action-btn.secondary:hover {
+            background: #e9ecef;
+        }
+        
+        .featured-stores h3 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo">VisionCraft</div>
+                <nav>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#products">Products</a></li>
+                        <li><a href="#try-on">Virtual Try-On</a></li>
+                        <li><a href="#store-locator">Find Store</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <section class="hero" id="home">
+            <h1>AI-Powered Eyewear Experience</h1>
+            <p>Discover the perfect frames with our revolutionary virtual try-on technology and personalized recommendations</p>
+            <a href="#try-on" class="cta-button">Try Virtual Fitting</a>
+        </section>
+
+        <section class="features">
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>AI Recommendations</h3>
+                <p>Our advanced AI analyzes your face shape, style preferences, and lifestyle to recommend the perfect eyewear for you.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👓</div>
+                <h3>Virtual Try-On</h3>
+                <p>See how any frame looks on you instantly with our cutting-edge augmented reality technology.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Mobile Experience</h3>
+                <p>Shop seamlessly across all devices with our responsive design and mobile-optimized experience.</p>
+            </div>
+        </section>
+
+        <section class="products" id="products">
+            <h2>Featured Eyewear</h2>
+            
+            <!-- Product Search and Filter -->
+            <div class="product-controls">
+                <div class="search-bar">
+                    <input type="text" id="product-search" placeholder="Search frames..." />
+                    <button onclick="searchProducts()">🔍</button>
+                </div>
+                <div class="filter-controls">
+                    <select id="category-filter" onchange="filterProducts()">
+                        <option value="">All Categories</option>
+                        <option value="sunglasses">Sunglasses</option>
+                        <option value="prescription">Prescription</option>
+                        <option value="sports">Sports</option>
+                        <option value="computer">Computer</option>
+                    </select>
+                    <select id="price-filter" onchange="filterProducts()">
+                        <option value="">All Prices</option>
+                        <option value="0-150">Under $150</option>
+                        <option value="150-200">$150 - $200</option>
+                        <option value="200-250">$200 - $250</option>
+                        <option value="250+">$250+</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="product-grid" id="product-grid">
+                <div class="product-card" data-category="sunglasses" data-price="149.99" data-sku="AVT-001">
+                    <div class="product-image">👓</div>
+                    <div class="product-info">
+                        <div class="product-name">Classic Aviator</div>
+                        <div class="product-price">$149.99</div>
+                        <div class="product-sku">SKU: AVT-001</div>
+                    </div>
+                    <div class="bopis-section">
+                        <h4>Buy Online, Pick-up In Store</h4>
+                        <div class="store-availability">
+                            <div class="store-option" data-store="downtown">
+                                <span class="store-name">Downtown Store</span>
+                                <span class="stock-status in-stock">5 in stock</span>
+                            </div>
+                            <div class="store-option" data-store="mall">
+                                <span class="store-name">Mall Store</span>
+                                <span class="stock-status low-stock">2 in stock</span>
+                            </div>
+                            <div class="store-option" data-store="airport">
+                                <span class="store-name">Airport Store</span>
+                                <span class="stock-status in-stock">8 in stock</span>
+                            </div>
+                        </div>
+                        <button class="bopis-btn" onclick="startBOPIS('AVT-001', 'Classic Aviator')">Reserve for Pickup</button>
+                    </div>
+                </div>
+                
+                <div class="product-card" data-category="prescription" data-price="199.99" data-sku="MSQ-002">
+                    <div class="product-image">🕶️</div>
+                    <div class="product-info">
+                        <div class="product-name">Modern Square</div>
+                        <div class="product-price">$199.99</div>
+                        <div class="product-sku">SKU: MSQ-002</div>
+                    </div>
+                    <div class="bopis-section">
+                        <h4>Buy Online, Pick-up In Store</h4>
+                        <div class="store-availability">
+                            <div class="store-option" data-store="downtown">
+                                <span class="store-name">Downtown Store</span>
+                                <span class="stock-status in-stock">3 in stock</span>
+                            </div>
+                            <div class="store-option" data-store="mall">
+                                <span class="store-name">Mall Store</span>
+                                <span class="stock-status out-of-stock">Out of stock</span>
+                            </div>
+                            <div class="store-option" data-store="airport">
+                                <span class="store-name">Airport Store</span>
+                                <span class="stock-status in-stock">6 in stock</span>
+                            </div>
+                        </div>
+                        <button class="bopis-btn" onclick="startBOPIS('MSQ-002', 'Modern Square')">Reserve for Pickup</button>
+                    </div>
+                </div>
+                
+                <div class="product-card" data-category="prescription" data-price="179.99" data-sku="VRD-003">
+                    <div class="product-image">👓</div>
+                    <div class="product-info">
+                        <div class="product-name">Vintage Round</div>
+                        <div class="product-price">$179.99</div>
+                        <div class="product-sku">SKU: VRD-003</div>
+                    </div>
+                    <div class="bopis-section">
+                        <h4>Buy Online, Pick-up In Store</h4>
+                        <div class="store-availability">
+                            <div class="store-option" data-store="downtown">
+                                <span class="store-name">Downtown Store</span>
+                                <span class="stock-status in-stock">7 in stock</span>
+                            </div>
+                            <div class="store-option" data-store="mall">
+                                <span class="store-name">Mall Store</span>
+                                <span class="stock-status in-stock">4 in stock</span>
+                            </div>
+                            <div class="store-option" data-store="airport">
+                                <span class="store-name">Airport Store</span>
+                                <span class="stock-status low-stock">1 in stock</span>
+                            </div>
+                        </div>
+                        <button class="bopis-btn" onclick="startBOPIS('VRD-003', 'Vintage Round')">Reserve for Pickup</button>
+                    </div>
+                </div>
+                
+                <div class="product-card" data-category="sports" data-price="229.99" data-sku="SPT-004">
+                    <div class="product-image">🕶️</div>
+                    <div class="product-info">
+                        <div class="product-name">Sport Performance</div>
+                        <div class="product-price">$229.99</div>
+                        <div class="product-sku">SKU: SPT-004</div>
+                    </div>
+                    <div class="bopis-section">
+                        <h4>Buy Online, Pick-up In Store</h4>
+                        <div class="store-availability">
+                            <div class="store-option" data-store="downtown">
+                                <span class="store-name">Downtown Store</span>
+                                <span class="stock-status low-stock">2 in stock</span>
+                            </div>
+                            <div class="store-option" data-store="mall">
+                                <span class="store-name">Mall Store</span>
+                                <span class="stock-status in-stock">5 in stock</span>
+                            </div>
+                            <div class="store-option" data-store="airport">
+                                <span class="store-name">Airport Store</span>
+                                <span class="stock-status in-stock">9 in stock</span>
+                            </div>
+                        </div>
+                        <button class="bopis-btn" onclick="startBOPIS('SPT-004', 'Sport Performance')">Reserve for Pickup</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Store Locator Section -->
+        <section class="store-locator-section" id="store-locator">
+            <div class="store-locator-content">
+                <h2>Find a Store Near You</h2>
+                <p>Experience VisionCraft's AI-powered eyewear technology in person at our retail partners</p>
+                
+                <!-- Store Search -->
+                <div class="store-search">
+                    <div class="search-input-group">
+                        <input type="text" id="store-location-search" placeholder="Enter ZIP code, city, or address" />
+                        <button onclick="findNearbyStores()" class="search-btn">🔍 Find Stores</button>
+                    </div>
+                    <div class="search-filters">
+                        <label class="filter-checkbox">
+                            <input type="checkbox" id="filter-bopis-stores"> BOPIS Available
+                        </label>
+                        <label class="filter-checkbox">
+                            <input type="checkbox" id="filter-open-stores"> Open Now
+                        </label>
+                        <select id="store-radius">
+                            <option value="10">Within 10 miles</option>
+                            <option value="25" selected>Within 25 miles</option>
+                            <option value="50">Within 50 miles</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Store Results -->
+                <div class="store-results" id="store-results" style="display: none;">
+                    <div class="store-results-header">
+                        <h3>Nearby Stores</h3>
+                        <span id="store-count">0 stores found</span>
+                    </div>
+                    <div class="store-grid" id="store-grid">
+                        <!-- Store cards will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Default Store Display -->
+                <div class="featured-stores" id="featured-stores">
+                    <h3>Featured Store Locations</h3>
+                    <div class="store-grid">
+                        <div class="store-card" data-store-id="downtown">
+                            <div class="store-header">
+                                <h4>VARAi Store - Downtown</h4>
+                                <span class="store-distance">📍 2.1 mi</span>
+                            </div>
+                            <div class="store-address">
+                                123 Main Street<br>
+                                New York, NY 10001<br>
+                                (555) 123-4567
+                            </div>
+                            <div class="store-features">
+                                <span class="feature-tag bopis">BOPIS Available</span>
+                                <span class="feature-tag open">Open Now</span>
+                                <span class="feature-tag">Eye Exams</span>
+                            </div>
+                            <div class="store-hours">
+                                <strong>Today:</strong> 9:00 AM - 8:00 PM
+                            </div>
+                            <div class="store-actions">
+                                <button onclick="selectStoreForBopis('downtown')" class="store-action-btn primary">
+                                    Reserve Pickup
+                                </button>
+                                <button onclick="getStoreDirections('downtown')" class="store-action-btn secondary">
+                                    Directions
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="store-card" data-store-id="mall">
+                            <div class="store-header">
+                                <h4>VARAi Store - Mall</h4>
+                                <span class="store-distance">📍 4.8 mi</span>
+                            </div>
+                            <div class="store-address">
+                                456 Mall Avenue<br>
+                                New York, NY 10002<br>
+                                (555) 234-5678
+                            </div>
+                            <div class="store-features">
+                                <span class="feature-tag bopis">BOPIS Available</span>
+                                <span class="feature-tag open">Open Now</span>
+                                <span class="feature-tag">Frame Fitting</span>
+                            </div>
+                            <div class="store-hours">
+                                <strong>Today:</strong> 10:00 AM - 9:00 PM
+                            </div>
+                            <div class="store-actions">
+                                <button onclick="selectStoreForBopis('mall')" class="store-action-btn primary">
+                                    Reserve Pickup
+                                </button>
+                                <button onclick="getStoreDirections('mall')" class="store-action-btn secondary">
+                                    Directions
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="store-card" data-store-id="airport">
+                            <div class="store-header">
+                                <h4>VARAi Store - Airport</h4>
+                                <span class="store-distance">📍 7.2 mi</span>
+                            </div>
+                            <div class="store-address">
+                                789 Airport Road<br>
+                                New York, NY 10003<br>
+                                (555) 345-6789
+                            </div>
+                            <div class="store-features">
+                                <span class="feature-tag">Limited BOPIS</span>
+                                <span class="feature-tag open">Open Now</span>
+                                <span class="feature-tag">Express Service</span>
+                            </div>
+                            <div class="store-hours">
+                                <strong>Today:</strong> 6:00 AM - 10:00 PM
+                            </div>
+                            <div class="store-actions">
+                                <button onclick="selectStoreForBopis('airport')" class="store-action-btn primary">
+                                    Reserve Pickup
+                                </button>
+                                <button onclick="getStoreDirections('airport')" class="store-action-btn secondary">
+                                    Directions
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="demo-section" id="try-on">
+            <h2>Experience Our Technology</h2>
+            <p>Try our AI-powered features and see the future of eyewear shopping</p>
+            <button class="demo-button" onclick="startVirtualTryOn()">Start Virtual Try-On</button>
+            <button class="demo-button" onclick="getFaceAnalysis()">Get Face Shape Analysis</button>
+            <button class="demo-button" onclick="getRecommendations()">Get AI Recommendations</button>
+        </section>
+
+        <footer>
+            <p>&copy; 2025 VisionCraft - Powered by Commerce Studio AI</p>
+        </footer>
+    </div>
+
+    <!-- BOPIS Modal -->
+    <div id="bopis-modal" class="bopis-modal">
+        <div class="bopis-modal-content">
+            <div class="bopis-modal-header">
+                <h3>Reserve for Store Pickup</h3>
+                <button class="close-modal" onclick="closeBOPISModal()">&times;</button>
+            </div>
+            
+            <form class="bopis-form" id="bopis-form">
+                <div class="form-group">
+                    <label>Selected Product</label>
+                    <div id="selected-product-info" style="padding: 0.75rem; background: #f8f9fa; border-radius: 8px; font-weight: 500;"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customer-name">Full Name *</label>
+                    <input type="text" id="customer-name" name="customerName" required placeholder="Enter your full name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="customer-email">Email Address *</label>
+                    <input type="email" id="customer-email" name="customerEmail" required placeholder="Enter your email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="customer-phone">Phone Number</label>
+                    <input type="tel" id="customer-phone" name="customerPhone" placeholder="(555) 123-4567">
+                </div>
+                
+                <div class="form-group">
+                    <label for="store-selection">Select Store Location *</label>
+                    <select id="store-selection" name="storeId" required>
+                        <option value="">Choose a store...</option>
+                        <option value="downtown">VARAi Store - Downtown (123 Main St)</option>
+                        <option value="mall">VARAi Store - Mall (456 Mall Ave)</option>
+                        <option value="airport">VARAi Store - Airport (789 Airport Rd)</option>
+                        <option value="suburbs">VARAi Store - Suburbs (321 Oak St)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="quantity">Quantity</label>
+                    <select id="quantity" name="quantity">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Preferred Pickup Time</label>
+                    <div class="pickup-times" id="pickup-times">
+                        <div class="time-slot" data-time="today-2pm">Today 2:00 PM</div>
+                        <div class="time-slot" data-time="today-4pm">Today 4:00 PM</div>
+                        <div class="time-slot" data-time="today-6pm">Today 6:00 PM</div>
+                        <div class="time-slot" data-time="tomorrow-10am">Tomorrow 10:00 AM</div>
+                        <div class="time-slot" data-time="tomorrow-2pm">Tomorrow 2:00 PM</div>
+                        <div class="time-slot" data-time="tomorrow-4pm">Tomorrow 4:00 PM</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="special-instructions">Special Instructions</label>
+                    <textarea id="special-instructions" name="specialInstructions" rows="3" placeholder="Any special requests or instructions..."></textarea>
+                </div>
+                
+                <button type="submit" class="submit-reservation">Complete Reservation</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Order Status Modal -->
+    <div id="status-modal" class="bopis-modal">
+        <div class="bopis-modal-content">
+            <div class="bopis-modal-header">
+                <h3>Reservation Status</h3>
+                <button class="close-modal" onclick="closeStatusModal()">&times;</button>
+            </div>
+            <div id="status-content"></div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables for BOPIS functionality
+        let currentProduct = null;
+        let selectedTimeSlot = null;
+        let reservations = JSON.parse(localStorage.getItem('bopis-reservations') || '[]');
+
+        // Store Locator Functions
+        function findNearbyStores() {
+            const location = document.getElementById('store-location-search').value.trim();
+            if (!location) {
+                alert('Please enter a location to search for stores');
+                return;
+            }
+
+            // Show loading state
+            const searchBtn = document.querySelector('.search-btn');
+            const originalText = searchBtn.textContent;
+            searchBtn.textContent = '🔍 Searching...';
+            searchBtn.disabled = true;
+
+            // Simulate API call with mock data
+            setTimeout(() => {
+                const mockStores = generateMockStores(location);
+                displayStoreResults(mockStores);
+                
+                // Reset button
+                searchBtn.textContent = originalText;
+                searchBtn.disabled = false;
+            }, 1500);
+        }
+
+        function generateMockStores(location) {
+            // Mock store data based on search location
+            const baseStores = [
+                {
+                    id: 'downtown',
+                    name: 'VARAi Store - Downtown',
+                    address: '123 Main Street, New York, NY 10001',
+                    phone: '(555) 123-4567',
+                    distance: Math.random() * 5 + 1,
+                    bopis: true,
+                    open: true,
+                    hours: '9:00 AM - 8:00 PM',
+                    features: ['BOPIS Available', 'Eye Exams', 'Frame Fitting']
+                },
+                {
+                    id: 'mall',
+                    name: 'VARAi Store - Mall',
+                    address: '456 Mall Avenue, New York, NY 10002',
+                    phone: '(555) 234-5678',
+                    distance: Math.random() * 8 + 2,
+                    bopis: true,
+                    open: true,
+                    hours: '10:00 AM - 9:00 PM',
+                    features: ['BOPIS Available', 'Frame Fitting', 'Style Consultation']
+                },
+                {
+                    id: 'airport',
+                    name: 'VARAi Store - Airport',
+                    address: '789 Airport Road, New York, NY 10003',
+                    phone: '(555) 345-6789',
+                    distance: Math.random() * 12 + 5,
+                    bopis: false,
+                    open: true,
+                    hours: '6:00 AM - 10:00 PM',
+                    features: ['Express Service', 'Travel Frames']
+                },
+                {
+                    id: 'suburbs',
+                    name: 'VARAi Store - Suburbs',
+                    address: '321 Oak Street, New York, NY 10004',
+                    phone: '(555) 456-7890',
+                    distance: Math.random() * 15 + 8,
+                    bopis: true,
+                    open: false,
+                    hours: 'Closed - Opens 9:00 AM',
+                    features: ['BOPIS Available', 'Eye Exams', 'Kids Frames']
+                }
+            ];
+
+            // Apply filters
+            const bopisFilter = document.getElementById('filter-bopis-stores').checked;
+            const openFilter = document.getElementById('filter-open-stores').checked;
+            const radius = parseInt(document.getElementById('store-radius').value);
+
+            let filteredStores = baseStores.filter(store => {
+                if (bopisFilter && !store.bopis) return false;
+                if (openFilter && !store.open) return false;
+                if (store.distance > radius) return false;
+                return true;
+            });
+
+            // Sort by distance
+            filteredStores.sort((a, b) => a.distance - b.distance);
+
+            return filteredStores;
+        }
+
+        function displayStoreResults(stores) {
+            const resultsSection = document.getElementById('store-results');
+            const featuredSection = document.getElementById('featured-stores');
+            const storeGrid = document.getElementById('store-grid');
+            const storeCount = document.getElementById('store-count');
+
+            if (stores.length === 0) {
+                resultsSection.style.display = 'none';
+                featuredSection.style.display = 'block';
+                alert('No stores found matching your criteria. Please try adjusting your filters or search radius.');
+                return;
+            }
+
+            // Update count
+            storeCount.textContent = `${stores.length} store${stores.length !== 1 ? 's' : ''} found`;
+
+            // Generate store cards
+            storeGrid.innerHTML = stores.map(store => createStoreCardHTML(store)).join('');
+
+            // Show results, hide featured
+            resultsSection.style.display = 'block';
+            featuredSection.style.display = 'none';
+
+            // Scroll to results
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function createStoreCardHTML(store) {
+            const featureTags = store.features.map(feature => {
+                let className = 'feature-tag';
+                if (feature.includes('BOPIS')) className += ' bopis';
+                if (feature.includes('Open') || store.open) className += ' open';
+                return `<span class="${className}">${feature}</span>`;
+            }).join('');
+
+            return `
+                <div class="store-card" data-store-id="${store.id}">
+                    <div class="store-header">
+                        <h4>${store.name}</h4>
+                        <span class="store-distance">📍 ${store.distance.toFixed(1)} mi</span>
+                    </div>
+                    <div class="store-address">
+                        ${store.address}<br>
+                        ${store.phone}
+                    </div>
+                    <div class="store-features">
+                        ${featureTags}
+                    </div>
+                    <div class="store-hours">
+                        <strong>Today:</strong> ${store.hours}
+                    </div>
+                    <div class="store-actions">
+                        ${store.bopis ?
+                            `<button onclick="selectStoreForBopis('${store.id}')" class="store-action-btn primary">
+                                Reserve Pickup
+                            </button>` :
+                            `<button class="store-action-btn primary" disabled>
+                                BOPIS Unavailable
+                            </button>`
+                        }
+                        <button onclick="getStoreDirections('${store.id}')" class="store-action-btn secondary">
+                            Directions
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function selectStoreForBopis(storeId) {
+            // Pre-select the store in the BOPIS modal
+            const storeSelect = document.getElementById('store-selection');
+            if (storeSelect) {
+                storeSelect.value = storeId;
+            }
+
+            // Show message about store selection
+            alert(`Store selected for pickup! You can now reserve any product for pickup at this location.`);
+        }
+
+        function getStoreDirections(storeId) {
+            // Mock directions - in real implementation, this would open Google Maps
+            const storeNames = {
+                'downtown': 'VARAi Store - Downtown (123 Main St)',
+                'mall': 'VARAi Store - Mall (456 Mall Ave)',
+                'airport': 'VARAi Store - Airport (789 Airport Rd)',
+                'suburbs': 'VARAi Store - Suburbs (321 Oak St)'
+            };
+            
+            const storeName = storeNames[storeId] || 'Selected Store';
+            const mapsUrl = `https://www.google.com/maps/search/${encodeURIComponent(storeName)}`;
+            window.open(mapsUrl, '_blank');
+        }
+
+        // BOPIS Functions
+        function startBOPIS(sku, productName) {
+            currentProduct = { sku, productName };
+            document.getElementById('selected-product-info').textContent = `${productName} (${sku})`;
+            document.getElementById('bopis-modal').classList.add('active');
+            
+            // Reset form
+            document.getElementById('bopis-form').reset();
+            selectedTimeSlot = null;
+            document.querySelectorAll('.time-slot').forEach(slot => {
+                slot.classList.remove('selected');
+            });
+        }
+
+        function closeBOPISModal() {
+            document.getElementById('bopis-modal').classList.remove('active');
+            currentProduct = null;
+        }
+
+        function closeStatusModal() {
+            document.getElementById('status-modal').classList.remove('active');
+        }
+
+        // Time slot selection
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.time-slot').forEach(slot => {
+                slot.addEventListener('click', function() {
+                    document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedTimeSlot = this.dataset.time;
+                });
+            });
+
+            // Store selection interaction
+            document.querySelectorAll('.store-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.store-option').forEach(o => o.classList.remove('selected'));
+                    this.classList.add('selected');
+                    
+                    // Update store selection dropdown
+                    const storeId = this.dataset.store;
+                    document.getElementById('store-selection').value = storeId;
+                });
+            });
+
+            // BOPIS form submission
+            document.getElementById('bopis-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (!currentProduct) {
+                    alert('No product selected');
+                    return;
+                }
+
+                const formData = new FormData(this);
+                const reservationData = {
+                    id: 'RES-' + Date.now(),
+                    confirmationNumber: 'BOPIS-' + Math.random().toString(36).substr(2, 8).toUpperCase(),
+                    product: currentProduct,
+                    customerName: formData.get('customerName'),
+                    customerEmail: formData.get('customerEmail'),
+                    customerPhone: formData.get('customerPhone'),
+                    storeId: formData.get('storeId'),
+                    quantity: formData.get('quantity'),
+                    pickupTime: selectedTimeSlot,
+                    specialInstructions: formData.get('specialInstructions'),
+                    status: 'pending',
+                    createdAt: new Date().toISOString(),
+                    estimatedReady: getEstimatedReadyTime()
+                };
+
+                // Save reservation
+                reservations.push(reservationData);
+                localStorage.setItem('bopis-reservations', JSON.stringify(reservations));
+
+                // Show success message
+                showReservationSuccess(reservationData);
+                closeBOPISModal();
+            });
+        });
+
+        function getEstimatedReadyTime() {
+            const now = new Date();
+            now.setHours(now.getHours() + 2); // 2 hours from now
+            return now.toISOString();
+        }
+
+        function showReservationSuccess(reservation) {
+            const statusContent = document.getElementById('status-content');
+            statusContent.innerHTML = `
+                <div style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 3rem; color: #28a745; margin-bottom: 1rem;">✅</div>
+                    <h3 style="color: #28a745; margin-bottom: 1rem;">Reservation Confirmed!</h3>
+                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                        <p><strong>Confirmation Number:</strong> ${reservation.confirmationNumber}</p>
+                        <p><strong>Product:</strong> ${reservation.product.productName}</p>
+                        <p><strong>Store:</strong> ${getStoreName(reservation.storeId)}</p>
+                        <p><strong>Estimated Ready:</strong> ${formatDateTime(reservation.estimatedReady)}</p>
+                    </div>
+                    <p style="color: #666; margin-bottom: 1.5rem;">
+                        We'll send you an email confirmation and notify you when your order is ready for pickup.
+                    </p>
+                    <div style="display: flex; gap: 1rem; justify-content: center;">
+                        <button onclick="trackReservation('${reservation.confirmationNumber}')" class="demo-button">
+                            Track Order
+                        </button>
+                        <button onclick="closeStatusModal()" class="demo-button">
+                            Continue Shopping
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('status-modal').classList.add('active');
+        }
+
+        function getStoreName(storeId) {
+            const storeNames = {
+                'downtown': 'VARAi Store - Downtown',
+                'mall': 'VARAi Store - Mall',
+                'airport': 'VARAi Store - Airport',
+                'suburbs': 'VARAi Store - Suburbs'
+            };
+            return storeNames[storeId] || 'Unknown Store';
+        }
+
+        function formatDateTime(isoString) {
+            const date = new Date(isoString);
+            return date.toLocaleDateString() + ' at ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+
+        function trackReservation(confirmationNumber) {
+            const reservation = reservations.find(r => r.confirmationNumber === confirmationNumber);
+            if (!reservation) {
+                alert('Reservation not found');
+                return;
+            }
+
+            const statusContent = document.getElementById('status-content');
+            statusContent.innerHTML = `
+                <div style="padding: 2rem;">
+                    <h3 style="margin-bottom: 1.5rem;">Order Status: ${reservation.confirmationNumber}</h3>
+                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                            <span><strong>Product:</strong></span>
+                            <span>${reservation.product.productName}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                            <span><strong>Status:</strong></span>
+                            <span style="color: #667eea; font-weight: bold;">${reservation.status.toUpperCase()}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                            <span><strong>Store:</strong></span>
+                            <span>${getStoreName(reservation.storeId)}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span><strong>Estimated Ready:</strong></span>
+                            <span>${formatDateTime(reservation.estimatedReady)}</span>
+                        </div>
+                    </div>
+                    <div style="background: #e3f2fd; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                        <p style="margin: 0; color: #1976d2;">
+                            📱 We'll send you a text message when your order is ready for pickup!
+                        </p>
+                    </div>
+                    <button onclick="closeStatusModal()" class="demo-button" style="width: 100%;">
+                        Close
+                    </button>
+                </div>
+            `;
+        }
+
+        // Product search and filtering
+        function searchProducts() {
+            const searchTerm = document.getElementById('product-search').value.toLowerCase();
+            filterProducts(searchTerm);
+        }
+
+        function filterProducts(searchTerm = '') {
+            const categoryFilter = document.getElementById('category-filter').value;
+            const priceFilter = document.getElementById('price-filter').value;
+            const productCards = document.querySelectorAll('.product-card');
+
+            productCards.forEach(card => {
+                const productName = card.querySelector('.product-name').textContent.toLowerCase();
+                const category = card.dataset.category;
+                const price = parseFloat(card.dataset.price);
+
+                let showCard = true;
+
+                // Search filter
+                if (searchTerm && !productName.includes(searchTerm)) {
+                    showCard = false;
+                }
+
+                // Category filter
+                if (categoryFilter && category !== categoryFilter) {
+                    showCard = false;
+                }
+
+                // Price filter
+                if (priceFilter) {
+                    const [min, max] = priceFilter.split('-').map(p => p === '+' ? Infinity : parseFloat(p));
+                    if (max && (price < min || price > max)) {
+                        showCard = false;
+                    } else if (!max && price < min) {
+                        showCard = false;
+                    }
+                }
+
+                card.style.display = showCard ? 'block' : 'none';
+            });
+        }
+
+        // Enhanced demo functions
+        function startVirtualTryOn() {
+            alert('🚀 Virtual Try-On Demo\n\nThis would launch our AR camera interface where customers can:\n• See frames in real-time on their face\n• Switch between different styles instantly\n• Take photos to share with friends\n• Get perfect fit measurements\n\n✨ Integration with BOPIS: After trying on, customers can immediately reserve their favorite frames for pickup!');
+        }
+
+        function getFaceAnalysis() {
+            alert('🔍 Face Shape Analysis Demo\n\nOur AI would analyze your facial features to:\n• Determine your face shape (oval, round, square, etc.)\n• Measure key facial dimensions\n• Suggest the most flattering frame styles\n• Provide personalized styling tips\n\n🎯 Smart BOPIS Integration: Analysis results help recommend the best-fitting frames available at your preferred store location!');
+        }
+
+        function getRecommendations() {
+            alert('🎯 AI Recommendations Demo\n\nBased on your preferences, our system would:\n• Analyze your style preferences\n• Consider your lifestyle needs\n• Match you with perfect frames\n• Show similar styles you might love\n• Provide price comparisons\n\n🏪 BOPIS Integration: See real-time availability at nearby stores and reserve recommended frames instantly!');
+        }
+
+        // Demo login functionality
+        function showDemoLogin() {
+            alert('🔐 Demo Login System\n\nQuick access to different user roles:\n\n👑 Super Admin (admin@varai.com)\n📊 Brand Manager (manager@varai.com)\n🏢 Client Admin (client@varai.com)\n👁️ Viewer (viewer@varai.com)\n\nEach role has different permissions and dashboard views for comprehensive testing!');
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add some interactive animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.feature-card, .product-card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>
