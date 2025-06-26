@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VARAi Admin Portal - Customer Management</title>
+    <link rel="stylesheet" href="../css/varai-design-system.css">
+    <link rel="stylesheet" href="../css/enterprise-enhancements.css">
+    <style>
+        .admin-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--varai-background) 0%, var(--varai-gray-50) 100%);
+        }
+        
+        .admin-navbar {
+            background: var(--varai-background);
+            border-bottom: 1px solid var(--varai-border);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        
+        .admin-nav-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .admin-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--varai-primary);
+            text-decoration: none;
+            background: linear-gradient(135deg, var(--varai-primary) 0%, var(--varai-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .admin-nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .admin-nav-link {
+            color: var(--varai-gray-600);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--varai-transition);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+        }
+        
+        .admin-nav-link:hover,
+        .admin-nav-link.active {
+            color: var(--varai-accent);
+            background: rgba(30, 150, 252, 0.1);
+        }
+        
+        .admin-main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .admin-header {
+            margin-bottom: 2rem;
+        }
+        
+        .admin-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--varai-foreground);
+            margin-bottom: 0.5rem;
+        }
+        
+        .admin-subtitle {
+            color: var(--varai-gray-600);
+            font-size: 1.1rem;
+        }
+        
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: var(--varai-background);
+            border: 1px solid var(--varai-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: var(--varai-transition);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--varai-shadow-lg);
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--varai-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: var(--varai-gray-600);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .stat-change {
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+        
+        .stat-change.positive {
+            color: var(--varai-success);
+        }
+        
+        .stat-change.negative {
+            color: var(--varai-error);
+        }
+        
+        .admin-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        
+        .customers-section {
+            background: var(--varai-background);
+            border: 1px solid var(--varai-border);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--varai-foreground);
+        }
+        
+        .search-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .search-input {
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--varai-border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background: var(--varai-background);
+            color: var(--varai-foreground);
+            min-width: 300px;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--varai-accent);
+            box-shadow: 0 0 0 3px rgba(30, 150, 252, 0.1);
+        }
+        
+        .filter-select {
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--varai-border);
+            border-radius: 8px;
+            background: var(--varai-background);
+            color: var(--varai-foreground);
+            cursor: pointer;
+        }
+        
+        .customers-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        .customers-table th,
+        .customers-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--varai-border);
+        }
+        
+        .customers-table th {
+            background: var(--varai-gray-50);
+            font-weight: 600;
+            color: var(--varai-foreground);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .customers-table td {
+            color: var(--varai-gray-700);
+        }
+        
+        .customer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--varai-primary) 0%, var(--varai-accent) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .customer-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .customer-details h4 {
+            margin: 0;
+            color: var(--varai-foreground);
+            font-weight: 600;
+        }
+        
+        .customer-details p {
+            margin: 0;
+            color: var(--varai-gray-600);
+            font-size: 0.9rem;
+        }
+        
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-badge.active {
+            background: rgba(48, 209, 88, 0.1);
+            color: var(--varai-success);
+        }
+        
+        .status-badge.inactive {
+            background: rgba(255, 59, 48, 0.1);
+            color: var(--varai-error);
+        }
+        
+        .status-badge.trial {
+            background: rgba(255, 149, 0, 0.1);
+            color: #ff9500;
+        }
+        
+        .plan-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            background: linear-gradient(135deg, var(--varai-primary) 0%, var(--varai-accent) 100%);
+            color: white;
+        }
+        
+        .usage-bar {
+            width: 100px;
+            height: 6px;
+            background: var(--varai-gray-200);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .usage-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--varai-success) 0%, var(--varai-primary) 100%);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+        
+        .usage-text {
+            font-size: 0.8rem;
+            color: var(--varai-gray-600);
+            margin-top: 0.25rem;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-action {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--varai-border);
+            background: var(--varai-background);
+            color: var(--varai-foreground);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--varai-transition);
+        }
+        
+        .btn-action:hover {
+            background: var(--varai-gray-50);
+            border-color: var(--varai-primary);
+        }
+        
+        .btn-action.primary {
+            background: var(--varai-primary);
+            color: white;
+            border-color: var(--varai-primary);
+        }
+        
+        .btn-action.primary:hover {
+            background: #5a67d8;
+        }
+        
+        .btn-action.danger {
+            background: var(--varai-error);
+            color: white;
+            border-color: var(--varai-error);
+        }
+        
+        .btn-action.danger:hover {
+            background: #dc2626;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .pagination-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--varai-border);
+            background: var(--varai-background);
+            color: var(--varai-foreground);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--varai-transition);
+        }
+        
+        .pagination-btn:hover {
+            background: var(--varai-gray-50);
+        }
+        
+        .pagination-btn.active {
+            background: var(--varai-primary);
+            color: white;
+            border-color: var(--varai-primary);
+        }
+        
+        .pagination-info {
+            color: var(--varai-gray-600);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .admin-main {
+                padding: 1rem;
+            }
+            
+            .admin-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-input {
+                min-width: auto;
+            }
+            
+            .customers-table {
+                font-size: 0.8rem;
+            }
+            
+            .customers-table th,
+            .customers-table td {
+                padding: 0.75rem 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Navigation -->
+        <nav class="admin-navbar">
+            <div class="admin-nav-content">
+                <a href="#" class="admin-logo">VARAi Admin</a>
+                <div class="admin-nav-links">
+                    <a href="#" class="admin-nav-link active">Customers</a>
+                    <a href="#" class="admin-nav-link">Apps</a>
+                    <a href="#" class="admin-nav-link">Billing</a>
+                    <a href="#" class="admin-nav-link">Analytics</a>
+                    <a href="#" class="admin-nav-link">Settings</a>
+                    <a href="../customer/login.html" class="admin-nav-link">Logout</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Header -->
+            <div class="admin-header">
+                <h1 class="admin-title">Customer Management</h1>
+                <p class="admin-subtitle">Manage customer accounts, subscriptions, and usage across the VARAi platform</p>
+            </div>
+
+            <!-- Statistics -->
+            <div class="admin-stats">
+                <div class="stat-card">
+                    <div class="stat-value">1,247</div>
+                    <div class="stat-label">Total Customers</div>
+                    <div class="stat-change positive">+12% this month</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">892</div>
+                    <div class="stat-label">Active Subscriptions</div>
+                    <div class="stat-change positive">+8% this month</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">$47,320</div>
+                    <div class="stat-label">Monthly Revenue</div>
+                    <div class="stat-change positive">+15% this month</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">2.4M</div>
+                    <div class="stat-label">Tokens Consumed</div>
+                    <div class="stat-change positive">+22% this month</div>
+                </div>
+            </div>
+
+            <!-- Customers Section -->
+            <div class="admin-content">
+                <div class="customers-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Customer Accounts</h2>
+                        <div class="search-controls">
+                            <input type="text" class="search-input" placeholder="Search customers..." id="customerSearch">
+                            <select class="filter-select" id="statusFilter">
+                                <option value="">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="trial">Trial</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                            <select class="filter-select" id="planFilter">
+                                <option value="">All Plans</option>
+                                <option value="starter">Starter</option>
+                                <option value="professional">Professional</option>
+                                <option value="enterprise">Enterprise</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <table class="customers-table">
+                        <thead>
+                            <tr>
+                                <th>Customer</th>
+                                <th>Plan</th>
+                                <th>Status</th>
+                                <th>Token Usage</th>
+                                <th>Monthly Spend</th>
+                                <th>Last Active</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customersTableBody">
+                            <!-- Customer rows will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+
+                    <div class="pagination">
+                        <button class="pagination-btn" onclick="changePage(-1)">Previous</button>
+                        <span class="pagination-info">Page 1 of 25</span>
+                        <button class="pagination-btn" onclick="changePage(1)">Next</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Sample customer data
+        const customers = [
+            {
+                id: 1,
+                name: "Acme Eyewear Co.",
+                email: "admin@acmeeyewear.com",
+                plan: "Professional",
+                status: "active",
+                tokensUsed: 8500,
+                tokensLimit: 10000,
+                monthlySpend: 199,
+                lastActive: "2024-12-26",
+                joinDate: "2024-01-15"
+            },
+            {
+                id: 2,
+                name: "Vision Plus Store",
+                email: "contact@visionplus.com",
+                plan: "Enterprise",
+                status: "active",
+                tokensUsed: 45000,
+                tokensLimit: 100000,
+                monthlySpend: 999,
+                lastActive: "2024-12-25",
+                joinDate: "2023-11-20"
+            },
+            {
+                id: 3,
+                name: "Optical Boutique",
+                email: "info@opticalboutique.com",
+                plan: "Starter",
+                status: "trial",
+                tokensUsed: 750,
+                tokensLimit: 1000,
+                monthlySpend: 0,
+                lastActive: "2024-12-24",
+                joinDate: "2024-12-20"
+            },
+            {
+                id: 4,
+                name: "EyeStyle Fashion",
+                email: "hello@eyestyle.com",
+                plan: "Professional",
+                status: "active",
+                tokensUsed: 6200,
+                tokensLimit: 10000,
+                monthlySpend: 199,
+                lastActive: "2024-12-26",
+                joinDate: "2024-03-10"
+            },
+            {
+                id: 5,
+                name: "Metro Optics",
+                email: "support@metrooptics.com",
+                plan: "Starter",
+                status: "inactive",
+                tokensUsed: 0,
+                tokensLimit: 1000,
+                monthlySpend: 0,
+                lastActive: "2024-11-15",
+                joinDate: "2024-10-05"
+            }
+        ];
+
+        let currentPage = 1;
+        let filteredCustomers = [...customers];
+
+        function renderCustomers() {
+            const tbody = document.getElementById('customersTableBody');
+            tbody.innerHTML = '';
+
+            filteredCustomers.forEach(customer => {
+                const usagePercent = (customer.tokensUsed / customer.tokensLimit) * 100;
+                const initials = customer.name.split(' ').map(word => word[0]).join('').substring(0, 2);
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <div class="customer-info">
+                            <div class="customer-avatar">${initials}</div>
+                            <div class="customer-details">
+                                <h4>${customer.name}</h4>
+                                <p>${customer.email}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="plan-badge">${customer.plan}</span>
+                    </td>
+                    <td>
+                        <span class="status-badge ${customer.status}">${customer.status}</span>
+                    </td>
+                    <td>
+                        <div class="usage-bar">
+                            <div class="usage-fill" style="width: ${usagePercent}%"></div>
+                        </div>
+                        <div class="usage-text">${customer.tokensUsed.toLocaleString()} / ${customer.tokensLimit.toLocaleString()}</div>
+                    </td>
+                    <td>$${customer.monthlySpend}</td>
+                    <td>${new Date(customer.lastActive).toLocaleDateString()}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-action primary" onclick="viewCustomer(${customer.id})">View</button>
+                            <button class="btn-action" onclick="editCustomer(${customer.id})">Edit</button>
+                            <button class="btn-action danger" onclick="suspendCustomer(${customer.id})">Suspend</button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function filterCustomers() {
+            const searchTerm = document.getElementById('customerSearch').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+            const planFilter = document.getElementById('planFilter').value;
+
+            filteredCustomers = customers.filter(customer => {
+                const matchesSearch = customer.name.toLowerCase().includes(searchTerm) || 
+                                    customer.email.toLowerCase().includes(searchTerm);
+                const matchesStatus = !statusFilter || customer.status === statusFilter;
+                const matchesPlan = !planFilter || customer.plan.toLowerCase() === planFilter;
+
+                return matchesSearch && matchesStatus && matchesPlan;
+            });
+
+            renderCustomers();
+        }
+
+        function viewCustomer(customerId) {
+            const customer = customers.find(c => c.id === customerId);
+            alert(`Viewing customer: ${customer.name}\n\nThis would open a detailed customer view with:\n• Account information\n• Usage analytics\n• Billing history\n• App activations\n• Support tickets`);
+        }
+
+        function editCustomer(customerId) {
+            const customer = customers.find(c => c.id === customerId);
+            alert(`Editing customer: ${customer.name}\n\nThis would open an edit form with:\n• Account details\n• Plan management\n• Token limits\n• Billing settings\n• Access permissions`);
+        }
+
+        function suspendCustomer(customerId) {
+            const customer = customers.find(c => c.id === customerId);
+            if (confirm(`Are you sure you want to suspend ${customer.name}?\n\nThis will:\n• Disable their account access\n• Stop all AI service processing\n• Pause billing\n• Send suspension notification`)) {
+                alert(`${customer.name} has been suspended.`);
+                // Update customer status
+                customer.status = 'inactive';
+                renderCustomers();
+            }
+        }
+
+        function changePage(direction) {
+            // Pagination logic would go here
+            alert('Pagination functionality would be implemented here');
+        }
+
+        // Event listeners
+        document.getElementById('customerSearch').addEventListener('input', filterCustomers);
+        document.getElementById('statusFilter').addEventListener('change', filterCustomers);
+        document.getElementById('planFilter').addEventListener('change', filterCustomers);
+
+        // Initialize
+        renderCustomers();
+    </script>
+</body>
+</html>
