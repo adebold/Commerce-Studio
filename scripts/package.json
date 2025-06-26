@@ -1,0 +1,18 @@
+{
+  "name": "varai-stripe-setup",
+  "version": "1.0.0",
+  "description": "Stripe product setup scripts for VARAi Commerce Studio",
+  "main": "stripe-product-setup.js",
+  "scripts": {
+    "setup": "node stripe-product-setup.js",
+    "test": "node test-stripe-connection.js"
+  },
+  "dependencies": {
+    "stripe": "^14.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "author": "VARAi Development Team",
+  "license": "MIT"
+}
