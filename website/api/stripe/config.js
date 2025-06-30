@@ -3,10 +3,14 @@
 
 class StripeConfig {
     constructor() {
-        // Stripe Configuration
-        this.stripePublishableKey = process.env.STRIPE_PUBLISHABLE_KEY || 'pk_live_51OjQqsFRqSlo4PSXdkemMl6hFHfsyr9C2AhXqnHOwpT01wp9Bp8RDag6H5DGwsIw3jiiUfrDPX3tEPe1owj37Vmo002g091T5o';
-        this.stripeSecretKey = process.env.STRIPE_SECRET_KEY || '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';
-        this.stripeWebhookSecret = process.env.STRIPE_WEBHOOK_SECRET || 'whsec_1234567890abcdef';
+        // Stripe Configuration - All secrets managed via Google Cloud Secret Manager
+        // SECURITY: No fallback values provided - all secrets must be properly configured
+        this.stripePublishableKey = process.env.STRIPE_PUBLISHABLE_KEY;
+        this.stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+        this.stripeWebhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+        
+        // Validate that all required secrets are present
+        this.validateSecrets();
         
         // Product and Price IDs for Token Packages
         this.products = {
@@ -73,6 +77,39 @@ class StripeConfig {
             'style-advisor': 4,
             'inventory-optimizer': 10
         };
+    }
+
+    // Validate that all required secrets are present
+    validateSecrets() {
+        const requiredSecrets = [
+            'STRIPE_PUBLISHABLE_KEY',
+            'STRIPE_SECRET_KEY',
+            'STRIPE_WEBHOOK_SECRET'
+        ];
+
+        const missingSecrets = requiredSecrets.filter(secret => !process.env[secret]);
+        
+        if (missingSecrets.length > 0) {
+            throw new Error(
+                `Missing required Stripe secrets from Google Cloud Secret Manager: ${missingSecrets.join(', ')}. ` +
+                'Please ensure all secrets are properly configured in Google Cloud Secret Manager and accessible to the application.'
+            );
+        }
+
+        // Validate secret format (basic validation)
+        if (this.stripePublishableKey && !this.stripePublishableKey.startsWith('pk_')) {
+            throw new Error('Invalid Stripe publishable key format. Must start with "pk_"');
+        }
+
+        if (this.stripeSecretKey && !this.stripeSecretKey.startsWith('sk_') && !this.stripeSecretKey.startsWith('rk_')) {
+            throw new Error('Invalid Stripe secret key format. Must start with "sk_" or "rk_"');
+        }
+
+        if (this.stripeWebhookSecret && !this.stripeWebhookSecret.startsWith('whsec_')) {
+            throw new Error('Invalid Stripe webhook secret format. Must start with "whsec_"');
+        }
+
+        console.log('✅ All Stripe secrets validated successfully');
     }
 
     getProductByPlan(plan) {
