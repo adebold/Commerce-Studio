@@ -6,6 +6,7 @@
     <title>VARAi Commerce Studio - Demo Login</title>
     <link rel="stylesheet" href="css/varai-design-system.css">
     <link rel="stylesheet" href="css/enterprise-enhancements.css">
+    <link rel="stylesheet" href="css/apple-hero-sections.css">
     <style>
         .demo-login-container {
             min-height: 100vh;
@@ -42,7 +43,7 @@
         
         .demo-accounts {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
@@ -287,6 +288,19 @@
                         ✅ API Connected • Multi-store • Advanced Catalog
                     </div>
                 </div>
+                
+                <div class="demo-account-card" onclick="loginAs('woocommerce-merchant')" style="border: 2px solid #96588a;">
+                    <div class="account-role">
+                        🛍️ WooCommerce Owner
+                    </div>
+                    <div class="account-email">woocommerce@varai.com</div>
+                    <div class="account-description">
+                        WordPress/WooCommerce store owner with plugin integration, shortcode management, and SEO optimization
+                    </div>
+                    <div style="margin-top: 0.5rem; font-size: 0.8rem; color: #96588a; font-weight: bold;">
+                        ✅ Plugin Active • Shortcodes • WordPress Native
+                    </div>
+                </div>
             </div>
             
             <div class="demo-actions">
@@ -333,6 +347,14 @@
                     platform: 'magento',
                     storeUrl: 'demo-store.magento.com',
                     features: ['Multi-store Support', 'Advanced Catalog', 'Module Integration']
+                },
+                'woocommerce-merchant': {
+                    email: 'woocommerce@varai.com',
+                    password: 'WooCommerce123!',
+                    name: 'WooCommerce Owner',
+                    platform: 'woocommerce',
+                    storeUrl: 'demo-store.wordpress.com',
+                    features: ['WordPress Plugin', 'Shortcode Integration', 'SEO Optimization', 'WP Admin Access']
                 }
             };
             

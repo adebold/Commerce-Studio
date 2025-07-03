@@ -214,3 +214,32 @@ terraform 3.*
 *.tfstate 3.*
 .terraform.lock 2.*
 .terraform.lock 3.*
+
+# Cleanup additions
+*.tmp
+*.bak
+*~
+.DS_Store
+
+# Report files (keep in docs/reports/)
+/*_REPORT.md
+/*_COMPLETION_REPORT.md
+/*_DEPLOYMENT_*.md
+/*_IMPLEMENTATION_*.md
+
+# Temporary test files
+/test-*.js
+/verification-*.js
+/*-verification.js
+
+# Duplicate files
+/*-duplicate*
+/*-copy*
+/*-backup*
+
+# PowerShell scripts in root
+/*.ps1
+
+# Temporary directories
+/temp/
+/tmp/
