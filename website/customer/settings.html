@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../css/varai-design-system.css">
     <link rel="stylesheet" href="../css/enterprise-enhancements.css">
     <link rel="stylesheet" href="../css/apple-hero-sections.css">
+    <link rel="stylesheet" href="../css/customer-portal.css">
     <style>
         .settings-container {
             min-height: 100vh;
@@ -569,6 +570,7 @@
                                 Connected Apps
                             </button>
                         </li>
+                        
                         <li class="settings-nav-item">
                             <button class="settings-nav-button" onclick="showSection('security')">
                                 <svg class="settings-nav-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -592,17 +594,17 @@
                     
                     <div class="settings-form-group">
                         <label class="settings-form-label" for="companyName">Company Name</label>
-                        <input type="text" id="companyName" class="settings-form-input" placeholder="Enter your company name" value="VisionCraft Eyewear">
+                        <input type="text" id="companyName" class="settings-form-input" placeholder="Enter your company name" value="VisionCraft Eyewear" data-validate="required|minLength:2" required>
                     </div>
                     
                     <div class="settings-form-group">
                         <label class="settings-form-label" for="contactEmail">Contact Email</label>
-                        <input type="email" id="contactEmail" class="settings-form-input" placeholder="Enter contact email" value="admin@visioncraft.com">
+                        <input type="email" id="contactEmail" class="settings-form-input" placeholder="Enter contact email" value="admin@visioncraft.com" data-validate="required|email" required>
                     </div>
                     
                     <div class="settings-form-group">
                         <label class="settings-form-label" for="businessPhone">Business Phone</label>
-                        <input type="tel" id="businessPhone" class="settings-form-input" placeholder="Enter business phone" value="+1 (555) 123-4567">
+                        <input type="tel" id="businessPhone" class="settings-form-input" placeholder="Enter business phone" value="+1 (555) 123-4567" data-validate="phone">
                     </div>
                     
                     <div class="settings-form-group">
@@ -645,8 +647,9 @@ United States</textarea>
                                 Sync products, orders, and customer data with your Shopify store.
                             </p>
                             <div class="integration-card-actions">
-                                <button class="btn-secondary btn-small">Configure</button>
-                                <button class="btn-danger btn-small">Disconnect</button>
+                                <button class="btn-secondary btn-small integration-configure-btn" data-platform="shopify">Configure</button>
+                                <button class="btn-primary btn-small integration-sync-btn" data-platform="shopify">Sync Now</button>
+                                <button class="btn-danger btn-small integration-disconnect-btn" data-platform="shopify">Disconnect</button>
                             </div>
                         </div>
                         
@@ -662,7 +665,7 @@ United States</textarea>
                                 Connect your Magento store for seamless product management.
                             </p>
                             <div class="integration-card-actions">
-                                <button class="btn-primary btn-small">Connect</button>
+                                <button class="btn-primary btn-small integration-connect-btn" data-platform="magento">Connect</button>
                             </div>
                         </div>
                         
@@ -678,7 +681,7 @@ United States</textarea>
                                 Integrate with WooCommerce for WordPress-based stores.
                             </p>
                             <div class="integration-card-actions">
-                                <button class="btn-primary btn-small">Connect</button>
+                                <button class="btn-primary btn-small integration-connect-btn" data-platform="woocommerce">Connect</button>
                             </div>
                         </div>
                         
@@ -694,7 +697,7 @@ United States</textarea>
                                 Connect your BigCommerce store for comprehensive integration.
                             </p>
                             <div class="integration-card-actions">
-                                <button class="btn-primary btn-small">Connect</button>
+                                <button class="btn-primary btn-small integration-connect-btn" data-platform="bigcommerce">Connect</button>
                             </div>
                         </div>
                     </div>
@@ -731,7 +734,7 @@ United States</textarea>
                     
                     <div class="settings-form-group">
                         <label class="settings-form-label" for="pmsPassword">PMS Password</label>
-                        <input type="password" id="pmsPassword" class="settings-form-input" placeholder="Enter PMS password">
+                        <input type="password" id="pmsPassword" class="settings-form-input" placeholder="Enter PMS password" data-validate="required|minLength:8">
                     </div>
                     
                     <div class="settings-toggle">
@@ -810,6 +813,8 @@ United States</textarea>
                             </div>
                         </div>
                     </div>
+                
+
                 </section>
 
                 <!-- Notifications Section -->
@@ -881,6 +886,267 @@ United States</textarea>
                     </div>
                     
                     <button class="btn-primary">Save Notification Settings</button>
+                </section>
+
+                <!-- Billing & Subscription Section -->
+                <section id="billing-section" class="settings-section">
+                    <h2 class="settings-section-title">Billing & Subscription</h2>
+                    <p class="settings-section-description">
+                        Manage your subscription, billing information, and payment methods.
+                    </p>
+                    
+                    <!-- Current Plan -->
+                    <div class="settings-form-group">
+                        <h3 style="margin-bottom: 1rem;">Current Plan</h3>
+                        <div style="background: linear-gradient(135deg, var(--varai-accent) 0%, #0066cc 100%); color: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <div>
+                                    <h4 style="margin: 0; font-size: 1.25rem; font-weight: 600;">Professional Plan</h4>
+                                    <p style="margin: 0.5rem 0 0 0; opacity: 0.9;">Advanced features for growing businesses</p>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-size: 2rem; font-weight: 700; line-height: 1;">$99</div>
+                                    <div style="opacity: 0.8; font-size: 0.9rem;">per month</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div style="font-size: 0.9rem; opacity: 0.9;">
+                                    Next billing: January 26, 2025
+                                </div>
+                                <button style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem;">
+                                    Change Plan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Usage & Limits -->
+                    <div class="settings-form-group">
+                        <h3 style="margin-bottom: 1rem;">Usage & Limits</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                            <div style="background: var(--varai-gray-50); padding: 1rem; border-radius: 8px; border: 1px solid var(--varai-border);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                    <span style="font-weight: 500; color: var(--varai-foreground);">API Calls</span>
+                                    <span style="font-size: 0.8rem; color: var(--varai-gray-600);">This Month</span>
+                                </div>
+                                <div style="margin-bottom: 0.5rem;">
+                                    <div style="background: var(--varai-gray-200); height: 8px; border-radius: 4px; overflow: hidden;">
+                                        <div style="background: var(--varai-accent); height: 100%; width: 65%; border-radius: 4px;"></div>
+                                    </div>
+                                </div>
+                                <div style="font-size: 0.9rem; color: var(--varai-gray-600);">
+                                    65,000 / 100,000 calls
+                                </div>
+                            </div>
+                            
+                            <div style="background: var(--varai-gray-50); padding: 1rem; border-radius: 8px; border: 1px solid var(--varai-border);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                    <span style="font-weight: 500; color: var(--varai-foreground);">Storage</span>
+                                    <span style="font-size: 0.8rem; color: var(--varai-gray-600);">Used</span>
+                                </div>
+                                <div style="margin-bottom: 0.5rem;">
+                                    <div style="background: var(--varai-gray-200); height: 8px; border-radius: 4px; overflow: hidden;">
+                                        <div style="background: var(--varai-success); height: 100%; width: 45%; border-radius: 4px;"></div>
+                                    </div>
+                                </div>
+                                <div style="font-size: 0.9rem; color: var(--varai-gray-600);">
+                                    4.5 GB / 10 GB
+                                </div>
+                            </div>
+                            
+                            <div style="background: var(--varai-gray-50); padding: 1rem; border-radius: 8px; border: 1px solid var(--varai-border);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                    <span style="font-weight: 500; color: var(--varai-foreground);">Team Members</span>
+                                    <span style="font-size: 0.8rem; color: var(--varai-gray-600);">Active</span>
+                                </div>
+                                <div style="margin-bottom: 0.5rem;">
+                                    <div style="background: var(--varai-gray-200); height: 8px; border-radius: 4px; overflow: hidden;">
+                                        <div style="background: var(--varai-warning); height: 100%; width: 80%; border-radius: 4px;"></div>
+                                    </div>
+                                </div>
+                                <div style="font-size: 0.9rem; color: var(--varai-gray-600);">
+                                    8 / 10 members
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="settings-form-group">
+                        <h3 style="margin-bottom: 1rem;">Payment Method</h3>
+                        <div style="background: var(--varai-gray-50); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--varai-border); margin-bottom: 1rem;">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <div style="width: 40px; height: 25px; background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.7rem;">
+                                        VISA
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 500; color: var(--varai-foreground);">•••• •••• •••• 4242</div>
+                                        <div style="font-size: 0.8rem; color: var(--varai-gray-600);">Expires 12/2027</div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button class="btn-secondary btn-small">Update</button>
+                                    <button class="btn-secondary btn-small">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn-secondary">Add Payment Method</button>
+                    </div>
+
+                    <!-- Billing Address -->
+                    <div class="settings-form-group">
+                        <h3 style="margin-bottom: 1rem;">Billing Address</h3>
+                        
+                        <div class="settings-form-group">
+                            <label class="settings-form-label" for="billingCompany">Company Name</label>
+                            <input type="text" id="billingCompany" class="settings-form-input" placeholder="Enter company name" value="VisionCraft Eyewear">
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="settings-form-group">
+                                <label class="settings-form-label" for="billingFirstName">First Name</label>
+                                <input type="text" id="billingFirstName" class="settings-form-input" placeholder="Enter first name" value="John" data-validate="required|minLength:2" required>
+                            </div>
+                            <div class="settings-form-group">
+                                <label class="settings-form-label" for="billingLastName">Last Name</label>
+                                <input type="text" id="billingLastName" class="settings-form-input" placeholder="Enter last name" value="Smith">
+                            </div>
+                        </div>
+                        
+                        <div class="settings-form-group">
+                            <label class="settings-form-label" for="billingAddress">Street Address</label>
+                            <input type="text" id="billingAddress" class="settings-form-input" placeholder="Enter street address" value="123 Business Ave">
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 100px; gap: 1rem;">
+                            <div class="settings-form-group">
+                                <label class="settings-form-label" for="billingCity">City</label>
+                                <input type="text" id="billingCity" class="settings-form-input" placeholder="Enter city" value="New York">
+                            </div>
+                            <div class="settings-form-group">
+                                <label class="settings-form-label" for="billingState">State</label>
+                                <select id="billingState" class="settings-form-input">
+                                    <option value="NY" selected>NY</option>
+                                    <option value="CA">CA</option>
+                                    <option value="TX">TX</option>
+                                    <option value="FL">FL</option>
+                                </select>
+                            </div>
+                            <div class="settings-form-group">
+                                <label class="settings-form-label" for="billingZip">ZIP</label>
+                                <input type="text" id="billingZip" class="settings-form-input" placeholder="ZIP" value="10001" data-validate="zipCode">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Methods -->
+                    <div class="settings-form-group">
+                        <h3 style="margin-bottom: 1rem;">Payment Methods</h3>
+                        <div id="payment-methods-container">
+                            <!-- Payment methods will be loaded here by payment-method-manager.js -->
+                        </div>
+                    </div>
+
+                    <!-- Billing History -->
+                    <div class="settings-form-group">
+                        <h3 style="margin-bottom: 1rem;">Billing History</h3>
+                        <div style="background: var(--varai-gray-50); border-radius: 8px; border: 1px solid var(--varai-border); overflow: hidden;">
+                            <div style="display: grid; grid-template-columns: 1fr 120px 100px 80px; gap: 1rem; padding: 1rem; background: var(--varai-gray-100); font-weight: 500; font-size: 0.9rem; color: var(--varai-gray-700);">
+                                <div>Invoice</div>
+                                <div>Date</div>
+                                <div>Amount</div>
+                                <div>Status</div>
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 120px 100px 80px; gap: 1rem; padding: 1rem; border-bottom: 1px solid var(--varai-border); align-items: center;">
+                                <div>
+                                    <div style="font-weight: 500; color: var(--varai-foreground);">#INV-2024-12</div>
+                                    <div style="font-size: 0.8rem; color: var(--varai-gray-600);">Professional Plan</div>
+                                </div>
+                                <div style="font-size: 0.9rem; color: var(--varai-gray-600);">Dec 26, 2024</div>
+                                <div style="font-weight: 500; color: var(--varai-foreground);">$99.00</div>
+                                <div>
+                                    <span style="background: var(--varai-success); color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 500;">PAID</span>
+                                </div>
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 120px 100px 80px; gap: 1rem; padding: 1rem; border-bottom: 1px solid var(--varai-border); align-items: center;">
+                                <div>
+                                    <div style="font-weight: 500; color: var(--varai-foreground);">#INV-2024-11</div>
+                                    <div style="font-size: 0.8rem; color: var(--varai-gray-600);">Professional Plan</div>
+                                </div>
+                                <div style="font-size: 0.9rem; color: var(--varai-gray-600);">Nov 26, 2024</div>
+                                <div style="font-weight: 500; color: var(--varai-foreground);">$99.00</div>
+                                <div>
+                                    <span style="background: var(--varai-success); color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 500;">PAID</span>
+                                </div>
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 120px 100px 80px; gap: 1rem; padding: 1rem; align-items: center;">
+                                <div>
+                                    <div style="font-weight: 500; color: var(--varai-foreground);">#INV-2024-10</div>
+                                    <div style="font-size: 0.8rem; color: var(--varai-gray-600);">Professional Plan</div>
+                                </div>
+                                <div style="font-size: 0.9rem; color: var(--varai-gray-600);">Oct 26, 2024</div>
+                                <div style="font-weight: 500; color: var(--varai-foreground);">$99.00</div>
+                                <div>
+                                    <span style="background: var(--varai-success); color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 500;">PAID</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <button class="btn-secondary">Download All Invoices</button>
+                        </div>
+                    </div>
+
+                    <!-- Subscription Settings -->
+                    <div class="settings-form-group">
+                        <h3 style="margin-bottom: 1rem;">Subscription Settings</h3>
+                        
+                        <div class="settings-toggle" style="margin-bottom: 1rem;">
+                            <div class="settings-toggle-info">
+                                <div class="settings-toggle-title">Auto-renewal</div>
+                                <div class="settings-toggle-description">Automatically renew subscription each billing cycle</div>
+                            </div>
+                            <div class="settings-switch active" onclick="toggleSwitch(this)"></div>
+                        </div>
+                        
+                        <div class="settings-toggle" style="margin-bottom: 1rem;">
+                            <div class="settings-toggle-info">
+                                <div class="settings-toggle-title">Usage Alerts</div>
+                                <div class="settings-toggle-description">Receive notifications when approaching usage limits</div>
+                            </div>
+                            <div class="settings-switch active" onclick="toggleSwitch(this)"></div>
+                        </div>
+                        
+                        <div class="settings-toggle">
+                            <div class="settings-toggle-info">
+                                <div class="settings-toggle-title">Billing Notifications</div>
+                                <div class="settings-toggle-description">Email notifications for billing events and invoices</div>
+                            </div>
+                            <div class="settings-switch active" onclick="toggleSwitch(this)"></div>
+                        </div>
+                    </div>
+
+                    <!-- Danger Zone -->
+                    <div class="settings-form-group">
+                        <h3 style="margin-bottom: 1rem; color: var(--varai-danger);">Danger Zone</h3>
+                        <div style="background: var(--varai-gray-50); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--varai-danger); border-left: 4px solid var(--varai-danger);">
+                            <div style="margin-bottom: 1rem;">
+                                <h4 style="margin: 0 0 0.5rem 0; color: var(--varai-danger); font-size: 1rem;">Cancel Subscription</h4>
+                                <p style="margin: 0; color: var(--varai-gray-600); font-size: 0.9rem; line-height: 1.5;">
+                                    Canceling your subscription will downgrade your account to the free plan at the end of the current billing period.
+                                    You will lose access to premium features but your data will be preserved.
+                                </p>
+                            </div>
+                            <button style="background: var(--varai-danger); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; cursor: pointer; font-weight: 500;">
+                                Cancel Subscription
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-primary">Save Billing Settings</button>
                 </section>
 
                 <!-- Connected Apps Section -->
@@ -981,12 +1247,12 @@ United States</textarea>
                         
                         <div class="settings-form-group">
                             <label class="settings-form-label" for="currentPassword">Current Password</label>
-                            <input type="password" id="currentPassword" class="settings-form-input" placeholder="Enter current password">
+                            <input type="password" id="currentPassword" class="settings-form-input" placeholder="Enter current password" data-validate="required|minLength:8" required>
                         </div>
                         
                         <div class="settings-form-group">
                             <label class="settings-form-label" for="newPassword">New Password</label>
-                            <input type="password" id="newPassword" class="settings-form-input" placeholder="Enter new password">
+                            <input type="password" id="newPassword" class="settings-form-input" placeholder="Enter new password" data-validate="required|passwordStrength" required>
                         </div>
                         
                         <div class="settings-form-group">
@@ -1315,6 +1581,8 @@ United States</textarea>
 
     <!-- Stripe Integration Scripts -->
     <script src="../js/billing-manager.js"></script>
+    <script src="../js/payment-method-manager.js"></script>
+    <script src="../js/form-validation-manager.js"></script>
     <script src="../api/stripe/config.js"></script>
     
     <script>
@@ -1354,6 +1622,11 @@ United States</textarea>
                 showSection(hash);
             }
         });
+
+        // Toggle switch functionality
+        function toggleSwitch(element) {
+            element.classList.toggle('active');
+        }
 
         // Logout functionality
         function logout() {
@@ -1467,6 +1740,38 @@ United States</textarea>
             // Load user data
             loadUserData();
             
+            // Initialize Payment Method Manager
+            if (typeof PaymentMethodManager !== 'undefined') {
+                window.paymentMethodManager = new PaymentMethodManager();
+                window.paymentMethodManager.init();
+            }
+            
+            // Initialize Form Validation Manager
+            if (typeof FormValidationManager !== 'undefined') {
+                window.formValidationManager = new FormValidationManager();
+                window.formValidationManager.init();
+            }
+            
+            // Initialize Real-time Data Manager
+            if (typeof RealTimeDataManager !== 'undefined') {
+                window.realTimeDataManager = new RealTimeDataManager({
+                    debug: true
+                });
+                
+                // Set up real-time event listeners
+                window.realTimeDataManager.on('connected', function() {
+                    console.log('Real-time data connection established');
+                });
+                
+                window.realTimeDataManager.on('usage_update', function(data) {
+                    console.log('Usage update received:', data);
+                });
+                
+                window.realTimeDataManager.on('billing_update', function(data) {
+                    console.log('Billing update received:', data);
+                });
+            }
+            
             // Add save button event listeners
             document.querySelectorAll('.btn-primary').forEach(button => {
                 if (button.textContent.includes('Save') || button.textContent.includes('Update')) {
@@ -1478,5 +1783,7 @@ United States</textarea>
             });
         });
     </script>
+    <script src="../js/realtime-data-manager.js"></script>
+    <script src="../js/store-integration-manager.js"></script>
 </body>
 </html>
