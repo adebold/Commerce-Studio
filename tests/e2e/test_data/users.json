@@ -1,0 +1,35 @@
+[
+  {
+    "email": "test@example.com",
+    "password": "Password123!",
+    "role": "user",
+    "first_name": "Test",
+    "last_name": "User",
+    "region": "na"
+  },
+  {
+    "email": "euuser@example.com",
+    "password": "Password123!",
+    "role": "user",
+    "first_name": "European",
+    "last_name": "User",
+    "region": "eu"
+  },
+  {
+    "email": "admin@example.com",
+    "password": "AdminPass456!",
+    "role": "admin",
+    "first_name": "Admin",
+    "last_name": "User",
+    "region": "na"
+  },
+  {
+    "email": "optician@example.com",
+    "password": "Optician123!",
+    "role": "optician",
+    "first_name": "Optician",
+    "last_name": "User",
+    "region": "na",
+    "practice_id": "practice-123"
+  }
+]

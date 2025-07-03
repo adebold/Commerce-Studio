@@ -1,0 +1,197 @@
+{
+  "testCases": [
+    {
+      "displayName": "Style Preference - Modern",
+      "tags": ["style", "preference", "modern"],
+      "testCaseConversationTurns": [
+        {
+          "userInput": {
+            "text": "I'm looking for some modern eyewear"
+          },
+          "virtualAgentOutput": {
+            "triggeredIntent": "style.recommendation",
+            "expectParameterMatch": {
+              "style": "modern"
+            }
+          }
+        },
+        {
+          "userInput": {
+            "text": "For everyday use"
+          },
+          "virtualAgentOutput": {
+            "triggeredIntent": "provide.occasion",
+            "expectParameterMatch": {
+              "occasion": "everyday"
+            }
+          }
+        },
+        {
+          "userInput": {
+            "text": "I'm a professional who likes to look sophisticated"
+          },
+          "virtualAgentOutput": {
+            "triggeredIntent": "provide.personality",
+            "expectParameterMatch": {
+              "personality": "professional"
+            }
+          }
+        },
+        {
+          "userInput": {
+            "text": "No additional preferences"
+          },
+          "virtualAgentOutput": {
+            "expectWebhookMatch": "recommendation.style",
+            "expectCustomPayloadExists": true
+          }
+        }
+      ]
+    },
+    {
+      "displayName": "Style Preference - Classic with Color",
+      "tags": ["style", "preference", "classic", "filter"],
+      "testCaseConversationTurns": [
+        {
+          "userInput": {
+            "text": "I want classic frames"
+          },
+          "virtualAgentOutput": {
+            "triggeredIntent": "style.recommendation",
+            "expectParameterMatch": {
+              "style": "classic"
+            }
+          }
+        },
+        {
+          "userInput": {
+            "text": "For work purposes"
+          },
+          "virtualAgentOutput": {
+            "triggeredIntent": "provide.occasion",
+            "expectParameterMatch": {
+              "occasion": "work"
+            }
+          }
+        },
+        {
+          "userInput": {
+            "text": "I prefer a conservative look"
+          },
+          "virtualAgentOutput": {
+            "triggeredIntent": "provide.personality",
+            "expectParameterMatch": {
+              "personality": "conservative"
+            }
+          }
+        },
+        {
+          "userInput": {
+            "text": "Yes, I'd like to specify a color"
+          },
+          "virtualAgentOutput": {
+            "triggeredIntent": "filter.options"
+          }
+        },
+        {
+          "userInput": {
+            "text": "Black frames"
+          },
+          "virtualAgentOutput": {
+            "expectParameterMatch": {
+              "color": "black"
+            }
+          }
+        },
+        {
+          "userInput": {
+            "text": "No material preference"
+          },
+          "virtualAgentOutput": {
+            "expectNoError": true
+          }
+        },
+        {
+          "userInput": {
+            "text": "No brand preference"
+          },
+          "virtualAgentOutput": {
+            "expectWebhookMatch": "recommendation.style",
+            "expectCustomPayloadExists": true
+          }
+        }
+      ]
+    },
+    {
+      "displayName": "Style Refinement Flow",
+      "tags": ["style", "refine", "iteration"],
+      "testCaseConversationTurns": [
+        {
+          "userInput": {
+            "text": "I need stylish glasses"
+          },
+          "virtualAgentOutput": {
+            "triggeredIntent": "style.recommendation"
+          }
+        },
+        {
+          "userInput": {
+            "text": "Trendy style"
+          },
+          "virtualAgentOutput": {
+            "expectParameterMatch": {
+              "style": "trendy"
+            }
+          }
+        },
+        {
+          "userInput": {
+            "text": "For social occasions"
+          },
+          "virtualAgentOutput": {
+            "expectParameterMatch": {
+              "occasion": "social"
+            }
+          }
+        },
+        {
+          "userInput": {
+            "text": "I like to stand out"
+          },
+          "virtualAgentOutput": {
+            "expectParameterMatch": {
+              "personality": "bold"
+            }
+          }
+        },
+        {
+          "userInput": {
+            "text": "No additional filters"
+          },
+          "virtualAgentOutput": {
+            "expectWebhookMatch": "recommendation.style"
+          }
+        },
+        {
+          "userInput": {
+            "text": "I want to refine my search"
+          },
+          "virtualAgentOutput": {
+            "triggeredIntent": "refine.preferences"
+          }
+        },
+        {
+          "userInput": {
+            "text": "I'd like red frames"
+          },
+          "virtualAgentOutput": {
+            "expectParameterMatch": {
+              "color": "red"
+            },
+            "expectWebhookMatch": "recommendation.style"
+          }
+        }
+      ]
+    }
+  ]
+}
