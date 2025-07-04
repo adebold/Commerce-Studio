@@ -1,0 +1,673 @@
+{
+  "name": "fit_consultation",
+  "displayName": "Fit Consultation Flow",
+  "description": "Helps users understand proper eyewear fit, troubleshoot fit issues, and find perfectly fitting frames",
+  "version": "1.0.0",
+  "states": [
+    {
+      "name": "welcome",
+      "displayName": "Welcome & Fit Consultation Inquiry",
+      "entryPrompt": "Welcome to our fit consultation! I can help you understand eyewear fit, troubleshoot issues with your current glasses, or find frames that will fit you perfectly. What would you like assistance with today?",
+      "transitionConditions": [
+        {
+          "condition": "query_type = \"general_guidance\"",
+          "nextState": "general_guidance"
+        },
+        {
+          "condition": "query_type = \"troubleshoot_issue\"",
+          "nextState": "troubleshoot_issue"
+        },
+        {
+          "condition": "query_type = \"fit_based_search\"",
+          "nextState": "fit_based_search"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "query_type",
+          "type": "string",
+          "description": "The type of fit assistance the user is looking for (general_guidance, troubleshoot_issue, fit_based_search)"
+        }
+      ]
+    },
+    {
+      "name": "general_guidance",
+      "displayName": "Provide Fit Education",
+      "entryPrompt": "I'd be happy to explain how eyewear should properly fit. A well-fitting frame should sit comfortably on your nose, not pinch your temples, and the arms should rest gently on your ears. Would you like to learn more about specific aspects of frame fit?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "fit_education"
+        }
+      ]
+    },
+    {
+      "name": "fit_education",
+      "displayName": "Explain Frame Fit Principles",
+      "entryPrompt": "There are several key aspects to proper eyewear fit: frame width, temple length, bridge fit, frame height, and weight distribution. Each contributes to comfort and appearance. Would you like to learn more about any of these specific areas?",
+      "transitionConditions": [
+        {
+          "condition": "learn_more",
+          "nextState": "fit_education_topics"
+        },
+        {
+          "condition": "!learn_more",
+          "nextState": "end_education"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "learn_more",
+          "type": "boolean",
+          "description": "Whether the user wants to learn more about fit principles"
+        }
+      ]
+    },
+    {
+      "name": "fit_education_topics",
+      "displayName": "Offer Fit Education Topics",
+      "entryPrompt": "Which aspect of eyewear fit would you like to learn more about? Options include frame width, temple length, bridge fit, frame height, or weight distribution.",
+      "transitionConditions": [
+        {
+          "condition": "topic == 'frame_width'",
+          "nextState": "frame_width_info"
+        },
+        {
+          "condition": "topic == 'temple_length'",
+          "nextState": "temple_info"
+        },
+        {
+          "condition": "topic == 'bridge_fit'",
+          "nextState": "bridge_info"
+        },
+        {
+          "condition": "topic == 'frame_height'",
+          "nextState": "height_info"
+        },
+        {
+          "condition": "topic == 'weight_balance'",
+          "nextState": "weight_info"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "topic",
+          "type": "string",
+          "description": "The fit topic the user wants to explore"
+        }
+      ]
+    },
+    {
+      "name": "frame_width_info",
+      "displayName": "Frame Width Information",
+      "entryPrompt": "Frame width is crucial for comfort and appearance. Your frames should align with your face width - not extending beyond your temples or pinching inward. The frame's total width should be approximately the same as your face width, with your eyes centered in each lens. Would you like to learn about another aspect of fit?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "more_topics_query"
+        }
+      ]
+    },
+    {
+      "name": "temple_info",
+      "displayName": "Temple Length Information",
+      "entryPrompt": "Temples (the arms of your glasses) should be long enough to extend comfortably over your ears. Too short, and they'll push the glasses forward; too long, and they may cause discomfort behind your ears. The bend should align with where your ear meets your head. Would you like to learn about another aspect of fit?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "more_topics_query"
+        }
+      ]
+    },
+    {
+      "name": "bridge_info",
+      "displayName": "Bridge Fit Information",
+      "entryPrompt": "The bridge connects the two lenses and sits on your nose. It should distribute weight evenly and comfortably. For plastic frames, the bridge should sit flush against your nose. For metal frames with nose pads, these should rest comfortably without digging in. Would you like to learn about another aspect of fit?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "more_topics_query"
+        }
+      ]
+    },
+    {
+      "name": "height_info",
+      "displayName": "Frame Height Information",
+      "entryPrompt": "Frame height affects both comfort and vision. The frames should sit at or just below your eyebrows, and the bottom should not rest on your cheeks. The vertical center of the lens should align with your pupils for optimal vision. Would you like to learn about another aspect of fit?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "more_topics_query"
+        }
+      ]
+    },
+    {
+      "name": "weight_info",
+      "displayName": "Weight Distribution Information",
+      "entryPrompt": "Weight distribution affects comfort, especially for all-day wear. Heavier frames should have features to distribute weight evenly, like adjustable nose pads or broader temple arms. Lightweight materials like titanium or thin acetate can reduce pressure points. Would you like to learn about another aspect of fit?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "more_topics_query"
+        }
+      ]
+    },
+    {
+      "name": "more_topics_query",
+      "displayName": "Ask About More Topics",
+      "entryPrompt": "Would you like to learn about another aspect of eyewear fit?",
+      "transitionConditions": [
+        {
+          "condition": "more_topics",
+          "nextState": "fit_education_topics"
+        },
+        {
+          "condition": "!more_topics",
+          "nextState": "fit_recommendation"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "more_topics",
+          "type": "boolean",
+          "description": "Whether the user wants to explore additional fit topics"
+        }
+      ]
+    },
+    {
+      "name": "fit_recommendation",
+      "displayName": "Offer Frame Recommendation",
+      "entryPrompt": "Now that you understand more about eyewear fit, would you like me to help you find frames that will fit you perfectly?",
+      "transitionConditions": [
+        {
+          "condition": "want_recommendations",
+          "nextState": "fit_based_search"
+        },
+        {
+          "condition": "!want_recommendations",
+          "nextState": "end_education"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "want_recommendations",
+          "type": "boolean",
+          "description": "Whether the user wants frame recommendations"
+        }
+      ]
+    },
+    {
+      "name": "end_education",
+      "displayName": "End Education",
+      "entryPrompt": "I hope this information about eyewear fit was helpful! Feel free to return if you have more questions or want to find the perfect fitting frames.",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "end"
+        }
+      ]
+    },
+    {
+      "name": "troubleshoot_issue",
+      "displayName": "Troubleshoot Specific Issue",
+      "entryPrompt": "I'd be happy to help troubleshoot fit issues with your current eyewear. What specific problem are you experiencing? Common issues include glasses slipping down, pinching at the temples, discomfort behind the ears, marks on your nose, or alignment problems.",
+      "transitionConditions": [
+        {
+          "condition": "issue_type == 'slipping'",
+          "nextState": "slipping_issue"
+        },
+        {
+          "condition": "issue_type == 'pinching'",
+          "nextState": "pinching_issue"
+        },
+        {
+          "condition": "issue_type == 'ear_discomfort'",
+          "nextState": "ear_issue"
+        },
+        {
+          "condition": "issue_type == 'nose_marks'",
+          "nextState": "nose_issue"
+        },
+        {
+          "condition": "issue_type == 'alignment'",
+          "nextState": "alignment_issue"
+        },
+        {
+          "condition": "issue_type == 'other'",
+          "nextState": "other_issue"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "issue_type",
+          "type": "string",
+          "description": "The specific fit issue being troubleshooted"
+        }
+      ]
+    },
+    {
+      "name": "slipping_issue",
+      "displayName": "Troubleshoot Slipping",
+      "entryPrompt": "If your glasses are slipping down your nose, this could be due to several factors: the frame might be too heavy, the bridge too wide, or the temples may need adjustment. Is this a new issue, or have your glasses always slipped?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "slipping_solutions"
+        }
+      ]
+    },
+    {
+      "name": "slipping_solutions",
+      "displayName": "Provide Slipping Solutions",
+      "entryPrompt": "For slipping glasses, possible solutions include: 1) Having the temples adjusted to create more grip behind the ears, 2) Adding nose pads or replacing existing ones, 3) Using eyewear retainers like silicone ear hooks, or 4) Getting frames with a narrower bridge that better fits your nose profile.",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "adjustment_help"
+        }
+      ]
+    },
+    {
+      "name": "pinching_issue",
+      "displayName": "Troubleshoot Pinching",
+      "entryPrompt": "Pinching at the temples can be uncomfortable and cause headaches. This typically happens when frames are too narrow for your face. When did you start noticing this pinching sensation?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "pinching_solutions"
+        }
+      ]
+    },
+    {
+      "name": "pinching_solutions",
+      "displayName": "Provide Pinching Solutions",
+      "entryPrompt": "For temple pinching, solutions include: 1) Having an optician adjust the temples to widen the fit, 2) Choosing frames with spring hinges that flex more comfortably, or 3) Selecting wider frames that better match your face width. For severe cases, you may need to consider different frames entirely.",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "adjustment_help"
+        }
+      ]
+    },
+    {
+      "name": "ear_issue",
+      "displayName": "Troubleshoot Ear Discomfort",
+      "entryPrompt": "Discomfort behind the ears can be caused by temples that are too tight, poorly shaped, or not properly aligned with your ear contour. Is the discomfort constant or does it develop after wearing your glasses for a while?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "ear_solutions"
+        }
+      ]
+    },
+    {
+      "name": "ear_solutions",
+      "displayName": "Provide Ear Discomfort Solutions",
+      "entryPrompt": "For ear discomfort, consider: 1) Having an optician adjust the temple tips to better follow your ear contour, 2) Adding soft silicone covers to the temple tips, 3) Choosing frames with more flexible materials, or 4) Selecting frames with ergonomically designed temple tips that distribute pressure more evenly.",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "adjustment_help"
+        }
+      ]
+    },
+    {
+      "name": "nose_issue",
+      "displayName": "Troubleshoot Nose Marks",
+      "entryPrompt": "Marks on your nose can indicate that your glasses are putting too much pressure on your nose bridge or that the nose pads aren't properly aligned. Are these marks red and irritated, or just indentations?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "nose_solutions"
+        }
+      ]
+    },
+    {
+      "name": "nose_solutions",
+      "displayName": "Provide Nose Mark Solutions",
+      "entryPrompt": "For nose marks and discomfort: 1) For metal frames, have the nose pads adjusted to distribute weight more evenly, 2) Consider frames with larger or softer nose pads, 3) For plastic frames without nose pads, look for styles with a better bridge fit for your nose shape, or 4) Add stick-on silicone nose pads for additional comfort.",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "adjustment_help"
+        }
+      ]
+    },
+    {
+      "name": "alignment_issue",
+      "displayName": "Troubleshoot Alignment",
+      "entryPrompt": "Alignment issues can make your glasses look crooked on your face and may cause visual discomfort. Did this happen after the glasses were dropped or bent, or have they always seemed misaligned?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "alignment_solutions"
+        }
+      ]
+    },
+    {
+      "name": "alignment_solutions",
+      "displayName": "Provide Alignment Solutions",
+      "entryPrompt": "For alignment issues: 1) Visit an optician for professional adjustment of the frame's alignment, 2) For metal frames, the nose pads and temples can be adjusted to correct the balance, 3) For plastic frames, gentle heating and reshaping might be needed - which should be done by a professional to avoid damaging the frames.",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "adjustment_help"
+        }
+      ]
+    },
+    {
+      "name": "other_issue",
+      "displayName": "Address Other Issues",
+      "entryPrompt": "Let's address your specific concern. Could you describe the fit issue you're experiencing in more detail?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "custom_solutions"
+        }
+      ]
+    },
+    {
+      "name": "custom_solutions",
+      "displayName": "Provide Custom Solutions",
+      "entryPrompt": "Based on your description, here are some potential solutions: ${custom_recommendations}. Would a professional adjustment help with this issue?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "adjustment_help"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "custom_recommendations",
+          "type": "string",
+          "description": "Custom recommendations for the user's specific issue"
+        }
+      ]
+    },
+    {
+      "name": "adjustment_help",
+      "displayName": "Offer Professional Adjustment Info",
+      "entryPrompt": "Many fit issues can be resolved with professional adjustments from an optician. Would you like information about getting your frames professionally adjusted?",
+      "transitionConditions": [
+        {
+          "condition": "need_professional_help",
+          "nextState": "local_options"
+        },
+        {
+          "condition": "!need_professional_help",
+          "nextState": "issue_resolved"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "need_professional_help",
+          "type": "boolean",
+          "description": "Whether the user needs information about professional adjustments"
+        }
+      ]
+    },
+    {
+      "name": "local_options",
+      "displayName": "Provide Local Adjustment Options",
+      "entryPrompt": "Most optical shops offer adjustment services, which are often complimentary if you purchased your glasses there. Even if you didn't, many places provide basic adjustments for a small fee or no charge. I recommend calling ahead to confirm their policy. Would these adjustments likely resolve your issue?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "issue_resolved"
+        }
+      ]
+    },
+    {
+      "name": "issue_resolved",
+      "displayName": "Ask if Issue Resolved",
+      "entryPrompt": "Do you think the solutions we've discussed will resolve your fit issue, or would you like to explore other options?",
+      "transitionConditions": [
+        {
+          "condition": "resolved",
+          "nextState": "fit_recommendation"
+        },
+        {
+          "condition": "!resolved",
+          "nextState": "alternative_suggestions"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "resolved",
+          "type": "boolean",
+          "description": "Whether the user feels their issue will be resolved"
+        }
+      ]
+    },
+    {
+      "name": "alternative_suggestions",
+      "displayName": "Suggest Alternatives",
+      "entryPrompt": "If the adjustments might not fully resolve your issue, it might be worth considering new frames that better suit your face shape and fit needs. Would you like me to help you find frames that would fit you better?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "fit_based_search"
+        }
+      ]
+    },
+    {
+      "name": "fit_based_search",
+      "displayName": "Start Fit-Based Search",
+      "entryPrompt": "Let's find frames that will fit you perfectly! Do you know the measurements of your current eyewear? These are typically printed on the inside of the temple and include numbers like 54-18-145 (lens width, bridge width, temple length).",
+      "transitionConditions": [
+        {
+          "condition": "has_measurements",
+          "nextState": "get_measurements"
+        },
+        {
+          "condition": "!has_measurements",
+          "nextState": "measurement_help"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "has_measurements",
+          "type": "boolean",
+          "description": "Whether the user knows their current frame measurements"
+        }
+      ]
+    },
+    {
+      "name": "measurement_help",
+      "displayName": "Provide Measurement Guide",
+      "entryPrompt": "No problem! Frame measurements consist of three numbers: lens width, bridge width, and temple length (in millimeters). Check the inside of your current temple arms - you might see numbers like 54-18-145. If you can't find them, we can determine good measurements based on your face characteristics.",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "get_measurements"
+        }
+      ]
+    },
+    {
+      "name": "get_measurements",
+      "displayName": "Capture Measurements",
+      "entryPrompt": "Thanks! ${measurements}. Now, would you describe your face as narrow, average, or wide in width?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "face_width_query"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "measurements",
+          "type": "string",
+          "description": "The user's current frame measurements (if available)"
+        }
+      ]
+    },
+    {
+      "name": "face_width_query",
+      "displayName": "Ask About Face Width",
+      "entryPrompt": "Would you describe your face as narrow, average, or wide in width? This helps determine the optimal frame width for your face.",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "face_shape"
+        }
+      ]
+    },
+    {
+      "name": "face_shape",
+      "displayName": "Ask About Face Shape",
+      "entryPrompt": "What would you say is your face shape (oval, round, square, heart, etc.)? This helps find frames that complement your facial features.",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "nose_bridge_query"
+        }
+      ]
+    },
+    {
+      "name": "nose_bridge_query",
+      "displayName": "Ask About Nose Bridge",
+      "entryPrompt": "How would you describe your nose bridge? Is it high (prominent), low (flat), or average? Different bridge heights work better with different frame designs.",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "skin_sensitivity_query"
+        }
+      ]
+    },
+    {
+      "name": "skin_sensitivity_query",
+      "displayName": "Ask About Skin Sensitivity",
+      "entryPrompt": "Do you have sensitive skin that might react to certain frame materials, or do you prefer hypoallergenic materials?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "activity_level_query"
+        }
+      ]
+    },
+    {
+      "name": "activity_level_query",
+      "displayName": "Ask About Activity Level",
+      "entryPrompt": "How active are you in your daily life? This helps determine if you need durable, secure-fitting frames or if comfort for long periods of sitting is the priority.",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "generate_recommendations"
+        }
+      ]
+    },
+    {
+      "name": "generate_recommendations",
+      "displayName": "Generate Fit-Based Recommendations",
+      "entryPrompt": "Based on your fit preferences and face characteristics, I'm finding frames that should fit you perfectly. This will just take a moment...",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "show_recommendations"
+        }
+      ]
+    },
+    {
+      "name": "show_recommendations",
+      "displayName": "Show Frame Recommendations",
+      "entryPrompt": "Here are some frames that should fit you perfectly based on your measurements and preferences. What do you think of these options?",
+      "transitionConditions": [
+        {
+          "condition": "user_reaction == 'like'",
+          "nextState": "product_details"
+        },
+        {
+          "condition": "user_reaction == 'refine'",
+          "nextState": "refine_preferences"
+        },
+        {
+          "condition": "user_reaction == 'dislike'",
+          "nextState": "alternative_frames"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "user_reaction",
+          "type": "string",
+          "description": "The user's reaction to the recommendations (like, refine, dislike)"
+        }
+      ]
+    },
+    {
+      "name": "product_details",
+      "displayName": "Show Product Details",
+      "entryPrompt": "Let me tell you more about this frame's fit features. The ${fit_highlight} ensures an excellent fit for your specific needs.",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "fit_highlights"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "fit_highlight",
+          "type": "string",
+          "description": "Highlighted fit feature of the selected frame"
+        }
+      ]
+    },
+    {
+      "name": "fit_highlights",
+      "displayName": "Highlight Fit Features",
+      "entryPrompt": "This frame has several fit-friendly features: ${fit_features}. Would you like to add these to your cart?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "add_to_cart"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "fit_features",
+          "type": "string",
+          "description": "Fit features of the selected frame"
+        }
+      ]
+    },
+    {
+      "name": "refine_preferences",
+      "displayName": "Refine Fit Criteria",
+      "entryPrompt": "Let's refine your fit preferences to find frames that will fit even better. What aspect of fit would you like to adjust?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "get_measurements"
+        }
+      ]
+    },
+    {
+      "name": "alternative_frames",
+      "displayName": "Offer Alternative Frames",
+      "entryPrompt": "Let me show you some alternative frames with different fit characteristics that might work better for you.",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "show_recommendations"
+        }
+      ]
+    },
+    {
+      "name": "add_to_cart",
+      "displayName": "Add to Cart Flow",
+      "entryPrompt": "I've added these frames to your cart. Is there anything else you'd like help with today?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "end"
+        }
+      ]
+    },
+    {
+      "name": "end",
+      "displayName": "End",
+      "entryPrompt": "Thank you for using our fit consultation service! I hope you find the perfect fitting frames that look and feel great.",
+      "isEndState": true
+    }
+  ],
+  "initialState": "welcome"
+}

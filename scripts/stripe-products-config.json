@@ -1,0 +1,207 @@
+{
+  "products": {
+    "virtual_try_on": {
+      "id": "varai_virtual_try_on",
+      "name": "Virtual Try-On",
+      "description": "AI-powered virtual eyewear fitting experience",
+      "metadata": {
+        "category": "ai_service",
+        "created_at": "2025-06-26T21:42:44.912Z",
+        "created_by": "varai_setup_script",
+        "service_type": "virtual_try_on",
+        "token_cost": "5"
+      }
+    },
+    "face_analysis": {
+      "id": "varai_face_analysis",
+      "name": "Face Analysis",
+      "description": "Advanced facial feature analysis for personalized recommendations",
+      "metadata": {
+        "category": "ai_service",
+        "created_at": "2025-06-26T21:42:45.130Z",
+        "created_by": "varai_setup_script",
+        "service_type": "face_analysis",
+        "token_cost": "3"
+      }
+    },
+    "recommendations": {
+      "id": "varai_recommendations",
+      "name": "AI Recommendations",
+      "description": "Personalized eyewear recommendations based on preferences",
+      "metadata": {
+        "category": "ai_service",
+        "created_at": "2025-06-26T21:42:45.318Z",
+        "created_by": "varai_setup_script",
+        "service_type": "recommendations",
+        "token_cost": "2"
+      }
+    },
+    "pd_calculator": {
+      "id": "varai_pd_calculator",
+      "name": "PD Calculator",
+      "description": "Accurate pupillary distance measurement tool",
+      "metadata": {
+        "category": "ai_service",
+        "created_at": "2025-06-26T21:42:45.500Z",
+        "created_by": "varai_setup_script",
+        "service_type": "pd_calculator",
+        "token_cost": "1"
+      }
+    },
+    "style_advisor": {
+      "id": "varai_style_advisor",
+      "name": "Style Advisor",
+      "description": "AI-powered style consultation and advice",
+      "metadata": {
+        "category": "ai_service",
+        "created_at": "2025-06-26T21:42:45.682Z",
+        "created_by": "varai_setup_script",
+        "service_type": "style_advisor",
+        "token_cost": "4"
+      }
+    },
+    "inventory_optimizer": {
+      "id": "varai_inventory_optimizer",
+      "name": "Inventory Optimizer",
+      "description": "AI-driven inventory management and optimization",
+      "metadata": {
+        "category": "ai_service",
+        "created_at": "2025-06-26T21:42:45.917Z",
+        "created_by": "varai_setup_script",
+        "service_type": "inventory_optimizer",
+        "token_cost": "10"
+      }
+    },
+    "starter": {
+      "id": "varai_starter_plan",
+      "name": "Starter Plan",
+      "description": "Perfect for small retailers getting started with AI",
+      "metadata": {
+        "category": "subscription",
+        "created_at": "2025-06-26T21:42:46.097Z",
+        "created_by": "varai_setup_script",
+        "plan_type": "starter",
+        "token_allowance": "1000"
+      }
+    },
+    "professional": {
+      "id": "varai_professional_plan",
+      "name": "Professional Plan",
+      "description": "Ideal for growing businesses with higher AI usage",
+      "metadata": {
+        "category": "subscription",
+        "created_at": "2025-06-26T21:42:46.410Z",
+        "created_by": "varai_setup_script",
+        "plan_type": "professional",
+        "token_allowance": "10000"
+      }
+    },
+    "enterprise": {
+      "id": "varai_enterprise_plan",
+      "name": "Enterprise Plan",
+      "description": "Unlimited AI services for large-scale operations",
+      "metadata": {
+        "category": "subscription",
+        "created_at": "2025-06-26T21:42:46.741Z",
+        "created_by": "varai_setup_script",
+        "plan_type": "enterprise",
+        "token_allowance": "unlimited"
+      }
+    },
+    "small": {
+      "id": "varai_tokens_100",
+      "name": "100 Token Package",
+      "description": "Small token package for testing and trial usage",
+      "metadata": {
+        "category": "token_package",
+        "created_at": "2025-06-26T21:42:47.058Z",
+        "created_by": "varai_setup_script",
+        "package_type": "small",
+        "token_amount": "100"
+      }
+    },
+    "medium": {
+      "id": "varai_tokens_500",
+      "name": "500 Token Package",
+      "description": "Medium token package for short-term projects",
+      "metadata": {
+        "category": "token_package",
+        "created_at": "2025-06-26T21:42:47.357Z",
+        "created_by": "varai_setup_script",
+        "package_type": "medium",
+        "token_amount": "500"
+      }
+    },
+    "large": {
+      "id": "varai_tokens_1000",
+      "name": "1000 Token Package",
+      "description": "Large token package for extended usage",
+      "metadata": {
+        "category": "token_package",
+        "created_at": "2025-06-26T21:42:47.664Z",
+        "created_by": "varai_setup_script",
+        "package_type": "large",
+        "token_amount": "1000"
+      }
+    }
+  },
+  "prices": {
+    "starter": {
+      "id": "price_1ReNcxFRqSlo4PSXAGAvuhz3",
+      "amount": 2900,
+      "currency": "usd",
+      "recurring": {
+        "aggregate_usage": null,
+        "interval": "month",
+        "interval_count": 1,
+        "meter": null,
+        "trial_period_days": null,
+        "usage_type": "licensed"
+      }
+    },
+    "professional": {
+      "id": "price_1ReNcyFRqSlo4PSXrCecg78S",
+      "amount": 19900,
+      "currency": "usd",
+      "recurring": {
+        "aggregate_usage": null,
+        "interval": "month",
+        "interval_count": 1,
+        "meter": null,
+        "trial_period_days": null,
+        "usage_type": "licensed"
+      }
+    },
+    "enterprise": {
+      "id": "price_1ReNcyFRqSlo4PSX8JbKbwS2",
+      "amount": 99900,
+      "currency": "usd",
+      "recurring": {
+        "aggregate_usage": null,
+        "interval": "month",
+        "interval_count": 1,
+        "meter": null,
+        "trial_period_days": null,
+        "usage_type": "licensed"
+      }
+    },
+    "small": {
+      "id": "price_1ReNczFRqSlo4PSXG6C1hvX9",
+      "amount": 1000,
+      "currency": "usd",
+      "recurring": null
+    },
+    "medium": {
+      "id": "price_1ReNczFRqSlo4PSX1KKDyYUl",
+      "amount": 4500,
+      "currency": "usd",
+      "recurring": null
+    },
+    "large": {
+      "id": "price_1ReNd0FRqSlo4PSXKb7zfkpN",
+      "amount": 8000,
+      "currency": "usd",
+      "recurring": null
+    }
+  }
+}

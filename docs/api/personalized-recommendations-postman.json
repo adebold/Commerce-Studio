@@ -1,0 +1,176 @@
+{
+  "info": {
+    "_postman_id": "7e5b8d85-f7e3-4b92-8c9e-5d0f3d8a3e6c",
+    "name": "Eyewear ML - Personalized Recommendations",
+    "description": "Collection for testing the personalized recommendations API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get Personalized Recommendations",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"customer_id\": \"customer123\",\n  \"limit\": 10,\n  \"include_reasoning\": true\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{api_base_url}}/api/recommendations/personalized",
+          "host": ["{{api_base_url}}"],
+          "path": ["api", "recommendations", "personalized"]
+        },
+        "description": "Get personalized product recommendations for a specific customer"
+      },
+      "response": []
+    },
+    {
+      "name": "Record Interaction Signal",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"customer_id\": \"customer123\",\n  \"product_id\": \"frame42\",\n  \"action_type\": \"view\",\n  \"session_id\": \"session-abc123\",\n  \"additional_data\": {\n    \"device\": \"mobile\",\n    \"time_spent\": 45\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{api_base_url}}/api/recommendations/signals",
+          "host": ["{{api_base_url}}"],
+          "path": ["api", "recommendations", "signals"]
+        },
+        "description": "Record a user interaction signal with a product"
+      },
+      "response": []
+    },
+    {
+      "name": "Record Add to Cart Signal",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"customer_id\": \"customer123\",\n  \"product_id\": \"frame42\",\n  \"action_type\": \"add_to_cart\",\n  \"session_id\": \"session-abc123\",\n  \"additional_data\": {\n    \"device\": \"mobile\",\n    \"source\": \"recommendation\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{api_base_url}}/api/recommendations/signals",
+          "host": ["{{api_base_url}}"],
+          "path": ["api", "recommendations", "signals"]
+        },
+        "description": "Record an add to cart signal"
+      },
+      "response": []
+    },
+    {
+      "name": "Record Purchase Signal",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"customer_id\": \"customer123\",\n  \"product_id\": \"frame42\",\n  \"action_type\": \"purchase\",\n  \"session_id\": \"session-abc123\",\n  \"additional_data\": {\n    \"device\": \"mobile\",\n    \"order_id\": \"order-xyz789\",\n    \"price\": 129.99\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{api_base_url}}/api/recommendations/signals",
+          "host": ["{{api_base_url}}"],
+          "path": ["api", "recommendations", "signals"]
+        },
+        "description": "Record a purchase signal"
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "api_base_url",
+      "value": "http://localhost:8000",
+      "type": "string",
+      "description": "Base URL for the API"
+    },
+    {
+      "key": "auth_token",
+      "value": "your-auth-token-here",
+      "type": "string",
+      "description": "Authentication token"
+    }
+  ]
+}

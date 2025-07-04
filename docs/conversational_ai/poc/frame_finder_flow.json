@@ -1,0 +1,514 @@
+{
+  "name": "frame_finder",
+  "displayName": "Frame Finder Flow",
+  "description": "Helps users find frames that match their face shape and physical characteristics",
+  "version": "1.0.0",
+  "states": [
+    {
+      "name": "welcome",
+      "displayName": "Welcome & Frame Finding Inquiry",
+      "entryPrompt": "Welcome to our frame finder! I'll help you find frames that will fit and look great on you. First, are you looking for eyeglasses or sunglasses?",
+      "transitionConditions": [
+        {
+          "condition": "product_type = \"eyeglasses\"",
+          "nextState": "eyeglasses_path"
+        },
+        {
+          "condition": "product_type = \"sunglasses\"",
+          "nextState": "sunglasses_path"
+        },
+        {
+          "condition": "product_type = \"not_sure\"",
+          "nextState": "product_type_options"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "product_type",
+          "type": "string",
+          "description": "The type of product the user is looking for (eyeglasses, sunglasses, not_sure)"
+        }
+      ]
+    },
+    {
+      "name": "product_type_options",
+      "displayName": "Explain Differences",
+      "entryPrompt": "Eyeglasses are designed for vision correction with clear lenses, while sunglasses have tinted lenses for sun protection. Some frames can accommodate both types of lenses. Which would you prefer?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "product_type_query"
+        }
+      ]
+    },
+    {
+      "name": "product_type_query",
+      "displayName": "Ask About Product Type",
+      "entryPrompt": "Would you like me to help you find eyeglasses or sunglasses?",
+      "transitionConditions": [
+        {
+          "condition": "product_type == 'eyeglasses'",
+          "nextState": "eyeglasses_path"
+        },
+        {
+          "condition": "product_type == 'sunglasses'",
+          "nextState": "sunglasses_path"
+        },
+        {
+          "condition": "product_type == 'not_sure'",
+          "nextState": "product_type_options"
+        }
+      ]
+    },
+    {
+      "name": "eyeglasses_path",
+      "displayName": "Set Product Type: Eyeglasses",
+      "entryPrompt": "Great! Let's find the perfect eyeglasses for you. Do you know your face shape?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "face_shape_query"
+        }
+      ]
+    },
+    {
+      "name": "sunglasses_path",
+      "displayName": "Set Product Type: Sunglasses",
+      "entryPrompt": "Excellent! Let's find the perfect sunglasses for you. Do you know your face shape?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "face_shape_query"
+        }
+      ]
+    },
+    {
+      "name": "face_shape_query",
+      "displayName": "Ask About Face Shape",
+      "entryPrompt": "Do you know your face shape (oval, round, square, heart, etc.)? This helps us find frames that complement your features.",
+      "transitionConditions": [
+        {
+          "condition": "knows_face_shape",
+          "nextState": "get_face_shape"
+        },
+        {
+          "condition": "!knows_face_shape",
+          "nextState": "face_shape_help"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "knows_face_shape",
+          "type": "boolean",
+          "description": "Whether the user knows their face shape"
+        }
+      ]
+    },
+    {
+      "name": "face_shape_help",
+      "displayName": "Offer Face Shape Analysis",
+      "entryPrompt": "No problem! I can help you determine your face shape. Generally, face shapes fall into categories like oval, round, square, heart, diamond, or triangle. Would you like me to explain how to identify your face shape?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "face_shape_options"
+        }
+      ]
+    },
+    {
+      "name": "face_shape_options",
+      "displayName": "Describe Face Shapes",
+      "entryPrompt": "Oval faces have balanced proportions with a slightly wider forehead. Round faces have soft angles and similar width and length. Square faces have strong jawlines and straight sides. Heart-shaped faces have wider foreheads and narrow chins. Which sounds most like your face?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "get_face_shape"
+        }
+      ]
+    },
+    {
+      "name": "get_face_shape",
+      "displayName": "Capture Face Shape",
+      "entryPrompt": "I see you have a ${face_shape} face shape. That's great to know! Do you have a preference for any particular frame shape?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "frame_shape_query"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "face_shape",
+          "type": "string",
+          "description": "The user's face shape (oval, round, square, heart, etc.)"
+        }
+      ]
+    },
+    {
+      "name": "frame_shape_query",
+      "displayName": "Ask About Preferred Frame Shape",
+      "entryPrompt": "Do you have a preference for the shape of your frames? For example, rectangular, round, cat-eye, or aviator?",
+      "transitionConditions": [
+        {
+          "condition": "has_frame_shape_preference",
+          "nextState": "get_frame_shape"
+        },
+        {
+          "condition": "!has_frame_shape_preference",
+          "nextState": "suggest_shapes"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "has_frame_shape_preference",
+          "type": "boolean",
+          "description": "Whether the user has a preference for frame shape"
+        }
+      ]
+    },
+    {
+      "name": "suggest_shapes",
+      "displayName": "Suggest Shapes for Face",
+      "entryPrompt": "Based on your ${face_shape} face shape, I can recommend some frame shapes that typically look great: ${recommended_shapes}. Do any of these appeal to you?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "get_frame_shape"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "recommended_shapes",
+          "type": "string",
+          "description": "Frame shapes that complement the user's face shape"
+        }
+      ]
+    },
+    {
+      "name": "get_frame_shape",
+      "displayName": "Capture Frame Shape",
+      "entryPrompt": "Great! I'll look for ${frame_shape} frames. Do you have any color preferences for your frames?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "color_query"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "frame_shape",
+          "type": "string",
+          "description": "The user's preferred frame shape"
+        }
+      ]
+    },
+    {
+      "name": "color_query",
+      "displayName": "Ask About Color Preference",
+      "entryPrompt": "What colors are you interested in for your frames? Popular options include black, tortoise, clear, gold, silver, or colorful frames.",
+      "transitionConditions": [
+        {
+          "condition": "has_color_preference",
+          "nextState": "get_color"
+        },
+        {
+          "condition": "!has_color_preference",
+          "nextState": "skip_color"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "has_color_preference",
+          "type": "boolean",
+          "description": "Whether the user has a color preference"
+        }
+      ]
+    },
+    {
+      "name": "get_color",
+      "displayName": "Capture Color Preference",
+      "entryPrompt": "I'll look for frames in ${color_preference}. Do you have a preference for frame materials, such as metal, acetate, or a combination?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "material_query"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "color_preference",
+          "type": "string",
+          "description": "The user's color preference for frames"
+        }
+      ]
+    },
+    {
+      "name": "skip_color",
+      "displayName": "Skip Color",
+      "entryPrompt": "No problem! I'll include a variety of colors. Do you have a preference for frame materials, such as metal, acetate, or a combination?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "material_query"
+        }
+      ]
+    },
+    {
+      "name": "material_query",
+      "displayName": "Ask About Material Preference",
+      "entryPrompt": "Do you prefer frames made of particular materials? Common options include acetate (plastic), metal, titanium, or combinations.",
+      "transitionConditions": [
+        {
+          "condition": "has_material_preference",
+          "nextState": "get_material"
+        },
+        {
+          "condition": "!has_material_preference",
+          "nextState": "skip_material"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "has_material_preference",
+          "type": "boolean",
+          "description": "Whether the user has a material preference"
+        }
+      ]
+    },
+    {
+      "name": "get_material",
+      "displayName": "Capture Material",
+      "entryPrompt": "I'll look for frames made of ${material_preference}. Do you have a budget range in mind?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "budget_query"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "material_preference",
+          "type": "string",
+          "description": "The user's material preference for frames"
+        }
+      ]
+    },
+    {
+      "name": "skip_material",
+      "displayName": "Skip Material",
+      "entryPrompt": "No problem! I'll include a variety of materials. Do you have a budget range in mind?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "budget_query"
+        }
+      ]
+    },
+    {
+      "name": "budget_query",
+      "displayName": "Ask About Budget",
+      "entryPrompt": "What's your budget range for frames? This helps me narrow down options that meet your needs.",
+      "transitionConditions": [
+        {
+          "condition": "has_budget",
+          "nextState": "get_budget"
+        },
+        {
+          "condition": "!has_budget",
+          "nextState": "skip_budget"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "has_budget",
+          "type": "boolean",
+          "description": "Whether the user has specified a budget"
+        }
+      ]
+    },
+    {
+      "name": "get_budget",
+      "displayName": "Capture Budget Range",
+      "entryPrompt": "I'll look for frames within ${budget_range}. Let me generate some recommendations based on all your preferences.",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "generate_recommendations"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "budget_range",
+          "type": "string",
+          "description": "The user's budget range for frames"
+        }
+      ]
+    },
+    {
+      "name": "skip_budget",
+      "displayName": "Skip Budget",
+      "entryPrompt": "I'll include options at various price points. Let me generate some recommendations based on your preferences.",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "generate_recommendations"
+        }
+      ]
+    },
+    {
+      "name": "generate_recommendations",
+      "displayName": "Generate Recommendations",
+      "entryPrompt": "Based on your preferences, I'm finding ${product_type} with a ${frame_shape} shape that will complement your ${face_shape} face.",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "show_recommendations"
+        }
+      ]
+    },
+    {
+      "name": "show_recommendations",
+      "displayName": "Show Frame Recommendations",
+      "entryPrompt": "Here are some frames that match your criteria. What do you think of these options?",
+      "transitionConditions": [
+        {
+          "condition": "user_reaction == 'like'",
+          "nextState": "product_details"
+        },
+        {
+          "condition": "user_reaction == 'refine'",
+          "nextState": "refine_preferences"
+        },
+        {
+          "condition": "user_reaction == 'dislike'",
+          "nextState": "alternative_frames"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "user_reaction",
+          "type": "string",
+          "description": "The user's reaction to the recommendations (like, refine, dislike)"
+        }
+      ]
+    },
+    {
+      "name": "product_details",
+      "displayName": "Show Product Details",
+      "entryPrompt": "Here are more details about this frame. Would you like to try them on virtually?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "virtual_try_on"
+        }
+      ]
+    },
+    {
+      "name": "virtual_try_on",
+      "displayName": "Offer Virtual Try-On",
+      "entryPrompt": "Would you like to see how these frames would look on you using our virtual try-on feature?",
+      "transitionConditions": [
+        {
+          "condition": "try_on",
+          "nextState": "launch_try_on"
+        },
+        {
+          "condition": "!try_on",
+          "nextState": "skip_try_on"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "try_on",
+          "type": "boolean",
+          "description": "Whether the user wants to use virtual try-on"
+        }
+      ]
+    },
+    {
+      "name": "launch_try_on",
+      "displayName": "Launch Virtual Try-On",
+      "entryPrompt": "Great! I've launched our virtual try-on feature. You can now see how these frames look on your face.",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "add_to_cart"
+        }
+      ]
+    },
+    {
+      "name": "skip_try_on",
+      "displayName": "Skip Try-On",
+      "entryPrompt": "No problem! Would you like to add these frames to your cart?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "add_to_cart"
+        }
+      ]
+    },
+    {
+      "name": "refine_preferences",
+      "displayName": "Refine Criteria",
+      "entryPrompt": "Let's refine your search. Which aspect would you like to change?",
+      "transitionConditions": [
+        {
+          "condition": "refinement == 'face_shape'",
+          "nextState": "face_shape_query"
+        },
+        {
+          "condition": "refinement == 'frame_shape'",
+          "nextState": "frame_shape_query"
+        },
+        {
+          "condition": "refinement == 'color'",
+          "nextState": "color_query"
+        },
+        {
+          "condition": "refinement == 'material'",
+          "nextState": "material_query"
+        },
+        {
+          "condition": "refinement == 'budget'",
+          "nextState": "budget_query"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "refinement",
+          "type": "string",
+          "description": "The aspect the user wants to refine (face_shape, frame_shape, color, material, budget)"
+        }
+      ]
+    },
+    {
+      "name": "alternative_frames",
+      "displayName": "Offer Alternative Frames",
+      "entryPrompt": "Let me show you some alternative frames that might better match your preferences.",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "show_recommendations"
+        }
+      ]
+    },
+    {
+      "name": "add_to_cart",
+      "displayName": "Add to Cart Flow",
+      "entryPrompt": "I've added these frames to your cart. Is there anything else you'd like to explore?",
+      "transitionConditions": [
+        {
+          "condition": "true",
+          "nextState": "end"
+        }
+      ]
+    },
+    {
+      "name": "end",
+      "displayName": "End",
+      "entryPrompt": "Thank you for using our frame finder! I hope you love your new frames.",
+      "isEndState": true
+    }
+  ],
+  "initialState": "welcome"
+}

@@ -1,0 +1,11 @@
+feat(client-portal): Implement client portal integration
+
+This commit implements the integration between the VARAi Commerce Studio platform and the Client Portal API. It enables seamless client management, reporting, and analytics.
+
+Key changes:
+- Create client portal integration module with API client, services, utils, hooks, and components
+- Update API gateway to include routes for client portal API
+- Modify Shopify app to register clients in client portal
+- Add dashboard and onboarding wizard components for frontend
+
+Related issues: #123, #124, #125
