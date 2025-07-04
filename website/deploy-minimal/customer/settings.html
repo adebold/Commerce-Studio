@@ -1,0 +1,1789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Settings - VARAi Customer Portal</title>
+    <link rel="stylesheet" href="../css/varai-design-system.css">
+    <link rel="stylesheet" href="../css/enterprise-enhancements.css">
+    <link rel="stylesheet" href="../css/apple-hero-sections.css">
+    <link rel="stylesheet" href="../css/customer-portal.css">
+    <style>
+        .settings-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--varai-background) 0%, var(--varai-gray-50) 100%);
+        }
+        
+        .settings-navbar {
+            background: var(--varai-background);
+            border-bottom: 1px solid var(--varai-border);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        
+        .settings-nav-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .settings-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--varai-primary);
+            text-decoration: none;
+            background: linear-gradient(135deg, var(--varai-primary) 0%, var(--varai-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .settings-nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .settings-nav-link {
+            color: var(--varai-gray-600);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--varai-transition);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+        }
+        
+        .settings-nav-link:hover,
+        .settings-nav-link.active {
+            color: var(--varai-accent);
+            background: rgba(30, 150, 252, 0.1);
+        }
+        
+        .settings-user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .settings-user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, var(--varai-gray-50) 0%, var(--varai-gray-100) 100%);
+            border-radius: 8px;
+            border: 1px solid var(--varai-border);
+        }
+        
+        .settings-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--varai-primary) 0%, var(--varai-accent) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .settings-user-name {
+            font-weight: 600;
+            color: var(--varai-foreground);
+            font-size: 0.9rem;
+        }
+        
+        .settings-main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+        }
+        
+        .settings-sidebar {
+            background: var(--varai-background);
+            border: 1px solid var(--varai-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            height: fit-content;
+            position: sticky;
+            top: 120px;
+        }
+        
+        .settings-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .settings-nav-item {
+            margin-bottom: 0.5rem;
+        }
+        
+        .settings-nav-button {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            background: none;
+            border: none;
+            border-radius: 8px;
+            color: var(--varai-gray-600);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--varai-transition);
+            text-align: left;
+        }
+        
+        .settings-nav-button:hover,
+        .settings-nav-button.active {
+            background: linear-gradient(135deg, var(--varai-gray-50) 0%, var(--varai-gray-100) 100%);
+            color: var(--varai-accent);
+        }
+        
+        .settings-nav-icon {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .settings-content {
+            background: var(--varai-background);
+            border: 1px solid var(--varai-border);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+        
+        .settings-section {
+            display: none;
+        }
+        
+        .settings-section.active {
+            display: block;
+        }
+        
+        .settings-section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--varai-foreground);
+            margin-bottom: 0.5rem;
+        }
+        
+        .settings-section-description {
+            color: var(--varai-gray-600);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .settings-form-group {
+            margin-bottom: 2rem;
+        }
+        
+        .settings-form-label {
+            display: block;
+            font-weight: 500;
+            color: var(--varai-foreground);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .settings-form-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid var(--varai-border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--varai-transition);
+            background: var(--varai-background);
+            color: var(--varai-foreground);
+        }
+        
+        .settings-form-input:focus {
+            outline: none;
+            border-color: var(--varai-accent);
+            box-shadow: 0 0 0 3px rgba(30, 150, 252, 0.1);
+        }
+        
+        .settings-form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .settings-form-select {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid var(--varai-border);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: var(--varai-background);
+            color: var(--varai-foreground);
+            cursor: pointer;
+        }
+        
+        .settings-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--varai-gray-50) 0%, var(--varai-gray-100) 100%);
+            border: 1px solid var(--varai-border);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        .settings-toggle-info {
+            flex: 1;
+        }
+        
+        .settings-toggle-title {
+            font-weight: 500;
+            color: var(--varai-foreground);
+            margin-bottom: 0.25rem;
+        }
+        
+        .settings-toggle-description {
+            font-size: 0.8rem;
+            color: var(--varai-gray-600);
+        }
+        
+        .settings-switch {
+            position: relative;
+            width: 48px;
+            height: 24px;
+            background: var(--varai-gray-300);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--varai-transition);
+        }
+        
+        .settings-switch.active {
+            background: var(--varai-accent);
+        }
+        
+        .settings-switch::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: var(--varai-transition);
+        }
+        
+        .settings-switch.active::before {
+            transform: translateX(24px);
+        }
+        
+        .integration-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .integration-card {
+            background: linear-gradient(135deg, var(--varai-gray-50) 0%, var(--varai-gray-100) 100%);
+            border: 1px solid var(--varai-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: relative;
+        }
+        
+        .integration-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .integration-card-title {
+            font-weight: 600;
+            color: var(--varai-foreground);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .integration-card-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--varai-primary) 0%, var(--varai-accent) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+        
+        .integration-status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .integration-status-badge.connected {
+            background: rgba(48, 209, 88, 0.1);
+            color: var(--varai-success);
+        }
+        
+        .integration-status-badge.disconnected {
+            background: rgba(255, 59, 48, 0.1);
+            color: var(--varai-error);
+        }
+        
+        .integration-card-description {
+            color: var(--varai-gray-600);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+        
+        .integration-card-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        .api-key-item {
+            background: linear-gradient(135deg, var(--varai-gray-50) 0%, var(--varai-gray-100) 100%);
+            border: 1px solid var(--varai-border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .api-key-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+        
+        .api-key-name {
+            font-weight: 500;
+            color: var(--varai-foreground);
+        }
+        
+        .api-key-date {
+            font-size: 0.8rem;
+            color: var(--varai-gray-500);
+        }
+        
+        .api-key-value {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.8rem;
+            background: var(--varai-background);
+            border: 1px solid var(--varai-border);
+            border-radius: 4px;
+            padding: 0.5rem;
+            margin-bottom: 0.75rem;
+            word-break: break-all;
+        }
+        
+        .api-key-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--varai-primary) 0%, var(--varai-accent) 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--varai-transition);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--varai-shadow-md);
+        }
+        
+        .btn-secondary {
+            background: var(--varai-background);
+            color: var(--varai-gray-600);
+            border: 1px solid var(--varai-border);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--varai-transition);
+        }
+        
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, var(--varai-gray-50) 0%, var(--varai-gray-100) 100%);
+        }
+        
+        .btn-danger {
+            background: var(--varai-error);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--varai-transition);
+        }
+        
+        .btn-danger:hover {
+            background: #d32f2f;
+        }
+        
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
+        
+        @media (max-width: 768px) {
+            .settings-nav-content {
+                padding: 0 1rem;
+            }
+            
+            .settings-nav-links {
+                display: none;
+            }
+            
+            .settings-main {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+                gap: 1rem;
+            }
+            
+            .settings-sidebar {
+                position: static;
+                order: 2;
+            }
+            
+            .settings-content {
+                order: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="settings-container">
+        <!-- Settings Navigation -->
+        <nav class="settings-navbar">
+            <div class="settings-nav-content">
+                <a href="index.html" class="settings-logo">VARAi Customer Portal</a>
+                
+                <div class="settings-nav-links">
+                    <a href="index.html" class="settings-nav-link">Overview</a>
+                    <a href="dashboard.html" class="settings-nav-link">Dashboard</a>
+                    <a href="settings.html" class="settings-nav-link active">Settings</a>
+                </div>
+                
+                <div class="settings-user-menu">
+                    <div class="settings-user-info">
+                        <div class="settings-avatar" id="settingsAvatar">V</div>
+                        <span class="settings-user-name" id="settingsUserName">Loading...</span>
+                    </div>
+                    <button class="logout-button" onclick="logout()" style="background: none; border: 1px solid var(--varai-border); color: var(--varai-gray-600); padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; transition: var(--varai-transition); font-size: 0.9rem;">Sign Out</button>
+                </div>
+            </div>
+            
+        </nav>
+
+        <!-- Main Settings Content -->
+        <main class="settings-main">
+            <!-- Settings Sidebar -->
+            <aside class="settings-sidebar">
+                <nav class="settings-nav">
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li class="settings-nav-item">
+                            <button class="settings-nav-button active" onclick="showSection('profile')">
+                                <svg class="settings-nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                                Profile
+                            </button>
+                        </li>
+                        <li class="settings-nav-item">
+                            <button class="settings-nav-button" onclick="showSection('integrations')">
+                                <svg class="settings-nav-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                Store Integrations
+                            </button>
+                        </li>
+                        <li class="settings-nav-item">
+                            <button class="settings-nav-button" onclick="showSection('pms-sync')">
+                                <svg class="settings-nav-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                PMS Synchronization
+                            </button>
+                        </li>
+                        <li class="settings-nav-item">
+                            <button class="settings-nav-button" onclick="showSection('api-keys')">
+                                <svg class="settings-nav-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M21 2L19 4L15 8L22 15L21 16L14 9L10 13L8 11L12 7L16 3L21 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M5 12L2 15L5 18L8 15L5 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                API Keys
+                            </button>
+                        </li>
+                        <li class="settings-nav-item">
+                            <button class="settings-nav-button" onclick="showSection('notifications')">
+                                <svg class="settings-nav-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M18 8C18 6.4087 17.3679 4.88258 16.2426 3.75736C15.1174 2.63214 13.5913 2 12 2C10.4087 2 8.88258 2.63214 7.75736 3.75736C6.63214 4.88258 6 6.4087 6 8C6 15 3 17 3 17H21C21 17 18 15 18 8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M13.73 21C13.5542 21.3031 13.3019 21.5547 12.9982 21.7295C12.6946 21.9044 12.3504 21.9965 12 21.9965C11.6496 21.9965 11.3054 21.9044 11.0018 21.7295C10.6982 21.5547 10.4458 21.3031 10.27 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                Notifications
+                            </button>
+                        </li>
+                        <li class="settings-nav-item">
+                            <button class="settings-nav-button" onclick="showSection('billing')">
+                                <svg class="settings-nav-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M3 10H21M7 15H1M13 15H9M16 15H21M2 9.5L3 4.5C3.1 4.2 3.4 4 3.7 4H20.3C20.6 4 20.9 4.2 21 4.5L22 9.5C22.1 9.8 21.9 10 21.6 10H2.4C2.1 10 1.9 9.8 2 9.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M5 21C4.4 21 4 20.6 4 20V10H20V20C20 20.6 19.6 21 19 21H5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                Billing & Subscription
+                            </button>
+                        </li>
+                        <li class="settings-nav-item">
+                            <button class="settings-nav-button" onclick="showSection('connected-apps')">
+                                <svg class="settings-nav-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                Connected Apps
+                            </button>
+                        </li>
+                        
+                        <li class="settings-nav-item">
+                            <button class="settings-nav-button" onclick="showSection('security')">
+                                <svg class="settings-nav-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 22S8 18 8 12V7L12 5L16 7V12C16 18 12 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                Security
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+            
+            <!-- Settings Content -->
+            <div class="settings-content">
+                <!-- Profile Settings Section -->
+                <section id="profile-section" class="settings-section active">
+                    <h2 class="settings-section-title">Profile Settings</h2>
+                    <p class="settings-section-description">
+                        Manage your account information and preferences.
+                    </p>
+                    
+                    <div class="settings-form-group">
+                        <label class="settings-form-label" for="companyName">Company Name</label>
+                        <input type="text" id="companyName" class="settings-form-input" placeholder="Enter your company name" value="VisionCraft Eyewear" data-validate="required|minLength:2" required>
+                    </div>
+                    
+                    <div class="settings-form-group">
+                        <label class="settings-form-label" for="contactEmail">Contact Email</label>
+                        <input type="email" id="contactEmail" class="settings-form-input" placeholder="Enter contact email" value="admin@visioncraft.com" data-validate="required|email" required>
+                    </div>
+                    
+                    <div class="settings-form-group">
+                        <label class="settings-form-label" for="businessPhone">Business Phone</label>
+                        <input type="tel" id="businessPhone" class="settings-form-input" placeholder="Enter business phone" value="+1 (555) 123-4567" data-validate="phone">
+                    </div>
+                    
+                    <div class="settings-form-group">
+                        <label class="settings-form-label" for="businessAddress">Business Address</label>
+                        <textarea id="businessAddress" class="settings-form-input settings-form-textarea" placeholder="Enter business address">123 Main Street
+New York, NY 10001
+United States</textarea>
+                    </div>
+                    
+                    <div class="settings-form-group">
+                        <label class="settings-form-label" for="timezone">Timezone</label>
+                        <select id="timezone" class="settings-form-select">
+                            <option value="America/New_York" selected>Eastern Time (ET)</option>
+                            <option value="America/Chicago">Central Time (CT)</option>
+                            <option value="America/Denver">Mountain Time (MT)</option>
+                            <option value="America/Los_Angeles">Pacific Time (PT)</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn-primary">Save Profile Changes</button>
+                </section>
+
+                <!-- Store Integrations Section -->
+                <section id="integrations-section" class="settings-section">
+                    <h2 class="settings-section-title">Store Integrations</h2>
+                    <p class="settings-section-description">
+                        Connect and manage your e-commerce platform integrations.
+                    </p>
+                    
+                    <div class="integration-cards">
+                        <div class="integration-card">
+                            <div class="integration-card-header">
+                                <div class="integration-card-title">
+                                    <div class="integration-card-icon">SH</div>
+                                    Shopify
+                                </div>
+                                <span class="integration-status-badge connected">Connected</span>
+                            </div>
+                            <p class="integration-card-description">
+                                Sync products, orders, and customer data with your Shopify store.
+                            </p>
+                            <div class="integration-card-actions">
+                                <button class="btn-secondary btn-small integration-configure-btn" data-platform="shopify">Configure</button>
+                                <button class="btn-primary btn-small integration-sync-btn" data-platform="shopify">Sync Now</button>
+                                <button class="btn-danger btn-small integration-disconnect-btn" data-platform="shopify">Disconnect</button>
+                            </div>
+                        </div>
+                        
+                        <div class="integration-card">
+                            <div class="integration-card-header">
+                                <div class="integration-card-title">
+                                    <div class="integration-card-icon">MG</div>
+                                    Magento
+                                </div>
+                                <span class="integration-status-badge disconnected">Disconnected</span>
+                            </div>
+                            <p class="integration-card-description">
+                                Connect your Magento store for seamless product management.
+                            </p>
+                            <div class="integration-card-actions">
+                                <button class="btn-primary btn-small integration-connect-btn" data-platform="magento">Connect</button>
+                            </div>
+                        </div>
+                        
+                        <div class="integration-card">
+                            <div class="integration-card-header">
+                                <div class="integration-card-title">
+                                    <div class="integration-card-icon">WC</div>
+                                    WooCommerce
+                                </div>
+                                <span class="integration-status-badge disconnected">Disconnected</span>
+                            </div>
+                            <p class="integration-card-description">
+                                Integrate with WooCommerce for WordPress-based stores.
+                            </p>
+                            <div class="integration-card-actions">
+                                <button class="btn-primary btn-small integration-connect-btn" data-platform="woocommerce">Connect</button>
+                            </div>
+                        </div>
+                        
+                        <div class="integration-card">
+                            <div class="integration-card-header">
+                                <div class="integration-card-title">
+                                    <div class="integration-card-icon">BC</div>
+                                    BigCommerce
+                                </div>
+                                <span class="integration-status-badge disconnected">Disconnected</span>
+                            </div>
+                            <p class="integration-card-description">
+                                Connect your BigCommerce store for comprehensive integration.
+                            </p>
+                            <div class="integration-card-actions">
+                                <button class="btn-primary btn-small integration-connect-btn" data-platform="bigcommerce">Connect</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- PMS Synchronization Section -->
+                <section id="pms-sync-section" class="settings-section">
+                    <h2 class="settings-section-title">PMS Synchronization</h2>
+                    <p class="settings-section-description">
+                        Configure synchronization with your Property Management System.
+                    </p>
+                    
+                    <div class="settings-form-group">
+                        <label class="settings-form-label" for="pmsProvider">PMS Provider</label>
+                        <select id="pmsProvider" class="settings-form-select">
+                            <option value="">Select PMS Provider</option>
+                            <option value="opera" selected>Oracle Opera</option>
+                            <option value="fidelio">Fidelio Suite8</option>
+                            <option value="protel">Protel Air</option>
+                            <option value="mews">Mews</option>
+                            <option value="cloudbeds">Cloudbeds</option>
+                        </select>
+                    </div>
+                    
+                    <div class="settings-form-group">
+                        <label class="settings-form-label" for="pmsEndpoint">PMS API Endpoint</label>
+                        <input type="url" id="pmsEndpoint" class="settings-form-input" placeholder="https://api.yourpms.com" value="https://api.opera.oracle.com/v1">
+                    </div>
+                    
+                    <div class="settings-form-group">
+                        <label class="settings-form-label" for="pmsUsername">PMS Username</label>
+                        <input type="text" id="pmsUsername" class="settings-form-input" placeholder="Enter PMS username" value="varai_integration">
+                    </div>
+                    
+                    <div class="settings-form-group">
+                        <label class="settings-form-label" for="pmsPassword">PMS Password</label>
+                        <input type="password" id="pmsPassword" class="settings-form-input" placeholder="Enter PMS password" data-validate="required|minLength:8">
+                    </div>
+                    
+                    <div class="settings-toggle">
+                        <div class="settings-toggle-info">
+                            <div class="settings-toggle-title">Auto Sync</div>
+                            <div class="settings-toggle-description">Automatically sync data every 15 minutes</div>
+                        </div>
+                        <div class="settings-switch active" onclick="toggleSwitch(this)"></div>
+                    </div>
+                    
+                    <div class="settings-toggle">
+                        <div class="settings-toggle-info">
+                            <div class="settings-toggle-title">Real-time Updates</div>
+                            <div class="settings-toggle-description">Push updates to PMS in real-time</div>
+                        </div>
+                        <div class="settings-switch" onclick="toggleSwitch(this)"></div>
+                    </div>
+                    
+                    <button class="btn-primary">Save PMS Settings</button>
+                    <button class="btn-secondary" style="margin-left: 1rem;">Test Connection</button>
+                </section>
+
+                <!-- API Keys Section -->
+                <section id="api-keys-section" class="settings-section">
+                    <h2 class="settings-section-title">API Keys</h2>
+                    <p class="settings-section-description">
+                        Manage your API keys for accessing VARAi Commerce Studio services.
+                    </p>
+                    
+                    <div class="settings-form-group">
+                        <button class="btn-primary">Generate New API Key</button>
+                    </div>
+                    
+                    <div class="api-key-item">
+                        <div class="api-key-header">
+                            <span class="api-key-name">Production API Key</span>
+                            <span class="api-key-date">Created: Dec 15, 2024</span>
+                        </div>
+                        <div class="api-key-value">varai_prod_ak_1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p7q8r9s0t</div>
+                        <div class="api-key-actions">
+                            <button class="btn-secondary btn-small">Copy</button>
+                            <button class="btn-secondary btn-small">Regenerate</button>
+                            <button class="btn-danger btn-small">Delete</button>
+                        </div>
+                    </div>
+                    
+                    <div class="api-key-item">
+                        <div class="api-key-header">
+                            <span class="api-key-name">Development API Key</span>
+                            <span class="api-key-date">Created: Dec 10, 2024</span>
+                        </div>
+                        <div class="api-key-value">varai_dev_ak_9z8y7x6w5v4u3t2s1r0q9p8o7n6m5l4k3j2i1h0g</div>
+                        <div class="api-key-actions">
+                            <button class="btn-secondary btn-small">Copy</button>
+                            <button class="btn-secondary btn-small">Regenerate</button>
+                            <button class="btn-danger btn-small">Delete</button>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-form-group" style="margin-top: 2rem;">
+                        <h3 style="margin-bottom: 1rem;">API Usage Limits</h3>
+                        <div style="background: var(--varai-gray-50); padding: 1rem; border-radius: 8px; border: 1px solid var(--varai-border);">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                                <div>
+                                    <div style="font-weight: 500; color: var(--varai-foreground);">Monthly Requests</div>
+                                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--varai-accent);">45,230 / 100,000</div>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 500; color: var(--varai-foreground);">Rate Limit</div>
+                                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--varai-accent);">1,000 / hour</div>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 500; color: var(--varai-foreground);">Current Plan</div>
+                                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--varai-accent);">Professional</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+
+                </section>
+
+                <!-- Notifications Section -->
+                <section id="notifications-section" class="settings-section">
+                    <h2 class="settings-section-title">Notifications</h2>
+                    <p class="settings-section-description">
+                        Configure how and when you receive notifications.
+                    </p>
+                    
+                    <div class="settings-form-group">
+                        <h3 style="margin-bottom: 1rem;">Email Notifications</h3>
+                        
+                        <div class="settings-toggle">
+                            <div class="settings-toggle-info">
+                                <div class="settings-toggle-title">Order Notifications</div>
+                                <div class="settings-toggle-description">Receive emails when new orders are placed</div>
+                            </div>
+                            <div class="settings-switch active" onclick="toggleSwitch(this)"></div>
+                        </div>
+                        
+                        <div class="settings-toggle">
+                            <div class="settings-toggle-info">
+                                <div class="settings-toggle-title">Integration Alerts</div>
+                                <div class="settings-toggle-description">Get notified about integration issues</div>
+                            </div>
+                            <div class="settings-switch active" onclick="toggleSwitch(this)"></div>
+                        </div>
+                        
+                        <div class="settings-toggle">
+                            <div class="settings-toggle-info">
+                                <div class="settings-toggle-title">Weekly Reports</div>
+                                <div class="settings-toggle-description">Receive weekly analytics summaries</div>
+                            </div>
+                            <div class="settings-switch" onclick="toggleSwitch(this)"></div>
+                        </div>
+                        
+                        <div class="settings-toggle">
+                            <div class="settings-toggle-info">
+                                <div class="settings-toggle-title">System Updates</div>
+                                <div class="settings-toggle-description">Get notified about platform updates</div>
+                            </div>
+                            <div class="settings-switch active" onclick="toggleSwitch(this)"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-form-group">
+                        <h3 style="margin-bottom: 1rem;">SMS Notifications</h3>
+                        
+                        <div class="settings-form-group">
+                            <label class="settings-form-label" for="smsNumber">SMS Number</label>
+                            <input type="tel" id="smsNumber" class="settings-form-input" placeholder="Enter phone number" value="+1 (555) 123-4567">
+                        </div>
+                        
+                        <div class="settings-toggle">
+                            <div class="settings-toggle-info">
+                                <div class="settings-toggle-title">Critical Alerts</div>
+                                <div class="settings-toggle-description">Receive SMS for critical system alerts</div>
+                            </div>
+                            <div class="settings-switch active" onclick="toggleSwitch(this)"></div>
+                        </div>
+                        
+                        <div class="settings-toggle">
+                            <div class="settings-toggle-info">
+                                <div class="settings-toggle-title">Order Confirmations</div>
+                                <div class="settings-toggle-description">SMS confirmations for high-value orders</div>
+                            </div>
+                            <div class="settings-switch" onclick="toggleSwitch(this)"></div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-primary">Save Notification Settings</button>
+                </section>
+
+                <!-- Billing & Subscription Section -->
+                <section id="billing-section" class="settings-section">
+                    <h2 class="settings-section-title">Billing & Subscription</h2>
+                    <p class="settings-section-description">
+                        Manage your subscription, billing information, and payment methods.
+                    </p>
+                    
+                    <!-- Current Plan -->
+                    <div class="settings-form-group">
+                        <h3 style="margin-bottom: 1rem;">Current Plan</h3>
+                        <div style="background: linear-gradient(135deg, var(--varai-accent) 0%, #0066cc 100%); color: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <div>
+                                    <h4 style="margin: 0; font-size: 1.25rem; font-weight: 600;">Professional Plan</h4>
+                                    <p style="margin: 0.5rem 0 0 0; opacity: 0.9;">Advanced features for growing businesses</p>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-size: 2rem; font-weight: 700; line-height: 1;">$99</div>
+                                    <div style="opacity: 0.8; font-size: 0.9rem;">per month</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div style="font-size: 0.9rem; opacity: 0.9;">
+                                    Next billing: January 26, 2025
+                                </div>
+                                <button style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem;">
+                                    Change Plan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Usage & Limits -->
+                    <div class="settings-form-group">
+                        <h3 style="margin-bottom: 1rem;">Usage & Limits</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                            <div style="background: var(--varai-gray-50); padding: 1rem; border-radius: 8px; border: 1px solid var(--varai-border);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                    <span style="font-weight: 500; color: var(--varai-foreground);">API Calls</span>
+                                    <span style="font-size: 0.8rem; color: var(--varai-gray-600);">This Month</span>
+                                </div>
+                                <div style="margin-bottom: 0.5rem;">
+                                    <div style="background: var(--varai-gray-200); height: 8px; border-radius: 4px; overflow: hidden;">
+                                        <div style="background: var(--varai-accent); height: 100%; width: 65%; border-radius: 4px;"></div>
+                                    </div>
+                                </div>
+                                <div style="font-size: 0.9rem; color: var(--varai-gray-600);">
+                                    65,000 / 100,000 calls
+                                </div>
+                            </div>
+                            
+                            <div style="background: var(--varai-gray-50); padding: 1rem; border-radius: 8px; border: 1px solid var(--varai-border);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                    <span style="font-weight: 500; color: var(--varai-foreground);">Storage</span>
+                                    <span style="font-size: 0.8rem; color: var(--varai-gray-600);">Used</span>
+                                </div>
+                                <div style="margin-bottom: 0.5rem;">
+                                    <div style="background: var(--varai-gray-200); height: 8px; border-radius: 4px; overflow: hidden;">
+                                        <div style="background: var(--varai-success); height: 100%; width: 45%; border-radius: 4px;"></div>
+                                    </div>
+                                </div>
+                                <div style="font-size: 0.9rem; color: var(--varai-gray-600);">
+                                    4.5 GB / 10 GB
+                                </div>
+                            </div>
+                            
+                            <div style="background: var(--varai-gray-50); padding: 1rem; border-radius: 8px; border: 1px solid var(--varai-border);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                    <span style="font-weight: 500; color: var(--varai-foreground);">Team Members</span>
+                                    <span style="font-size: 0.8rem; color: var(--varai-gray-600);">Active</span>
+                                </div>
+                                <div style="margin-bottom: 0.5rem;">
+                                    <div style="background: var(--varai-gray-200); height: 8px; border-radius: 4px; overflow: hidden;">
+                                        <div style="background: var(--varai-warning); height: 100%; width: 80%; border-radius: 4px;"></div>
+                                    </div>
+                                </div>
+                                <div style="font-size: 0.9rem; color: var(--varai-gray-600);">
+                                    8 / 10 members
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="settings-form-group">
+                        <h3 style="margin-bottom: 1rem;">Payment Method</h3>
+                        <div style="background: var(--varai-gray-50); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--varai-border); margin-bottom: 1rem;">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <div style="width: 40px; height: 25px; background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.7rem;">
+                                        VISA
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 500; color: var(--varai-foreground);">•••• •••• •••• 4242</div>
+                                        <div style="font-size: 0.8rem; color: var(--varai-gray-600);">Expires 12/2027</div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button class="btn-secondary btn-small">Update</button>
+                                    <button class="btn-secondary btn-small">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn-secondary">Add Payment Method</button>
+                    </div>
+
+                    <!-- Billing Address -->
+                    <div class="settings-form-group">
+                        <h3 style="margin-bottom: 1rem;">Billing Address</h3>
+                        
+                        <div class="settings-form-group">
+                            <label class="settings-form-label" for="billingCompany">Company Name</label>
+                            <input type="text" id="billingCompany" class="settings-form-input" placeholder="Enter company name" value="VisionCraft Eyewear">
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="settings-form-group">
+                                <label class="settings-form-label" for="billingFirstName">First Name</label>
+                                <input type="text" id="billingFirstName" class="settings-form-input" placeholder="Enter first name" value="John" data-validate="required|minLength:2" required>
+                            </div>
+                            <div class="settings-form-group">
+                                <label class="settings-form-label" for="billingLastName">Last Name</label>
+                                <input type="text" id="billingLastName" class="settings-form-input" placeholder="Enter last name" value="Smith">
+                            </div>
+                        </div>
+                        
+                        <div class="settings-form-group">
+                            <label class="settings-form-label" for="billingAddress">Street Address</label>
+                            <input type="text" id="billingAddress" class="settings-form-input" placeholder="Enter street address" value="123 Business Ave">
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 100px; gap: 1rem;">
+                            <div class="settings-form-group">
+                                <label class="settings-form-label" for="billingCity">City</label>
+                                <input type="text" id="billingCity" class="settings-form-input" placeholder="Enter city" value="New York">
+                            </div>
+                            <div class="settings-form-group">
+                                <label class="settings-form-label" for="billingState">State</label>
+                                <select id="billingState" class="settings-form-input">
+                                    <option value="NY" selected>NY</option>
+                                    <option value="CA">CA</option>
+                                    <option value="TX">TX</option>
+                                    <option value="FL">FL</option>
+                                </select>
+                            </div>
+                            <div class="settings-form-group">
+                                <label class="settings-form-label" for="billingZip">ZIP</label>
+                                <input type="text" id="billingZip" class="settings-form-input" placeholder="ZIP" value="10001" data-validate="zipCode">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Methods -->
+                    <div class="settings-form-group">
+                        <h3 style="margin-bottom: 1rem;">Payment Methods</h3>
+                        <div id="payment-methods-container">
+                            <!-- Payment methods will be loaded here by payment-method-manager.js -->
+                        </div>
+                    </div>
+
+                    <!-- Billing History -->
+                    <div class="settings-form-group">
+                        <h3 style="margin-bottom: 1rem;">Billing History</h3>
+                        <div style="background: var(--varai-gray-50); border-radius: 8px; border: 1px solid var(--varai-border); overflow: hidden;">
+                            <div style="display: grid; grid-template-columns: 1fr 120px 100px 80px; gap: 1rem; padding: 1rem; background: var(--varai-gray-100); font-weight: 500; font-size: 0.9rem; color: var(--varai-gray-700);">
+                                <div>Invoice</div>
+                                <div>Date</div>
+                                <div>Amount</div>
+                                <div>Status</div>
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 120px 100px 80px; gap: 1rem; padding: 1rem; border-bottom: 1px solid var(--varai-border); align-items: center;">
+                                <div>
+                                    <div style="font-weight: 500; color: var(--varai-foreground);">#INV-2024-12</div>
+                                    <div style="font-size: 0.8rem; color: var(--varai-gray-600);">Professional Plan</div>
+                                </div>
+                                <div style="font-size: 0.9rem; color: var(--varai-gray-600);">Dec 26, 2024</div>
+                                <div style="font-weight: 500; color: var(--varai-foreground);">$99.00</div>
+                                <div>
+                                    <span style="background: var(--varai-success); color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 500;">PAID</span>
+                                </div>
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 120px 100px 80px; gap: 1rem; padding: 1rem; border-bottom: 1px solid var(--varai-border); align-items: center;">
+                                <div>
+                                    <div style="font-weight: 500; color: var(--varai-foreground);">#INV-2024-11</div>
+                                    <div style="font-size: 0.8rem; color: var(--varai-gray-600);">Professional Plan</div>
+                                </div>
+                                <div style="font-size: 0.9rem; color: var(--varai-gray-600);">Nov 26, 2024</div>
+                                <div style="font-weight: 500; color: var(--varai-foreground);">$99.00</div>
+                                <div>
+                                    <span style="background: var(--varai-success); color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 500;">PAID</span>
+                                </div>
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 120px 100px 80px; gap: 1rem; padding: 1rem; align-items: center;">
+                                <div>
+                                    <div style="font-weight: 500; color: var(--varai-foreground);">#INV-2024-10</div>
+                                    <div style="font-size: 0.8rem; color: var(--varai-gray-600);">Professional Plan</div>
+                                </div>
+                                <div style="font-size: 0.9rem; color: var(--varai-gray-600);">Oct 26, 2024</div>
+                                <div style="font-weight: 500; color: var(--varai-foreground);">$99.00</div>
+                                <div>
+                                    <span style="background: var(--varai-success); color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 500;">PAID</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <button class="btn-secondary">Download All Invoices</button>
+                        </div>
+                    </div>
+
+                    <!-- Subscription Settings -->
+                    <div class="settings-form-group">
+                        <h3 style="margin-bottom: 1rem;">Subscription Settings</h3>
+                        
+                        <div class="settings-toggle" style="margin-bottom: 1rem;">
+                            <div class="settings-toggle-info">
+                                <div class="settings-toggle-title">Auto-renewal</div>
+                                <div class="settings-toggle-description">Automatically renew subscription each billing cycle</div>
+                            </div>
+                            <div class="settings-switch active" onclick="toggleSwitch(this)"></div>
+                        </div>
+                        
+                        <div class="settings-toggle" style="margin-bottom: 1rem;">
+                            <div class="settings-toggle-info">
+                                <div class="settings-toggle-title">Usage Alerts</div>
+                                <div class="settings-toggle-description">Receive notifications when approaching usage limits</div>
+                            </div>
+                            <div class="settings-switch active" onclick="toggleSwitch(this)"></div>
+                        </div>
+                        
+                        <div class="settings-toggle">
+                            <div class="settings-toggle-info">
+                                <div class="settings-toggle-title">Billing Notifications</div>
+                                <div class="settings-toggle-description">Email notifications for billing events and invoices</div>
+                            </div>
+                            <div class="settings-switch active" onclick="toggleSwitch(this)"></div>
+                        </div>
+                    </div>
+
+                    <!-- Danger Zone -->
+                    <div class="settings-form-group">
+                        <h3 style="margin-bottom: 1rem; color: var(--varai-danger);">Danger Zone</h3>
+                        <div style="background: var(--varai-gray-50); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--varai-danger); border-left: 4px solid var(--varai-danger);">
+                            <div style="margin-bottom: 1rem;">
+                                <h4 style="margin: 0 0 0.5rem 0; color: var(--varai-danger); font-size: 1rem;">Cancel Subscription</h4>
+                                <p style="margin: 0; color: var(--varai-gray-600); font-size: 0.9rem; line-height: 1.5;">
+                                    Canceling your subscription will downgrade your account to the free plan at the end of the current billing period.
+                                    You will lose access to premium features but your data will be preserved.
+                                </p>
+                            </div>
+                            <button style="background: var(--varai-danger); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; cursor: pointer; font-weight: 500;">
+                                Cancel Subscription
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-primary">Save Billing Settings</button>
+                </section>
+
+                <!-- Connected Apps Section -->
+                <section id="connected-apps-section" class="settings-section">
+                    <h2 class="settings-section-title">Connected Apps</h2>
+                    <p class="settings-section-description">
+                        Manage third-party applications connected to your account.
+                    </p>
+                    
+                    <div class="integration-cards">
+                        <div class="integration-card">
+                            <div class="integration-card-header">
+                                <div class="integration-card-title">
+                                    <div class="integration-card-icon">GA</div>
+                                    Google Analytics
+                                </div>
+                                <span class="integration-status-badge connected">Connected</span>
+                            </div>
+                            <p class="integration-card-description">
+                                Track website analytics and customer behavior insights.
+                            </p>
+                            <div class="integration-card-actions">
+                                <button class="btn-secondary btn-small">Configure</button>
+                                <button class="btn-danger btn-small">Disconnect</button>
+                            </div>
+                        </div>
+                        
+                        <div class="integration-card">
+                            <div class="integration-card-header">
+                                <div class="integration-card-title">
+                                    <div class="integration-card-icon">MC</div>
+                                    Mailchimp
+                                </div>
+                                <span class="integration-status-badge connected">Connected</span>
+                            </div>
+                            <p class="integration-card-description">
+                                Sync customer data for email marketing campaigns.
+                            </p>
+                            <div class="integration-card-actions">
+                                <button class="btn-secondary btn-small">Configure</button>
+                                <button class="btn-danger btn-small">Disconnect</button>
+                            </div>
+                        </div>
+                        
+                        <div class="integration-card">
+                            <div class="integration-card-header">
+                                <div class="integration-card-title">
+                                    <div class="integration-card-icon">ZP</div>
+                                    Zapier
+                                </div>
+                                <span class="integration-status-badge disconnected">Disconnected</span>
+                            </div>
+                            <p class="integration-card-description">
+                                Automate workflows between VARAi and other tools.
+                            </p>
+                            <div class="integration-card-actions">
+                                <button class="btn-primary btn-small">Connect</button>
+                            </div>
+                        </div>
+                        
+                        <div class="integration-card">
+                            <div class="integration-card-header">
+                                <div class="integration-card-title">
+                                    <div class="integration-card-icon">SL</div>
+                                    Slack
+                                </div>
+                                <span class="integration-status-badge disconnected">Disconnected</span>
+                            </div>
+                            <p class="integration-card-description">
+                                Receive notifications and alerts in your Slack workspace.
+                            </p>
+                            <div class="integration-card-actions">
+                                <button class="btn-primary btn-small">Connect</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-form-group" style="margin-top: 2rem;">
+                        <h3 style="margin-bottom: 1rem;">App Permissions</h3>
+                        <div style="background: var(--varai-gray-50); padding: 1rem; border-radius: 8px; border: 1px solid var(--varai-border);">
+                            <p style="color: var(--varai-gray-600); margin-bottom: 1rem;">
+                                Review and manage permissions for connected applications.
+                            </p>
+                            <button class="btn-secondary">Review Permissions</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Security Section -->
+                <section id="security-section" class="settings-section">
+                    <h2 class="settings-section-title">Security</h2>
+                    <p class="settings-section-description">
+                        Manage your account security settings and access controls.
+                    </p>
+                    
+                    <div class="settings-form-group">
+                        <h3 style="margin-bottom: 1rem;">Password Settings</h3>
+                        
+                        <div class="settings-form-group">
+                            <label class="settings-form-label" for="currentPassword">Current Password</label>
+                            <input type="password" id="currentPassword" class="settings-form-input" placeholder="Enter current password" data-validate="required|minLength:8" required>
+                        </div>
+                        
+                        <div class="settings-form-group">
+                            <label class="settings-form-label" for="newPassword">New Password</label>
+                            <input type="password" id="newPassword" class="settings-form-input" placeholder="Enter new password" data-validate="required|passwordStrength" required>
+                        </div>
+                        
+                        <div class="settings-form-group">
+                            <label class="settings-form-label" for="confirmPassword">Confirm New Password</label>
+                            <input type="password" id="confirmPassword" class="settings-form-input" placeholder="Confirm new password">
+                        </div>
+                        
+                        <button class="btn-primary">Update Password</button>
+                    </div>
+                    
+                    <div class="settings-form-group">
+                        <h3 style="margin-bottom: 1rem;">Two-Factor Authentication</h3>
+                        
+                        <div class="settings-toggle">
+                            <div class="settings-toggle-info">
+                                <div class="settings-toggle-title">Enable 2FA</div>
+                                <div class="settings-toggle-description">Add an extra layer of security to your account</div>
+                            </div>
+                            <div class="settings-switch" onclick="toggleSwitch(this)"></div>
+                        </div>
+                        
+                        <div style="margin-top: 1rem;">
+                            <button class="btn-secondary">Setup Authenticator App</button>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-form-group">
+                        <h3 style="margin-bottom: 1rem;">Session Management</h3>
+                        
+                        <div class="settings-form-group">
+                            <label class="settings-form-label" for="sessionTimeout">Session Timeout (minutes)</label>
+                            <select id="sessionTimeout" class="settings-form-select">
+                                <option value="30" selected>30 minutes</option>
+                                <option value="60">1 hour</option>
+                                <option value="120">2 hours</option>
+                                <option value="480">8 hours</option>
+                                <option value="1440">24 hours</option>
+                            </select>
+                        </div>
+                        
+                        <div class="settings-toggle">
+                            <div class="settings-toggle-info">
+                                <div class="settings-toggle-title">Remember Me</div>
+                                <div class="settings-toggle-description">Stay logged in on this device</div>
+                            </div>
+                            <div class="settings-switch active" onclick="toggleSwitch(this)"></div>
+                        </div>
+                        
+                        <button class="btn-danger" style="margin-top: 1rem;">Sign Out All Devices</button>
+                    </div>
+                    
+                    <div class="settings-form-group">
+                        <h3 style="margin-bottom: 1rem;">Access Logs</h3>
+                        <div style="background: var(--varai-gray-50); padding: 1rem; border-radius: 8px; border: 1px solid var(--varai-border);">
+                            <div style="margin-bottom: 0.5rem;">
+                                <strong>Last Login:</strong> Dec 26, 2024 at 11:14 PM (New York, NY)
+                            </div>
+                            <div style="margin-bottom: 0.5rem;">
+                                <strong>Previous Login:</strong> Dec 26, 2024 at 9:30 AM (New York, NY)
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <strong>Failed Attempts:</strong> 0 in the last 24 hours
+                            </div>
+                            <button class="btn-secondary">View Full Access Log</button>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-primary">Save Security Settings</button>
+                </section>
+
+                <!-- Billing & Subscription Section -->
+                <section id="billing-section" class="settings-section">
+                    <h2 class="settings-section-title">Billing & Subscription</h2>
+                    <p class="settings-section-description">
+                        Manage your subscription, billing information, and payment methods.
+                    </p>
+                    
+                    <!-- Current Plan -->
+                    <div class="settings-form-group">
+                        <h3 style="margin-bottom: 1rem;">Current Plan</h3>
+                        <div style="background: linear-gradient(135deg, var(--varai-accent) 0%, #0066cc 100%); color: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <div>
+                                    <h4 style="margin: 0; font-size: 1.25rem; font-weight: 600;">Professional Plan</h4>
+                                    <p style="margin: 0.5rem 0 0 0; opacity: 0.9;">Advanced features for growing businesses</p>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-size: 2rem; font-weight: 700; line-height: 1;">$99</div>
+                                    <div style="opacity: 0.8; font-size: 0.9rem;">per month</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div style="font-size: 0.9rem; opacity: 0.9;">
+                                    Next billing: January 26, 2025
+                                </div>
+                                <button style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem;">
+                                    Change Plan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Usage & Limits -->
+                    <div class="settings-form-group">
+                        <h3 style="margin-bottom: 1rem;">Usage & Limits</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                            <div style="background: var(--varai-gray-50); padding: 1rem; border-radius: 8px; border: 1px solid var(--varai-border);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                    <span style="font-weight: 500; color: var(--varai-foreground);">API Calls</span>
+                                    <span style="font-size: 0.8rem; color: var(--varai-gray-600);">This Month</span>
+                                </div>
+                                <div style="margin-bottom: 0.5rem;">
+                                    <div style="background: var(--varai-gray-200); height: 8px; border-radius: 4px; overflow: hidden;">
+                                        <div style="background: var(--varai-accent); height: 100%; width: 65%; border-radius: 4px;"></div>
+                                    </div>
+                                </div>
+                                <div style="font-size: 0.9rem; color: var(--varai-gray-600);">
+                                    65,000 / 100,000 calls
+                                </div>
+                            </div>
+                            
+                            <div style="background: var(--varai-gray-50); padding: 1rem; border-radius: 8px; border: 1px solid var(--varai-border);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                    <span style="font-weight: 500; color: var(--varai-foreground);">Storage</span>
+                                    <span style="font-size: 0.8rem; color: var(--varai-gray-600);">Used</span>
+                                </div>
+                                <div style="margin-bottom: 0.5rem;">
+                                    <div style="background: var(--varai-gray-200); height: 8px; border-radius: 4px; overflow: hidden;">
+                                        <div style="background: var(--varai-success); height: 100%; width: 45%; border-radius: 4px;"></div>
+                                    </div>
+                                </div>
+                                <div style="font-size: 0.9rem; color: var(--varai-gray-600);">
+                                    4.5 GB / 10 GB
+                                </div>
+                            </div>
+                            
+                            <div style="background: var(--varai-gray-50); padding: 1rem; border-radius: 8px; border: 1px solid var(--varai-border);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                    <span style="font-weight: 500; color: var(--varai-foreground);">Team Members</span>
+                                    <span style="font-size: 0.8rem; color: var(--varai-gray-600);">Active</span>
+                                </div>
+                                <div style="margin-bottom: 0.5rem;">
+                                    <div style="background: var(--varai-gray-200); height: 8px; border-radius: 4px; overflow: hidden;">
+                                        <div style="background: var(--varai-warning); height: 100%; width: 80%; border-radius: 4px;"></div>
+                                    </div>
+                                </div>
+                                <div style="font-size: 0.9rem; color: var(--varai-gray-600);">
+                                    8 / 10 members
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="settings-form-group">
+                        <h3 style="margin-bottom: 1rem;">Payment Method</h3>
+                        <div style="background: var(--varai-gray-50); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--varai-border); margin-bottom: 1rem;">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <div style="width: 40px; height: 25px; background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.7rem;">
+                                        VISA
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 500; color: var(--varai-foreground);">•••• •••• •••• 4242</div>
+                                        <div style="font-size: 0.8rem; color: var(--varai-gray-600);">Expires 12/2027</div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button class="btn-secondary btn-small">Update</button>
+                                    <button class="btn-secondary btn-small">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn-secondary">Add Payment Method</button>
+                    </div>
+
+                    <!-- Billing Address -->
+                    <div class="settings-form-group">
+                        <h3 style="margin-bottom: 1rem;">Billing Address</h3>
+                        
+                        <div class="settings-form-group">
+                            <label class="settings-form-label" for="billingCompany">Company Name</label>
+                            <input type="text" id="billingCompany" class="settings-form-input" placeholder="Enter company name" value="VisionCraft Eyewear">
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="settings-form-group">
+                                <label class="settings-form-label" for="billingFirstName">First Name</label>
+                                <input type="text" id="billingFirstName" class="settings-form-input" placeholder="Enter first name" value="John">
+                            </div>
+                            <div class="settings-form-group">
+                                <label class="settings-form-label" for="billingLastName">Last Name</label>
+                                <input type="text" id="billingLastName" class="settings-form-input" placeholder="Enter last name" value="Smith">
+                            </div>
+                        </div>
+                        
+                        <div class="settings-form-group">
+                            <label class="settings-form-label" for="billingAddress">Street Address</label>
+                            <input type="text" id="billingAddress" class="settings-form-input" placeholder="Enter street address" value="123 Business Ave">
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 100px; gap: 1rem;">
+                            <div class="settings-form-group">
+                                <label class="settings-form-label" for="billingCity">City</label>
+                                <input type="text" id="billingCity" class="settings-form-input" placeholder="Enter city" value="New York">
+                            </div>
+                            <div class="settings-form-group">
+                                <label class="settings-form-label" for="billingState">State</label>
+                                <select id="billingState" class="settings-form-input">
+                                    <option value="NY" selected>NY</option>
+                                    <option value="CA">CA</option>
+                                    <option value="TX">TX</option>
+                                    <option value="FL">FL</option>
+                                </select>
+                            </div>
+                            <div class="settings-form-group">
+                                <label class="settings-form-label" for="billingZip">ZIP</label>
+                                <input type="text" id="billingZip" class="settings-form-input" placeholder="ZIP" value="10001">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Billing History -->
+                    <div class="settings-form-group">
+                        <h3 style="margin-bottom: 1rem;">Billing History</h3>
+                        <div style="background: var(--varai-gray-50); border-radius: 8px; border: 1px solid var(--varai-border); overflow: hidden;">
+                            <div style="display: grid; grid-template-columns: 1fr 120px 100px 80px; gap: 1rem; padding: 1rem; background: var(--varai-gray-100); font-weight: 500; font-size: 0.9rem; color: var(--varai-gray-700);">
+                                <div>Invoice</div>
+                                <div>Date</div>
+                                <div>Amount</div>
+                                <div>Status</div>
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 120px 100px 80px; gap: 1rem; padding: 1rem; border-bottom: 1px solid var(--varai-border); align-items: center;">
+                                <div>
+                                    <div style="font-weight: 500; color: var(--varai-foreground);">#INV-2024-12</div>
+                                    <div style="font-size: 0.8rem; color: var(--varai-gray-600);">Professional Plan</div>
+                                </div>
+                                <div style="font-size: 0.9rem; color: var(--varai-gray-600);">Dec 26, 2024</div>
+                                <div style="font-weight: 500; color: var(--varai-foreground);">$99.00</div>
+                                <div>
+                                    <span style="background: var(--varai-success); color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 500;">PAID</span>
+                                </div>
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 120px 100px 80px; gap: 1rem; padding: 1rem; border-bottom: 1px solid var(--varai-border); align-items: center;">
+                                <div>
+                                    <div style="font-weight: 500; color: var(--varai-foreground);">#INV-2024-11</div>
+                                    <div style="font-size: 0.8rem; color: var(--varai-gray-600);">Professional Plan</div>
+                                </div>
+                                <div style="font-size: 0.9rem; color: var(--varai-gray-600);">Nov 26, 2024</div>
+                                <div style="font-weight: 500; color: var(--varai-foreground);">$99.00</div>
+                                <div>
+                                    <span style="background: var(--varai-success); color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 500;">PAID</span>
+                                </div>
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 120px 100px 80px; gap: 1rem; padding: 1rem; align-items: center;">
+                                <div>
+                                    <div style="font-weight: 500; color: var(--varai-foreground);">#INV-2024-10</div>
+                                    <div style="font-size: 0.8rem; color: var(--varai-gray-600);">Professional Plan</div>
+                                </div>
+                                <div style="font-size: 0.9rem; color: var(--varai-gray-600);">Oct 26, 2024</div>
+                                <div style="font-weight: 500; color: var(--varai-foreground);">$99.00</div>
+                                <div>
+                                    <span style="background: var(--varai-success); color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 500;">PAID</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <button class="btn-secondary">Download All Invoices</button>
+                        </div>
+                    </div>
+
+                    <!-- Subscription Settings -->
+                    <div class="settings-form-group">
+                        <h3 style="margin-bottom: 1rem;">Subscription Settings</h3>
+                        
+                        <div class="settings-toggle" style="margin-bottom: 1rem;">
+                            <div class="settings-toggle-info">
+                                <div class="settings-toggle-title">Auto-renewal</div>
+                                <div class="settings-toggle-description">Automatically renew subscription each billing cycle</div>
+                            </div>
+                            <div class="settings-switch active" onclick="toggleSwitch(this)"></div>
+                        </div>
+                        
+                        <div class="settings-toggle" style="margin-bottom: 1rem;">
+                            <div class="settings-toggle-info">
+                                <div class="settings-toggle-title">Usage Alerts</div>
+                                <div class="settings-toggle-description">Receive notifications when approaching usage limits</div>
+                            </div>
+                            <div class="settings-switch active" onclick="toggleSwitch(this)"></div>
+                        </div>
+                        
+                        <div class="settings-toggle">
+                            <div class="settings-toggle-info">
+                                <div class="settings-toggle-title">Billing Notifications</div>
+                                <div class="settings-toggle-description">Email notifications for billing events and invoices</div>
+                            </div>
+                            <div class="settings-switch active" onclick="toggleSwitch(this)"></div>
+                        </div>
+                    </div>
+
+                    <!-- Danger Zone -->
+                    <div class="settings-form-group">
+                        <h3 style="margin-bottom: 1rem; color: var(--varai-danger);">Danger Zone</h3>
+                        <div style="background: var(--varai-gray-50); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--varai-danger); border-left: 4px solid var(--varai-danger);">
+                            <div style="margin-bottom: 1rem;">
+                                <h4 style="margin: 0 0 0.5rem 0; color: var(--varai-danger); font-size: 1rem;">Cancel Subscription</h4>
+                                <p style="margin: 0; color: var(--varai-gray-600); font-size: 0.9rem; line-height: 1.5;">
+                                    Canceling your subscription will downgrade your account to the free plan at the end of the current billing period.
+                                    You will lose access to premium features but your data will be preserved.
+                                </p>
+                            </div>
+                            <button style="background: var(--varai-danger); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; cursor: pointer; font-weight: 500;">
+                                Cancel Subscription
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-primary">Save Billing Settings</button>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Stripe Integration Scripts -->
+    <script src="../js/billing-manager.js"></script>
+    <script src="../js/payment-method-manager.js"></script>
+    <script src="../js/form-validation-manager.js"></script>
+    <script src="../api/stripe/config.js"></script>
+    
+    <script>
+        // Settings navigation
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.settings-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all nav buttons
+            document.querySelectorAll('.settings-nav-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show selected section
+            const section = document.getElementById(`${sectionName}-section`);
+            if (section) {
+                section.classList.add('active');
+            }
+            
+            // Add active class to corresponding nav button
+            const navButton = document.querySelector(`[onclick="showSection('${sectionName}')"]`);
+            if (navButton) {
+                navButton.classList.add('active');
+            }
+            
+            // Update URL hash
+            window.location.hash = sectionName;
+        }
+
+        // Initialize settings when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Handle URL hash for direct section access
+            const hash = window.location.hash.substring(1);
+            if (hash) {
+                showSection(hash);
+            }
+        });
+
+        // Toggle switch functionality
+        function toggleSwitch(element) {
+            element.classList.toggle('active');
+        }
+
+        // Logout functionality
+        function logout() {
+            if (confirm('Are you sure you want to sign out?')) {
+                localStorage.removeItem('varai_customer_token');
+                localStorage.removeItem('varai_customer_data');
+                localStorage.removeItem('varai_customer_settings');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Toggle switch functionality
+        function toggleSwitch(element) {
+            element.classList.toggle('active');
+            
+            // Get the toggle info for context
+            const toggleInfo = element.previousElementSibling;
+            const toggleTitle = toggleInfo.querySelector('.settings-toggle-title').textContent;
+            
+            // Update toggle state
+            const isActive = element.classList.contains('active');
+            console.log(`${toggleTitle} ${isActive ? 'enabled' : 'disabled'}`);
+            
+            // Save setting to localStorage
+            const settingsKey = 'varai_customer_settings';
+            let settings = JSON.parse(localStorage.getItem(settingsKey) || '{}');
+            
+            // Convert title to camelCase key
+            const settingKey = toggleTitle.toLowerCase().replace(/\s+/g, '').replace(/[^a-zA-Z0-9]/g, '');
+            settings[settingKey] = isActive;
+            
+            localStorage.setItem(settingsKey, JSON.stringify(settings));
+        }
+
+        // Load user data and settings
+        function loadUserData() {
+            const userData = JSON.parse(localStorage.getItem('varai_customer_data') || '{}');
+            const settings = JSON.parse(localStorage.getItem('varai_customer_settings') || '{}');
+            
+            // Load profile data
+            if (userData.companyName) document.getElementById('companyName').value = userData.companyName;
+            if (userData.contactName) document.getElementById('contactName').value = userData.contactName;
+            if (userData.email) document.getElementById('email').value = userData.email;
+            if (userData.phone) document.getElementById('phone').value = userData.phone;
+            if (userData.address) document.getElementById('address').value = userData.address;
+            if (userData.timezone) document.getElementById('timezone').value = userData.timezone;
+            
+            // Load API keys
+            if (userData.shopifyApiKey) document.getElementById('shopifyApiKey').value = userData.shopifyApiKey;
+            if (userData.shopifySecretKey) document.getElementById('shopifySecretKey').value = userData.shopifySecretKey;
+            if (userData.magentoApiKey) document.getElementById('magentoApiKey').value = userData.magentoApiKey;
+            if (userData.woocommerceKey) document.getElementById('woocommerceKey').value = userData.woocommerceKey;
+            if (userData.bigcommerceKey) document.getElementById('bigcommerceKey').value = userData.bigcommerceKey;
+            
+            // Load PMS settings
+            if (userData.pmsProvider) document.getElementById('pmsProvider').value = userData.pmsProvider;
+            if (userData.pmsApiUrl) document.getElementById('pmsApiUrl').value = userData.pmsApiUrl;
+            if (userData.pmsApiKey) document.getElementById('pmsApiKey').value = userData.pmsApiKey;
+            
+            // Load notification preferences
+            if (userData.notificationEmail) document.getElementById('notificationEmail').value = userData.notificationEmail;
+            if (userData.smsNumber) document.getElementById('smsNumber').value = userData.smsNumber;
+            
+            // Apply toggle settings
+            document.querySelectorAll('.settings-switch').forEach(toggle => {
+                const toggleInfo = toggle.previousElementSibling;
+                const toggleTitle = toggleInfo.querySelector('.settings-toggle-title').textContent;
+                const settingKey = toggleTitle.toLowerCase().replace(/\s+/g, '').replace(/[^a-zA-Z0-9]/g, '');
+                
+                if (settings[settingKey]) {
+                    toggle.classList.add('active');
+                }
+            });
+        }
+
+        // Save form data
+        function saveSettings() {
+            const userData = {
+                companyName: document.getElementById('companyName').value,
+                contactName: document.getElementById('contactName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                address: document.getElementById('address').value,
+                timezone: document.getElementById('timezone').value,
+                shopifyApiKey: document.getElementById('shopifyApiKey').value,
+                shopifySecretKey: document.getElementById('shopifySecretKey').value,
+                magentoApiKey: document.getElementById('magentoApiKey').value,
+                woocommerceKey: document.getElementById('woocommerceKey').value,
+                bigcommerceKey: document.getElementById('bigcommerceKey').value,
+                pmsProvider: document.getElementById('pmsProvider').value,
+                pmsApiUrl: document.getElementById('pmsApiUrl').value,
+                pmsApiKey: document.getElementById('pmsApiKey').value,
+                notificationEmail: document.getElementById('notificationEmail').value,
+                smsNumber: document.getElementById('smsNumber').value
+            };
+            
+            localStorage.setItem('varai_customer_data', JSON.stringify(userData));
+            
+            // Show success message
+            alert('Settings saved successfully!');
+        }
+
+        // Enhanced DOMContentLoaded event
+        document.addEventListener('DOMContentLoaded', () => {
+            // Handle URL hash for direct section access
+            const hash = window.location.hash.substring(1);
+            if (hash) {
+                showSection(hash);
+            }
+            
+            // Load user data
+            loadUserData();
+            
+            // Initialize Payment Method Manager
+            if (typeof PaymentMethodManager !== 'undefined') {
+                window.paymentMethodManager = new PaymentMethodManager();
+                window.paymentMethodManager.init();
+            }
+            
+            // Initialize Form Validation Manager
+            if (typeof FormValidationManager !== 'undefined') {
+                window.formValidationManager = new FormValidationManager();
+                window.formValidationManager.init();
+            }
+            
+            // Initialize Real-time Data Manager
+            if (typeof RealTimeDataManager !== 'undefined') {
+                window.realTimeDataManager = new RealTimeDataManager({
+                    debug: true
+                });
+                
+                // Set up real-time event listeners
+                window.realTimeDataManager.on('connected', function() {
+                    console.log('Real-time data connection established');
+                });
+                
+                window.realTimeDataManager.on('usage_update', function(data) {
+                    console.log('Usage update received:', data);
+                });
+                
+                window.realTimeDataManager.on('billing_update', function(data) {
+                    console.log('Billing update received:', data);
+                });
+            }
+            
+            // Add save button event listeners
+            document.querySelectorAll('.btn-primary').forEach(button => {
+                if (button.textContent.includes('Save') || button.textContent.includes('Update')) {
+                    button.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        saveSettings();
+                    });
+                }
+            });
+        });
+    </script>
+    <script src="../js/realtime-data-manager.js"></script>
+    <script src="../js/store-integration-manager.js"></script>
+</body>
+</html>

@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-time Analytics - VARAi Commerce Studio</title>
+    <meta name="description" content="Experience live data processing with Chart.js visualizations, instant alerts, and real-time business intelligence dashboards for eyewear retailers.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=SF+Pro+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/varai-design-system.css">
+    <link rel="stylesheet" href="../css/enterprise-enhancements.css">
+    <link rel="stylesheet" href="../css/apple-hero-sections.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/predictive-analytics.js" defer></script>
+    <script src="../js/analytics-showcase.js" defer></script>
+    <script src="../js/main.js" defer></script>
+</head>
+<body>
+    <header class="varai-navbar">
+        <div class="varai-container">
+            <nav class="varai-flex varai-items-center varai-justify-between">
+                <a href="../index.html" class="varai-navbar-brand">VARAi Commerce Studio</a>
+                <button class="varai-mobile-menu-toggle" aria-label="Toggle navigation menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="varai-navbar-nav varai-d-none varai-d-md-flex varai-items-center" style="gap: 2rem;">
+                    <a href="../index.html" class="varai-nav-link">Home</a>
+                    <a href="../products.html" class="varai-nav-link">Products</a>
+                    <a href="../solutions.html" class="varai-nav-link">Solutions</a>
+                    <div class="varai-nav-dropdown">
+                        <a href="index.html" class="varai-nav-link varai-dropdown-toggle active">
+                            Analytics
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="margin-left: 0.5rem;">
+                                <path d="M7 10l5 5 5-5z"/>
+                            </svg>
+                        </a>
+                        <div class="varai-dropdown-menu">
+                            <a href="index.html" class="varai-dropdown-item">Analytics Hub</a>
+                            <a href="sales-forecasting.html" class="varai-dropdown-item">Sales Forecasting</a>
+                            <a href="seasonal-intelligence.html" class="varai-dropdown-item">Seasonal Intelligence</a>
+                            <a href="risk-assessment.html" class="varai-dropdown-item">Risk Assessment</a>
+                            <a href="growth-opportunities.html" class="varai-dropdown-item">Growth Opportunities</a>
+                            <a href="real-time-analytics.html" class="varai-dropdown-item">Real-time Analytics</a>
+                        </div>
+                    </div>
+                    <a href="../pricing.html" class="varai-nav-link">Pricing</a>
+                    <a href="../company.html" class="varai-nav-link">Company</a>
+                    <a href="https://visioncraft-store-353252826752.us-central1.run.app" class="varai-nav-link" target="_blank">Demo Store</a>
+                </div>
+                <div class="varai-d-none varai-d-md-flex">
+                    <a href="../customer/login.html" class="varai-nav-link" style="margin-right: 1rem;">Customer Portal</a>
+                    <a href="../signup/index.html" class="varai-btn varai-btn-primary">Get Started</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Real-time Analytics Hero -->
+        <section class="analytics-showcase-hero">
+            <div class="varai-container">
+                <div class="varai-text-center varai-mb-8 animate-on-scroll">
+                    <div class="analytics-icon" style="margin: 0 auto 2rem auto;">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                    </div>
+                    <h1 style="font-size: 3.5rem; font-weight: 700; line-height: 1.1; margin-bottom: 2rem;">
+                        Real-time Analytics
+                    </h1>
+                    <p style="font-size: 1.25rem; opacity: 0.9; max-width: 800px; margin: 0 auto;">
+                        Live data processing with Chart.js visualizations, instant alerts, and real-time 
+                        business intelligence dashboards that update every second.
+                    </p>
+                </div>
+                
+                <!-- Live Status Indicators -->
+                <div class="analytics-grid animate-on-scroll">
+                    <div class="analytics-stat-card">
+                        <div class="varai-flex varai-items-center varai-justify-center" style="gap: 0.5rem; margin-bottom: 1rem;">
+                            <div style="width: 12px; height: 12px; background: #30D158; border-radius: 50%; animation: pulse 2s infinite;"></div>
+                            <span style="color: var(--varai-success); font-weight: 600;">LIVE</span>
+                        </div>
+                        <div class="analytics-stat-value" id="liveDataPoints">0</div>
+                        <div class="analytics-stat-label">Data Points/Second</div>
+                    </div>
+                    <div class="analytics-stat-card">
+                        <div class="varai-flex varai-items-center varai-justify-center" style="gap: 0.5rem; margin-bottom: 1rem;">
+                            <div style="width: 12px; height: 12px; background: #1E96FC; border-radius: 50%; animation: pulse 2s infinite;"></div>
+                            <span style="color: var(--varai-accent); font-weight: 600;">PROCESSING</span>
+                        </div>
+                        <div class="analytics-stat-value" id="processingLatency">0ms</div>
+                        <div class="analytics-stat-label">Processing Latency</div>
+                    </div>
+                    <div class="analytics-stat-card">
+                        <div class="varai-flex varai-items-center varai-justify-center" style="gap: 0.5rem; margin-bottom: 1rem;">
+                            <div style="width: 12px; height: 12px; background: #FF9F0A; border-radius: 50%; animation: pulse 2s infinite;"></div>
+                            <span style="color: var(--varai-warning); font-weight: 600;">ALERTS</span>
+                        </div>
+                        <div class="analytics-stat-value" id="activeAlerts">0</div>
+                        <div class="analytics-stat-label">Active Alerts</div>
+                    </div>
+                    <div class="analytics-stat-card">
+                        <div class="varai-flex varai-items-center varai-justify-center" style="gap: 0.5rem; margin-bottom: 1rem;">
+                            <div style="width: 12px; height: 12px; background: #30D158; border-radius: 50%; animation: pulse 2s infinite;"></div>
+                            <span style="color: var(--varai-success); font-weight: 600;">UPTIME</span>
+                        </div>
+                        <div class="analytics-stat-value">99.9%</div>
+                        <div class="analytics-stat-label">System Uptime</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Dashboard -->
+        <section class="varai-section">
+            <div class="varai-container">
+                <div class="varai-text-center varai-mb-8 animate-on-scroll">
+                    <h2>Live Business Intelligence Dashboard</h2>
+                    <p class="varai-text-xl varai-text-muted">Watch your eyewear business metrics update in real-time</p>
+                </div>
+                
+                <div class="live-analytics-dashboard animate-on-scroll">
+                    <div class="varai-flex varai-items-center varai-justify-between varai-mb-6">
+                        <h3>Real-time Metrics</h3>
+                        <div class="varai-flex varai-items-center" style="gap: 1rem;">
+                            <div class="varai-flex varai-items-center" style="gap: 0.5rem;">
+                                <div style="width: 8px; height: 8px; background: #30D158; border-radius: 50%; animation: pulse 2s infinite;"></div>
+                                <span style="font-size: 0.9rem; color: var(--varai-success);">Live Data</span>
+                            </div>
+                            <button class="varai-btn varai-btn-outline" onclick="toggleDataStream()">
+                                <span id="streamToggle">Pause Stream</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Real-time Charts Grid -->
+                    <div class="varai-grid varai-grid-cols-2" style="gap: 2rem; margin-bottom: 2rem;">
+                        <div>
+                            <h4 style="margin-bottom: 1rem;">Sales Performance</h4>
+                            <div style="height: 300px;">
+                                <canvas id="liveSalesChart" width="400" height="300"></canvas>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 style="margin-bottom: 1rem;">Customer Activity</h4>
+                            <div style="height: 300px;">
+                                <canvas id="liveCustomerChart" width="400" height="300"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Live Metrics Cards -->
+                    <div class="analytics-grid">
+                        <div class="analytics-stat-card">
+                            <div class="analytics-stat-value" id="currentRevenue">$0</div>
+                            <div class="analytics-stat-label">Current Hour Revenue</div>
+                            <div class="analytics-stat-change positive" id="revenueChange">+0%</div>
+                        </div>
+                        <div class="analytics-stat-card">
+                            <div class="analytics-stat-value" id="currentOrders">0</div>
+                            <div class="analytics-stat-label">Orders This Hour</div>
+                            <div class="analytics-stat-change positive" id="ordersChange">+0</div>
+                        </div>
+                        <div class="analytics-stat-card">
+                            <div class="analytics-stat-value" id="activeVisitors">0</div>
+                            <div class="analytics-stat-label">Active Visitors</div>
+                            <div class="analytics-stat-change neutral" id="visitorsChange">Online now</div>
+                        </div>
+                        <div class="analytics-stat-card">
+                            <div class="analytics-stat-value" id="conversionRate">0%</div>
+                            <div class="analytics-stat-label">Conversion Rate</div>
+                            <div class="analytics-stat-change positive" id="conversionChange">+0%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Real-time Features -->
+        <section class="varai-section varai-bg-light">
+            <div class="varai-container">
+                <div class="varai-text-center varai-mb-8 animate-on-scroll">
+                    <h2>Real-time Analytics Features</h2>
+                    <p class="varai-text-xl varai-text-muted">Comprehensive live monitoring for your eyewear business</p>
+                </div>
+                
+                <div class="varai-grid varai-grid-cols-3" style="gap: 2rem;">
+                    <div class="analytics-capability-card animate-on-scroll">
+                        <div class="analytics-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg>
+                        </div>
+                        <h3>Instant Data Processing</h3>
+                        <p class="varai-text-muted">
+                            Process thousands of data points per second with sub-millisecond latency 
+                            for immediate business insights.
+                        </p>
+                        <ul style="list-style: none; padding: 0; margin-top: 1rem;">
+                            <li style="margin: 0.5rem 0; color: var(--varai-gray-600);">✓ Sub-millisecond latency</li>
+                            <li style="margin: 0.5rem 0; color: var(--varai-gray-600);">✓ High-throughput processing</li>
+                            <li style="margin: 0.5rem 0; color: var(--varai-gray-600);">✓ Automatic scaling</li>
+                        </ul>
+                    </div>
+
+                    <div class="analytics-capability-card animate-on-scroll">
+                        <div class="analytics-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                        </div>
+                        <h3>Smart Alerts & Notifications</h3>
+                        <p class="varai-text-muted">
+                            Intelligent alerting system that notifies you of important events, 
+                            anomalies, and opportunities as they happen.
+                        </p>
+                        <ul style="list-style: none; padding: 0; margin-top: 1rem;">
+                            <li style="margin: 0.5rem 0; color: var(--varai-gray-600);">✓ Anomaly detection</li>
+                            <li style="margin: 0.5rem 0; color: var(--varai-gray-600);">✓ Custom thresholds</li>
+                            <li style="margin: 0.5rem 0; color: var(--varai-gray-600);">✓ Multi-channel alerts</li>
+                        </ul>
+                    </div>
+
+                    <div class="analytics-capability-card animate-on-scroll">
+                        <div class="analytics-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                            </svg>
+                        </div>
+                        <h3>Interactive Visualizations</h3>
+                        <p class="varai-text-muted">
+                            Beautiful, responsive charts powered by Chart.js that update in real-time 
+                            with smooth animations and interactions.
+                        </p>
+                        <ul style="list-style: none; padding: 0; margin-top: 1rem;">
+                            <li style="margin: 0.5rem 0; color: var(--varai-gray-600);">✓ Chart.js powered</li>
+                            <li style="margin: 0.5rem 0; color: var(--varai-gray-600);">✓ Smooth animations</li>
+                            <li style="margin: 0.5rem 0; color: var(--varai-gray-600);">✓ Mobile responsive</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Alerts Demo -->
+        <section class="varai-section">
+            <div class="varai-container">
+                <div class="varai-text-center varai-mb-8 animate-on-scroll">
+                    <h2>Live Alerts System</h2>
+                    <p class="varai-text-xl varai-text-muted">See how our intelligent alerting system works in real-time</p>
+                </div>
+                
+                <div class="live-analytics-dashboard animate-on-scroll">
+                    <div class="varai-flex varai-items-center varai-justify-between varai-mb-6">
+                        <h3>Alert Stream</h3>
+                        <div class="varai-flex varai-items-center" style="gap: 0.5rem;">
+                            <div style="width: 8px; height: 8px; background: #FF9F0A; border-radius: 50%; animation: pulse 2s infinite;"></div>
+                            <span style="font-size: 0.9rem; color: var(--varai-warning);">Monitoring</span>
+                        </div>
+                    </div>
+                    
+                    <div id="alertsContainer" style="max-height: 400px; overflow-y: auto; background: var(--varai-gray-50); border-radius: 12px; padding: 1rem;">
+                        <!-- Alerts will be dynamically added here -->
+                    </div>
+                    
+                    <div class="varai-mt-4 varai-text-center">
+                        <button class="varai-btn varai-btn-primary" onclick="generateTestAlert()">Generate Test Alert</button>
+                        <button class="varai-btn varai-btn-outline" onclick="clearAlerts()">Clear Alerts</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technical Specifications -->
+        <section class="varai-section varai-bg-light">
+            <div class="varai-container">
+                <div class="varai-text-center varai-mb-8 animate-on-scroll">
+                    <h2>Technical Specifications</h2>
+                    <p class="varai-text-xl varai-text-muted">Enterprise-grade real-time analytics infrastructure</p>
+                </div>
+                
+                <div class="varai-grid varai-grid-cols-2" style="gap: 3rem;">
+                    <div class="animate-on-scroll">
+                        <h3 style="margin-bottom: 1.5rem;">Performance Metrics</h3>
+                        <div class="analytics-demo-container">
+                            <div style="padding: 1rem;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                                    <span>Data Processing Latency</span>
+                                    <strong style="color: var(--varai-success);">&lt; 10ms</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                                    <span>Throughput Capacity</span>
+                                    <strong style="color: var(--varai-success);">100K events/sec</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                                    <span>System Uptime</span>
+                                    <strong style="color: var(--varai-success);">99.9%</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                                    <span>Data Retention</span>
+                                    <strong style="color: var(--varai-accent);">Real-time + 2 years</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>Alert Response Time</span>
+                                    <strong style="color: var(--varai-success);">&lt; 1 second</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="animate-on-scroll">
+                        <h3 style="margin-bottom: 1.5rem;">Integration Capabilities</h3>
+                        <div class="analytics-demo-container">
+                            <div style="padding: 1rem;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                                    <span>REST API</span>
+                                    <strong style="color: var(--varai-success);">✓ Available</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                                    <span>WebSocket Streaming</span>
+                                    <strong style="color: var(--varai-success);">✓ Available</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                                    <span>Webhook Notifications</span>
+                                    <strong style="color: var(--varai-success);">✓ Available</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                                    <span>Custom Dashboards</span>
+                                    <strong style="color: var(--varai-success);">✓ Available</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>Mobile Apps</span>
+                                    <strong style="color: var(--varai-accent);">iOS & Android</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="varai-hero varai-text-center">
+            <div class="varai-container">
+                <div class="varai-container-sm animate-on-scroll">
+                    <h2 class="varai-mb-6">Ready for Real-time Business Intelligence?</h2>
+                    <p class="varai-text-xl varai-mb-8" style="opacity: 0.95;">
+                        Join hundreds of eyewear retailers who are already using VARAi's real-time analytics 
+                        to make instant data-driven decisions.
+                    </p>
+                    <div class="varai-flex varai-flex-wrap varai-justify-center" style="gap: 1rem;">
+                        <a href="../signup/index.html" class="varai-btn varai-btn-secondary varai-btn-lg">Start Free Trial</a>
+                        <a href="../customer/dashboard-predictive.html" class="varai-btn varai-btn-outline varai-btn-lg">View Live Demo</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="varai-footer">
+        <div class="varai-container">
+            <div class="varai-grid varai-grid-cols-4" style="gap: 2rem;">
+                <div class="varai-mb-6">
+                    <h4>VARAi Commerce Studio</h4>
+                    <p>AI-powered solutions for the modern eyewear retailer.</p>
+                </div>
+                <div class="varai-mb-6">
+                    <h5>Analytics</h5>
+                    <ul class="varai-footer-links">
+                        <li><a href="sales-forecasting.html">Sales Forecasting</a></li>
+                        <li><a href="seasonal-intelligence.html">Seasonal Intelligence</a></li>
+                        <li><a href="risk-assessment.html">Risk Assessment</a></li>
+                        <li><a href="growth-opportunities.html">Growth Opportunities</a></li>
+                        <li><a href="real-time-analytics.html">Real-time Analytics</a></li>
+                    </ul>
+                </div>
+                <div class="varai-mb-6">
+                    <h5>Company</h5>
+                    <ul class="varai-footer-links">
+                        <li><a href="../company.html">About Us</a></li>
+                        <li><a href="../contact.html">Contact</a></li>
+                        <li><a href="../careers.html">Careers</a></li>
+                        <li><a href="../blog.html">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="varai-mb-6">
+                    <h5>Support</h5>
+                    <ul class="varai-footer-links">
+                        <li><a href="../api-docs.html">API Documentation</a></li>
+                        <li><a href="../customer/login.html">Customer Portal</a></li>
+                        <li><a href="../demo-login.html">Demo Login</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div style="border-top: 1px solid var(--varai-gray-700); margin-top: 3rem; padding-top: 2rem; text-align: center;">
+                <p>&copy; 2025 VARAi Inc. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .alert-item {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-left: 4px solid var(--varai-accent);
+            box-shadow: var(--varai-shadow-sm);
+            animation: slideInRight 0.3s ease-out;
+        }
+        
+        .alert-item.warning {
+            border-left-color: var(--varai-warning);
+        }
+        
+        .alert-item.success {
+            border-left-color: var(--varai-success);
+        }
+        
+        .alert-item.error {
+            border-left-color: var(--varai-error);
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+
+    <script>
+        // Real-time Analytics specific functionality
+        let liveSalesChart = null;
+        let liveCustomerChart = null;
+        let dataStreamActive = true;
+        let alertCounter = 0;
+        
+        // Initialize real-time charts
+        function initializeRealtimeCharts() {
+            // Live Sales Chart
+            const salesCtx = document.getElementById('liveSalesChart');
+            if (salesCtx) {
+                liveSalesChart = new Chart(salesCtx, {
+                    type: 'line',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: 'Revenue ($)',
+                            data: [],
+                            borderColor: '#1E96FC',
+                            backgroundColor: 'rgba(30, 150, 252, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: {
+                            duration: 750
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Revenue ($)'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Live Customer Chart
+            const customerCtx = document.getElementById('liveCustomerChart');
+            if (customerCtx) {
+                liveCustomerChart = new Chart(customerCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: 'Active Visitors',
+                            data: [],
+                            backgroundColor: '#30D158',
+                            borderColor: '#30D158',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: {
+                            duration: 500
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Visitors'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        
+        // Update real-time data
+        function updateRealtimeData() {
+            if (!dataStreamActive) return;
+            
+            const now = new Date();
+            const timeLabel = now.toLocaleTimeString();
+            
+            // Generate random data
+            const revenue = 800 + Math.random() * 400;
+            const visitors = 15 + Math.random() * 25;
+            const orders = Math.floor(Math.random() * 8);
+            const conversionRate = (2 + Math.random() * 4).toFixed(1);
+            
+            // Update live metrics
+            document.getElementById('currentRevenue').textContent = `$${Math.round(revenue)}`;
+            document.getElementById('currentOrders').textContent = orders;
+            document.getElementById('activeVisitors').textContent = Math.round(visitors);
+            document.getElementById('conversionRate').textContent = `${conversionRate}%`;
+            
+            // Update status indicators
+            document.getElementById('liveDataPoints').textContent = Math.floor(50 + Math.random() * 100);
+            document.getElementById('processingLatency').textContent = `${Math.floor(5 + Math.random() * 15)}ms`;
+            document.getElementById('activeAlerts').textContent = Math.floor(Math.random() * 3);
+            
+            // Update charts
+            if (liveSalesChart) {
+                liveSalesChart.data.labels.push(timeLabel);
+                liveSalesChart.data.datasets[0].data.push(revenue);
+                
+                // Keep only last 20 data points
+                if (liveSalesChart.data.labels.length > 20) {
+                    liveSalesChart.data.labels.shift();
+                    liveSalesChart.data.datasets[0].data.shift();
+                }
+                
+                liveSalesChart.update('none');
+            }
+            
+            if (liveCustomerChart) {
+                liveCustomerChart.data.labels.push(timeLabel);
+                liveCustomerChart.data.datasets[0].data.push(visitors);
+                
+                // Keep only last 10 data points
+                if (liveCustomerChart.data.labels.length > 10) {
+                    liveCustomerChart.data.labels.shift();
+                    liveCustomerChart.data.datasets[0].data.shift();
+                }
+                
+                liveCustomerChart.update('none');
+            }
+        }
+        
+        // Toggle data stream
+        function toggleDataStream() {
+            dataStreamActive = !dataStreamActive;
+            const toggleButton = document.getElementById('streamToggle');
+            if (toggleButton) {
+                toggleButton.textContent = dataStreamActive ? 'Pause Stream' : 'Resume Stream';
+            }
+        }
+        
+        // Generate test alert
+        function generateTestAlert() {
+            const alertTypes = ['info', 'warning', 'success', 'error'];
+            const alertMessages = [
+                'High traffic detected - 150% above normal',
+                'Inventory low for Ray-Ban Aviators',
+                'Sales target achieved for this month!',
+                'Payment processing delay detected',
+                'New customer surge in sunglasses category',
+                'Conversion rate increased by 15%'
+            ];
+            
+            const type = alertTypes[Math.floor(Math.random() * alertTypes.length)];
+            const message = alertMessages[Math.floor(Math.random() * alertMessages.length)];
+            
+            addAlert(type, message);
+        }
+        
+        // Add alert to container
+        function addAlert(type, message) {
+            const container = document.getElementById('alertsContainer');
+            if (!container) return;
+            
+            const alertElement = document.createElement('div');
+            alertElement.className = `alert-item ${type}`;
+            alertElement.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div style="font-weight: 600; margin-bottom: 0.25rem;">${type.toUpperCase()}</div>
+                        <div style="color: var(--varai-gray-600);">${message}</div>
+                    </div>
+                    <div style="font-size: 0.8rem; color: var(--varai-gray-500);">
+                        ${new Date().toLocaleTimeString()}
+                    </div>
+                </div>
+            `;
+            
+            container.insertBefore(alertElement, container.firstChild);
+            
+            // Remove old alerts (keep only last 10)
+            while (container.children.length > 10) {
+                container.removeChild(container.lastChild);
+            }
+            
+            alertCounter++;
+        }
+        
+        // Clear all alerts
+        function clearAlerts() {
+            const container = document.getElementById('alertsContainer');
+            if (container) {
+                container.innerHTML = '';
+            }
+            alertCounter = 0;
+        }
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeRealtimeCharts();
+            
+            // Start real-time updates
+            setInterval(updateRealtimeData, 2000);
+            
+            // Generate random alerts
+            setInterval(() => {
+                if (Math.random() < 0.3) { // 30% chance every 10 seconds
+                    generateTestAlert();
+                }
+            }, 10000);
+            
+            // Initial data update
+            updateRealtimeData();
+        });
+
+        // Standard page functionality
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animated');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Mobile menu toggle
+        const mobileMenuToggle = document.querySelector('.varai-mobile-menu-toggle');
+        const navbarNav = document.querySelector('.varai-navbar-nav');
+
+        if (mobileMenuToggle && navbarNav) {
+            mobileMenuToggle.addEventListener('click', () => {
+                navbarNav.classList.toggle('active');
+            });
+        }
