@@ -53,7 +53,7 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "@playwright/test": "^1.40.0",
+    "@playwright/test": "^1.53.2",
     "allure-commandline": "^2.24.0",
     "allure-playwright": "^2.9.2",
     "axios": "^1.6.0",
