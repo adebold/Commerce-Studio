@@ -75,7 +75,7 @@
     "eslint-plugin-playwright": "^0.18.0",
     "jest-environment-node": "^29.7.0",
     "jest-html-reporter": "^3.10.1",
-    "rimraf": "^5.0.5",
+    "rimraf": "^6.0.1",
     "ts-jest": "^29.1.1",
     "typescript": "^5.2.2"
   },
