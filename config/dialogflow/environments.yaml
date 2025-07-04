@@ -1,0 +1,175 @@
+# Dialogflow CX Environment Configuration for EyewearML Conversational AI
+
+# Development Environment
+development:
+  display_name: "Development"
+  description: "Environment for development and testing of new features"
+  version_configs:
+    - version_number: "latest"
+      version_is_draft: true
+  update_time: null  # Will be set by Dialogflow when deployed
+  webhook_config:
+    webhook_url: "https://us-central1-eyewearml-conversational-ai-dev.cloudfunctions.net/dialogflow-fulfillment"
+    service_directory_config:
+      service: "dialogflow-fulfillment-dev"
+  deployment_type: "CONTINUOUS"  # Automatically deploy changes
+  git_integration_settings:
+    github_settings:
+      repository_name: "eyewear-ml"
+      branch_name: "development"
+      directory_path: "/src/dialogflow"
+  speech_to_text_settings:
+    speech_model_variant: "USE_ENHANCED"  # Use enhanced model for better accuracy
+  fulfillment:
+    return_partial_responses: true
+    enable_conversation_logging: true
+  security_settings:
+    purge_data_types:
+      - DIALOGFLOW_HISTORY
+    data_retention_days: 30
+    redaction_strategy: "REDACT_WITH_SERVICE"
+    redaction_scope: "DIALOGFLOW_AND_SPEECH"
+  resource_overrides:
+    - resource_type: "intent"
+      resource_id: "*"
+      override_settings:
+        ml_threshold: 0.3
+
+# Testing Environment
+testing:
+  display_name: "Testing"
+  description: "Environment for QA and integration testing"
+  version_configs:
+    - version_number: "stable"
+      version_is_draft: false
+  update_time: null  # Will be set by Dialogflow when deployed
+  webhook_config:
+    webhook_url: "https://us-central1-eyewearml-conversational-ai-test.cloudfunctions.net/dialogflow-fulfillment"
+    service_directory_config:
+      service: "dialogflow-fulfillment-test"
+  deployment_type: "MANUAL"  # Manually deploy after testing
+  git_integration_settings:
+    github_settings:
+      repository_name: "eyewear-ml"
+      branch_name: "testing"
+      directory_path: "/src/dialogflow"
+  speech_to_text_settings:
+    speech_model_variant: "USE_ENHANCED"  # Use enhanced model for better accuracy
+  fulfillment:
+    return_partial_responses: true
+    enable_conversation_logging: true
+  security_settings:
+    purge_data_types:
+      - DIALOGFLOW_HISTORY
+    data_retention_days: 60
+    redaction_strategy: "REDACT_WITH_SERVICE"
+    redaction_scope: "DIALOGFLOW_AND_SPEECH"
+  resource_overrides:
+    - resource_type: "intent"
+      resource_id: "*"
+      override_settings:
+        ml_threshold: 0.4
+    - resource_type: "entity_type"
+      resource_id: "*"
+      override_settings:
+        ml_threshold: 0.5
+
+# Production Environment
+production:
+  display_name: "Production"
+  description: "Production environment for customer-facing deployment"
+  version_configs:
+    - version_number: "release"
+      version_is_draft: false
+  update_time: null  # Will be set by Dialogflow when deployed
+  webhook_config:
+    webhook_url: "https://us-central1-eyewearml-conversational-ai.cloudfunctions.net/dialogflow-fulfillment"
+    service_directory_config:
+      service: "dialogflow-fulfillment-prod"
+  deployment_type: "MANUAL"  # Manually deploy for controlled releases
+  git_integration_settings:
+    github_settings:
+      repository_name: "eyewear-ml"
+      branch_name: "master"
+      directory_path: "/src/dialogflow"
+  speech_to_text_settings:
+    speech_model_variant: "USE_ENHANCED"  # Use enhanced model for better accuracy
+  fulfillment:
+    return_partial_responses: true
+    enable_conversation_logging: true
+  security_settings:
+    purge_data_types:
+      - DIALOGFLOW_HISTORY
+    data_retention_days: 365
+    redaction_strategy: "REDACT_WITH_SERVICE"
+    redaction_scope: "DIALOGFLOW_AND_SPEECH"
+  resource_overrides:
+    - resource_type: "intent"
+      resource_id: "*"
+      override_settings:
+        ml_threshold: 0.5
+    - resource_type: "entity_type"
+      resource_id: "*"
+      override_settings:
+        ml_threshold: 0.6
+
+# Environment Variables
+variables:
+  development:
+    PROJECT_ID: "eyewearml-conversational-ai-dev"
+    ENV_TYPE: "development"
+    LOG_LEVEL: "debug"
+    ENABLE_EXPERIMENTAL: "true"
+    API_VERSION: "v1"
+    ANALYTICS_ENABLED: "true"
+    TEST_MODE: "false"
+    CATALOG_API_URL: "https://api-dev.eyewearml.com/catalog"
+    RECOMMENDATION_API_URL: "https://api-dev.eyewearml.com/recommendations"
+    VISUAL_AI_API_URL: "https://api-dev.eyewearml.com/visual-ai"
+    
+  testing:
+    PROJECT_ID: "eyewearml-conversational-ai-test"
+    ENV_TYPE: "testing"
+    LOG_LEVEL: "info"
+    ENABLE_EXPERIMENTAL: "false"
+    API_VERSION: "v1"
+    ANALYTICS_ENABLED: "true"
+    TEST_MODE: "true"
+    CATALOG_API_URL: "https://api-test.eyewearml.com/catalog"
+    RECOMMENDATION_API_URL: "https://api-test.eyewearml.com/recommendations"
+    VISUAL_AI_API_URL: "https://api-test.eyewearml.com/visual-ai"
+    
+  production:
+    PROJECT_ID: "eyewearml-conversational-ai"
+    ENV_TYPE: "production"
+    LOG_LEVEL: "warning"
+    ENABLE_EXPERIMENTAL: "false"
+    API_VERSION: "v1"
+    ANALYTICS_ENABLED: "true"
+    TEST_MODE: "false"
+    CATALOG_API_URL: "https://api.eyewearml.com/catalog"
+    RECOMMENDATION_API_URL: "https://api.eyewearml.com/recommendations"
+    VISUAL_AI_API_URL: "https://api.eyewearml.com/visual-ai"
+
+# Environment Promotion Settings
+environment_promotion:
+  promotion_flow:
+    - from: "development"
+      to: "testing"
+      approval_required: true
+      approvers:
+        - "conversation-designers@eyewearml.com"
+        - "qa-team@eyewearml.com"
+      
+    - from: "testing"
+      to: "production"
+      approval_required: true
+      approvers:
+        - "product-manager@eyewearml.com"
+        - "release-manager@eyewearml.com"
+  
+  promotion_settings:
+    include_test_cases: true
+    include_webhooks: true
+    include_resources: true
+    auto_apply_environment_variables: true
