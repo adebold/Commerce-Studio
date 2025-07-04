@@ -1,0 +1,176 @@
+name: E-commerce Integration Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'apps/**'
+      - 'tests/**'
+      - '.github/workflows/integration-tests.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'apps/**'
+      - 'tests/**'
+      - '.github/workflows/integration-tests.yml'
+  workflow_dispatch:
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+
+  lint:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+      - name: Restore cached dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Lint Shopify integration
+        run: cd apps/shopify && npm run lint
+      - name: Lint BigCommerce integration
+        run: cd apps/bigcommerce && npm run lint
+      - name: Lint WooCommerce JS
+        run: cd apps/woocommerce && npm run lint
+      - name: Lint Magento JS
+        run: cd apps/magento && npm run lint
+
+  unit-tests:
+    needs: lint
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: [shopify, bigcommerce, woocommerce, magento]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+      - name: Restore cached dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Run unit tests
+        run: cd apps/${{ matrix.platform }} && npm test
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.platform }}-unit-test-results
+          path: apps/${{ matrix.platform }}/test-results
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.platform }}-coverage
+          path: apps/${{ matrix.platform }}/coverage
+
+  integration-tests:
+    needs: unit-tests
+    runs-on: ubuntu-latest
+    services:
+      mock-api:
+        image: node:18-alpine
+        ports:
+          - 3000:3000
+        options: >-
+          --health-cmd "wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        volumes:
+          - ./tests/mocks:/app
+        env:
+          NODE_ENV: test
+    strategy:
+      matrix:
+        platform: [shopify, bigcommerce, woocommerce, magento]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+      - name: Restore cached dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Start mock API server
+        run: cd tests/mocks && node server.js &
+      - name: Run integration tests
+        run: cd apps/${{ matrix.platform }} && npm run test:integration
+        env:
+          EYEWEAR_ML_API_URL: http://localhost:3000
+          EYEWEAR_ML_API_KEY: test_api_key
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.platform }}-integration-test-results
+          path: apps/${{ matrix.platform }}/test-results
+
+  e2e-tests:
+    needs: integration-tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Docker Compose
+        uses: docker/setup-buildx-action@v2
+      - name: Start test environment
+        run: docker-compose -f tests/e2e/docker-compose.yml up -d
+      - name: Run E2E tests
+        run: docker-compose -f tests/e2e/docker-compose.yml run test-base npm run test:e2e
+      - name: Upload E2E test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: e2e-test-results
+          path: test-results
+      - name: Tear down test environment
+        run: docker-compose -f tests/e2e/docker-compose.yml down
+
+  report:
+    needs: [unit-tests, integration-tests, e2e-tests]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download all test results
+        uses: actions/download-artifact@v3
+        with:
+          path: test-results
+      - name: Generate test report
+        run: node tests/scripts/generate-test-report.js
+      - name: Upload combined test report
+        uses: actions/upload-artifact@v3
+        with:
+          name: combined-test-report
+          path: test-results/report
+      - name: Check test coverage
+        run: node tests/scripts/check-coverage.js

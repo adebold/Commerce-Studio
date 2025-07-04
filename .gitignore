@@ -9,12 +9,23 @@ dist/
 build/
 .next/
 
-# Environment variables
+# Environment variables - SECURITY CRITICAL
 .env
+.env.*
 .env.local
+.env.development
 .env.development.local
+.env.test
 .env.test.local
+.env.staging
+.env.staging.local
+.env.production
 .env.production.local
+*.env
+*.env.*
+env.json
+config.json
+secrets.json
 
 # IDE and editor files
 .vscode/
@@ -138,3 +149,97 @@ celerybeat.pid
 .mypy_cache/
 .dmypy.json
 dmypy.json
+
+# Additional ignores to prevent duplicates
+*" 2"*
+*" 3"*
+*.backup
+.claude/
+.coverage
+.env.dev
+.env.development
+.env.local
+.env.test
+.env.staging
+.env.production
+
+# Security-sensitive files - NEVER COMMIT
+*.key
+*.pem
+*.p12
+*.pfx
+*.crt
+*.cer
+*.der
+id_rsa*
+id_dsa*
+id_ecdsa*
+id_ed25519*
+*.ppk
+credentials/
+secrets/
+private/
+.aws/
+.gcp/
+.azure/
+service-account*.json
+gcloud-service-key.json
+google-credentials.json
+firebase-adminsdk*.json
+
+# API Keys and tokens
+*api-key*
+*secret-key*
+*access-token*
+*refresh-token*
+*.token
+auth.json
+oauth.json
+
+# Database dumps and backups
+*.sql
+*.dump
+*.backup
+*.bak
+database.db
+*.sqlite
+*.sqlite3
+
+# Terraform duplicates
+terraform 2.*
+terraform 3.*
+*.tf 2.*
+*.tf 3.*
+*.tfstate 2.*
+*.tfstate 3.*
+.terraform.lock 2.*
+.terraform.lock 3.*
+
+# Cleanup additions
+*.tmp
+*.bak
+*~
+.DS_Store
+
+# Report files (keep in docs/reports/)
+/*_REPORT.md
+/*_COMPLETION_REPORT.md
+/*_DEPLOYMENT_*.md
+/*_IMPLEMENTATION_*.md
+
+# Temporary test files
+/test-*.js
+/verification-*.js
+/*-verification.js
+
+# Duplicate files
+/*-duplicate*
+/*-copy*
+/*-backup*
+
+# PowerShell scripts in root
+/*.ps1
+
+# Temporary directories
+/temp/
+/tmp/

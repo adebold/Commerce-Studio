@@ -1,0 +1,149 @@
+version: '3.8'
+
+networks:
+  data-net:
+    driver: bridge
+  api-gateway-net:
+    external: true
+  service-net:
+    external: true
+
+volumes:
+  mongodb-data:
+    driver: local
+  redis-data:
+    driver: local
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:5.0
+    container_name: data-mongodb
+    restart: unless-stopped
+    networks:
+      - data-net
+      - api-gateway-net
+      - service-net
+    volumes:
+      - mongodb-data:/data/db
+      - ./mongodb/init:/docker-entrypoint-initdb.d
+      - ./mongodb/config:/etc/mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin_password
+      MONGO_INITDB_DATABASE: varai
+    command: ["--config", "/etc/mongo/mongod.conf"]
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis Cache
+  redis:
+    image: redis:6.2-alpine
+    container_name: data-redis
+    restart: unless-stopped
+    networks:
+      - data-net
+      - api-gateway-net
+      - service-net
+    volumes:
+      - redis-data:/data
+      - ./redis/config/redis.conf:/usr/local/etc/redis/redis.conf
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # MongoDB Express (Admin UI)
+  mongo-express:
+    image: mongo-express:latest
+    container_name: data-mongo-express
+    restart: unless-stopped
+    networks:
+      - data-net
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: admin_password
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: admin_password
+    depends_on:
+      - mongodb
+
+  # Redis Commander (Admin UI)
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: data-redis-commander
+    restart: unless-stopped
+    networks:
+      - data-net
+    ports:
+      - "8082:8081"
+    environment:
+      REDIS_HOSTS: local:redis:6379
+      HTTP_USER: admin
+      HTTP_PASSWORD: admin_password
+    depends_on:
+      - redis
+
+  # Data Management API
+  data-api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: data-api
+    restart: unless-stopped
+    networks:
+      - data-net
+      - api-gateway-net
+      - service-net
+    volumes:
+      - ./api:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "3002:3000"
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      MONGODB_URI: mongodb://admin:admin_password@mongodb:27017/varai?authSource=admin
+      REDIS_URI: redis://redis:6379
+      CONSUL_HOST: consul
+      CONSUL_PORT: 8500
+      SERVICE_NAME: data-api
+    depends_on:
+      - mongodb
+      - redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Migration Service
+  migration-service:
+    build:
+      context: ./migrations
+      dockerfile: Dockerfile
+    container_name: data-migration-service
+    restart: "no"
+    networks:
+      - data-net
+    volumes:
+      - ./migrations:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      NODE_ENV: development
+      MONGODB_URI: mongodb://admin:admin_password@mongodb:27017/varai?authSource=admin
+      MIGRATION_MODE: up
+    depends_on:
+      - mongodb

@@ -1,0 +1,205 @@
+[
+  {
+    "id": "frame-123",
+    "name": "Classic Round Gold",
+    "price": 199.99,
+    "brand": "EyewearML",
+    "style": "round",
+    "material": "metal",
+    "color": "gold",
+    "image_url": "https://example.com/frames/classic-round-gold.jpg",
+    "variants": [
+      {
+        "id": "frame-123-s",
+        "size": "small",
+        "width": 135,
+        "temple_length": 140,
+        "bridge_width": 18
+      },
+      {
+        "id": "frame-123-m",
+        "size": "medium",
+        "width": 140,
+        "temple_length": 145,
+        "bridge_width": 20
+      },
+      {
+        "id": "frame-123-l",
+        "size": "large",
+        "width": 145,
+        "temple_length": 150,
+        "bridge_width": 22
+      }
+    ],
+    "region": "na"
+  },
+  {
+    "id": "frame-124",
+    "name": "Modern Square Black",
+    "price": 249.99,
+    "brand": "EyewearML",
+    "style": "square",
+    "material": "acetate",
+    "color": "black",
+    "image_url": "https://example.com/frames/modern-square-black.jpg",
+    "variants": [
+      {
+        "id": "frame-124-s",
+        "size": "small",
+        "width": 132,
+        "temple_length": 140,
+        "bridge_width": 18
+      },
+      {
+        "id": "frame-124-m",
+        "size": "medium",
+        "width": 137,
+        "temple_length": 145,
+        "bridge_width": 20
+      },
+      {
+        "id": "frame-124-l",
+        "size": "large",
+        "width": 142,
+        "temple_length": 150,
+        "bridge_width": 22
+      }
+    ],
+    "region": "na"
+  },
+  {
+    "id": "frame-125",
+    "name": "Aviator Silver",
+    "price": 179.99,
+    "brand": "EyewearML",
+    "style": "aviator",
+    "material": "metal",
+    "color": "silver",
+    "image_url": "https://example.com/frames/aviator-silver.jpg",
+    "variants": [
+      {
+        "id": "frame-125-s",
+        "size": "small",
+        "width": 134,
+        "temple_length": 138,
+        "bridge_width": 16
+      },
+      {
+        "id": "frame-125-m",
+        "size": "medium",
+        "width": 139,
+        "temple_length": 143,
+        "bridge_width": 18
+      }
+    ],
+    "region": "na"
+  },
+  {
+    "id": "frame-126",
+    "name": "Cat Eye Tortoise",
+    "price": 219.99,
+    "brand": "EyewearML",
+    "style": "cat-eye",
+    "material": "acetate",
+    "color": "tortoise",
+    "image_url": "https://example.com/frames/cat-eye-tortoise.jpg",
+    "variants": [
+      {
+        "id": "frame-126-s",
+        "size": "small",
+        "width": 130,
+        "temple_length": 138,
+        "bridge_width": 16
+      },
+      {
+        "id": "frame-126-m",
+        "size": "medium",
+        "width": 135,
+        "temple_length": 143,
+        "bridge_width": 18
+      }
+    ],
+    "region": "na"
+  },
+  {
+    "id": "frame-127",
+    "name": "Minimal Rimless",
+    "price": 299.99,
+    "brand": "EyewearML",
+    "style": "rimless",
+    "material": "titanium",
+    "color": "grey",
+    "image_url": "https://example.com/frames/minimal-rimless.jpg",
+    "variants": [
+      {
+        "id": "frame-127-m",
+        "size": "medium",
+        "width": 138,
+        "temple_length": 142,
+        "bridge_width": 18
+      },
+      {
+        "id": "frame-127-l",
+        "size": "large",
+        "width": 143,
+        "temple_length": 147,
+        "bridge_width": 20
+      }
+    ],
+    "region": "na"
+  },
+  {
+    "id": "frame-223",
+    "name": "European Round Gold",
+    "price": 219.99,
+    "brand": "EyewearML",
+    "style": "round",
+    "material": "metal",
+    "color": "gold",
+    "image_url": "https://example.com/frames/european-round-gold.jpg",
+    "variants": [
+      {
+        "id": "frame-223-s",
+        "size": "small",
+        "width": 134,
+        "temple_length": 140,
+        "bridge_width": 18
+      },
+      {
+        "id": "frame-223-m",
+        "size": "medium",
+        "width": 139,
+        "temple_length": 145,
+        "bridge_width": 20
+      }
+    ],
+    "region": "eu"
+  },
+  {
+    "id": "frame-224",
+    "name": "European Square Black",
+    "price": 269.99,
+    "brand": "EyewearML",
+    "style": "square",
+    "material": "acetate",
+    "color": "black",
+    "image_url": "https://example.com/frames/european-square-black.jpg",
+    "variants": [
+      {
+        "id": "frame-224-s",
+        "size": "small",
+        "width": 131,
+        "temple_length": 140,
+        "bridge_width": 18
+      },
+      {
+        "id": "frame-224-m",
+        "size": "medium",
+        "width": 136,
+        "temple_length": 145,
+        "bridge_width": 20
+      }
+    ],
+    "region": "eu"
+  }
+]

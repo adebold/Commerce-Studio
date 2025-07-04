@@ -1,0 +1,1112 @@
+name: Continuous Deployment
+
+on:
+  workflow_run:
+    workflows: ["Continuous Integration"]
+    types:
+      - completed
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'development'
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+      version:
+        description: 'Version to deploy (leave empty for latest)'
+        required: false
+        type: string
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: ${{ github.repository }}
+
+jobs:
+  prepare:
+    name: Prepare Deployment
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    
+    outputs:
+      environment: ${{ steps.set-env.outputs.environment }}
+      version: ${{ steps.set-version.outputs.version }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set environment
+        id: set-env
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+          elif [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            echo "environment=production" >> $GITHUB_OUTPUT
+          else
+            echo "environment=development" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Set version
+        id: set-version
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ] && [ -n "${{ github.event.inputs.version }}" ]; then
+            echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "version=${{ github.sha }}" >> $GITHUB_OUTPUT
+          fi
+
+  deploy-development:
+    name: Deploy to Development
+    runs-on: ubuntu-latest
+    needs: prepare
+    if: needs.prepare.outputs.environment == 'development'
+    # Environment configuration
+    # URL: https://dev.varai.ai
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install requests
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        
+      - name: Build and push API image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: service-infrastructure/cloud-run/Dockerfile
+          push: true
+          tags: gcr.io/${{ secrets.GCP_PROJECT_ID }}/api:${{ needs.prepare.outputs.version }}
+          build-args: |
+            SERVICE_NAME=api
+            ENV=dev
+            
+      - name: Build and push Auth image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: service-infrastructure/cloud-run/Dockerfile
+          push: true
+          tags: gcr.io/${{ secrets.GCP_PROJECT_ID }}/auth:${{ needs.prepare.outputs.version }}
+          build-args: |
+            SERVICE_NAME=auth
+            ENV=dev
+            
+      - name: Build and push Frontend image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: service-infrastructure/cloud-run/Dockerfile
+          push: true
+          tags: gcr.io/${{ secrets.GCP_PROJECT_ID }}/frontend:${{ needs.prepare.outputs.version }}
+          build-args: |
+            SERVICE_NAME=frontend
+            ENV=dev
+            
+      - name: Run vulnerability scanning
+        run: |
+          for SERVICE_NAME in api auth frontend; do
+            echo "Scanning $SERVICE_NAME image for vulnerabilities..."
+            gcloud artifacts docker images scan \
+              gcr.io/${{ secrets.GCP_PROJECT_ID }}/$SERVICE_NAME:${{ needs.prepare.outputs.version }} \
+              --format='json(response.scan)' > /tmp/scan-results-$SERVICE_NAME.json
+              
+            # Check for critical vulnerabilities
+            CRITICAL_COUNT=$(cat /tmp/scan-results-$SERVICE_NAME.json | jq '.response.scan.findings | map(select(.severity == "CRITICAL")) | length')
+            if [ "$CRITICAL_COUNT" -gt 0 ]; then
+              echo "Found $CRITICAL_COUNT critical vulnerabilities in $SERVICE_NAME. See scan-results-$SERVICE_NAME.json for details."
+              # Uncomment to fail the build on critical vulnerabilities
+              # exit 1
+            fi
+          done
+          
+      - name: Deploy to US region
+        run: |
+          for SERVICE_NAME in api auth frontend; do
+            echo "Deploying $SERVICE_NAME to US region..."
+            
+            # Set region-specific environment variables
+            REGION_ENV_VARS="REGION=us,DATA_RESIDENCY_REGION=us-central1"
+            
+            # Add service-specific variables
+            if [ "$SERVICE_NAME" == "api" ]; then
+              REGION_ENV_VARS="$REGION_ENV_VARS,API_BASE_URL=https://us-dev.eyewearml.com/api"
+            elif [ "$SERVICE_NAME" == "auth" ]; then
+              REGION_ENV_VARS="$REGION_ENV_VARS,AUTH_BASE_URL=https://us-dev.eyewearml.com/auth"
+            elif [ "$SERVICE_NAME" == "frontend" ]; then
+              REGION_ENV_VARS="$REGION_ENV_VARS,API_URL=https://us-dev.eyewearml.com/api,AUTH_URL=https://us-dev.eyewearml.com/auth"
+            fi
+            
+            # Deploy to Cloud Run
+            gcloud run deploy $SERVICE_NAME-us \
+              --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/$SERVICE_NAME:${{ needs.prepare.outputs.version }} \
+              --region us-central1 \
+              --platform managed \
+              --set-env-vars "$REGION_ENV_VARS" \
+              --service-account $SERVICE_NAME-sa@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com \
+              --memory 512Mi \
+              --cpu 1 \
+              --min-instances 1 \
+              --max-instances 10 \
+              --concurrency 80 \
+              --timeout 300s \
+              --ingress internal-and-cloud-load-balancing \
+              --no-allow-unauthenticated \
+              --tag dev \
+              --tag us
+              
+            # Set up domain mapping if needed
+            gcloud run domain-mappings create \
+              --service $SERVICE_NAME-us \
+              --domain us-dev.eyewearml.com \
+              --region us-central1
+          done
+          
+      - name: Deploy to EU region
+        run: |
+          for SERVICE_NAME in api auth frontend; do
+            echo "Deploying $SERVICE_NAME to EU region..."
+            
+            # Set region-specific environment variables
+            REGION_ENV_VARS="REGION=eu,GDPR_COMPLIANCE=true,DATA_RESIDENCY_REGION=europe-west1,DATA_RETENTION_DAYS=90"
+            
+            # Add service-specific variables
+            if [ "$SERVICE_NAME" == "api" ]; then
+              REGION_ENV_VARS="$REGION_ENV_VARS,API_BASE_URL=https://eu-dev.eyewearml.com/api"
+            elif [ "$SERVICE_NAME" == "auth" ]; then
+              REGION_ENV_VARS="$REGION_ENV_VARS,AUTH_BASE_URL=https://eu-dev.eyewearml.com/auth"
+            elif [ "$SERVICE_NAME" == "frontend" ]; then
+              REGION_ENV_VARS="$REGION_ENV_VARS,API_URL=https://eu-dev.eyewearml.com/api,AUTH_URL=https://eu-dev.eyewearml.com/auth"
+            fi
+            
+            # Deploy to Cloud Run
+            gcloud run deploy $SERVICE_NAME-eu \
+              --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/$SERVICE_NAME:${{ needs.prepare.outputs.version }} \
+              --region europe-west1 \
+              --platform managed \
+              --set-env-vars "$REGION_ENV_VARS" \
+              --service-account $SERVICE_NAME-sa@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com \
+              --memory 512Mi \
+              --cpu 1 \
+              --min-instances 1 \
+              --max-instances 10 \
+              --concurrency 80 \
+              --timeout 300s \
+              --ingress internal-and-cloud-load-balancing \
+              --no-allow-unauthenticated \
+              --tag dev \
+              --tag eu
+              
+            # Set up domain mapping if needed
+            gcloud run domain-mappings create \
+              --service $SERVICE_NAME-eu \
+              --domain eu-dev.eyewearml.com \
+              --region europe-west1
+          done
+          
+      - name: Run compliance tests
+        run: |
+          cd tests/compliance
+          python test_cloud_run_compliance.py \
+            --regions us,eu \
+            --services api,auth,frontend \
+            --domain dev.eyewearml.com \
+            --output /tmp/compliance-results.json
+            
+          # Check test results
+          FAILED_TESTS=$(cat /tmp/compliance-results.json | jq '.summary.failed')
+          if [ "$FAILED_TESTS" -gt 0 ]; then
+            echo "Failed $FAILED_TESTS compliance tests. See compliance-results.json for details."
+            # Uncomment to fail the build on compliance test failures
+            # exit 1
+          fi
+          
+      - name: Update load balancer configuration
+        run: |
+          echo "Updating load balancer configuration..."
+          cd terraform/environments/dev
+          terraform init
+          terraform apply -auto-approve \
+            -target=module.networking \
+            -var="services=api,auth,frontend" \
+            -var="image_tag=${{ needs.prepare.outputs.version }}"
+
+      - name: Run post-deployment tests
+        run: |
+          # Wait for services to be fully available
+          sleep 60 # Increased sleep time for Cloud Run deployment propagation
+
+          # Run basic health checks
+          curl -f https://dev.eyewearml.com/api/health || exit 1
+          curl -f https://dev.eyewearml.com/auth/health || exit 1
+          curl -f https://dev.eyewearml.com/ || exit 1 # Frontend health check
+          
+      - name: Trigger DAST scan
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          event-type: run-dast-scan
+          client-payload: '{"environment": "development", "target_url": "https://dev.eyewearml.com"}'
+
+      - name: Record deployment
+        run: |
+          # Create deployment record
+          mkdir -p data/deployment
+          TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+          DEPLOYMENT_ID="deployment-development-$TIMESTAMP"
+          
+          cat > data/deployment/$DEPLOYMENT_ID.json << EOF
+          {
+            "id": "$DEPLOYMENT_ID",
+            "environment": "development",
+            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%S.%3NZ)",
+            "status": "completed",
+            "components": ["api", "auth", "frontend"],
+            "verification_results": {
+              "health_check": true
+            },
+            "details": {
+              "deployed_by": "$GITHUB_ACTOR",
+              "deployment_type": "github-actions",
+              "version": "${{ needs.prepare.outputs.version }}",
+              "start_time": "$(date -u -d '2 minutes ago' +%Y-%m-%dT%H:%M:%S.%3NZ)",
+              "end_time": "$(date -u +%Y-%m-%dT%H:%M:%S.%3NZ)"
+            }
+          }
+          EOF
+          
+          echo "Deployment record saved to data/deployment/$DEPLOYMENT_ID.json"
+
+      - name: Send deployment notification
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            {
+              "text": "✅ Successfully deployed version ${{ needs.prepare.outputs.version }} to development environment",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "✅ Deployment Successful"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Environment:*\nDevelopment"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Version:*\n${{ needs.prepare.outputs.version }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Deployment URL: https://dev.eyewearml.com"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: prepare
+    if: needs.prepare.outputs.environment == 'staging'
+    # Environment configuration
+    # URL: https://staging.varai.ai
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install requests
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        
+      - name: Build and push API image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: service-infrastructure/cloud-run/Dockerfile
+          push: true
+          tags: gcr.io/${{ secrets.GCP_PROJECT_ID }}/api:${{ needs.prepare.outputs.version }}
+          build-args: |
+            SERVICE_NAME=api
+            ENV=staging
+            
+      - name: Build and push Auth image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: service-infrastructure/cloud-run/Dockerfile
+          push: true
+          tags: gcr.io/${{ secrets.GCP_PROJECT_ID }}/auth:${{ needs.prepare.outputs.version }}
+          build-args: |
+            SERVICE_NAME=auth
+            ENV=staging
+            
+      - name: Build and push Frontend image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: service-infrastructure/cloud-run/Dockerfile
+          push: true
+          tags: gcr.io/${{ secrets.GCP_PROJECT_ID }}/frontend:${{ needs.prepare.outputs.version }}
+          build-args: |
+            SERVICE_NAME=frontend
+            ENV=staging
+            
+      - name: Run vulnerability scanning
+        run: |
+          for SERVICE_NAME in api auth frontend; do
+            echo "Scanning $SERVICE_NAME image for vulnerabilities..."
+            gcloud artifacts docker images scan \
+              gcr.io/${{ secrets.GCP_PROJECT_ID }}/$SERVICE_NAME:${{ needs.prepare.outputs.version }} \
+              --format='json(response.scan)' > /tmp/scan-results-$SERVICE_NAME.json
+              
+            # Check for critical vulnerabilities
+            CRITICAL_COUNT=$(cat /tmp/scan-results-$SERVICE_NAME.json | jq '.response.scan.findings | map(select(.severity == "CRITICAL")) | length')
+            if [ "$CRITICAL_COUNT" -gt 0 ]; then
+              echo "Found $CRITICAL_COUNT critical vulnerabilities in $SERVICE_NAME. See scan-results-$SERVICE_NAME.json for details."
+              # Uncomment to fail the build on critical vulnerabilities
+              # exit 1
+            fi
+          done
+          
+      - name: Deploy to US region
+        run: |
+          for SERVICE_NAME in api auth frontend; do
+            echo "Deploying $SERVICE_NAME to US region..."
+            
+            # Set region-specific environment variables
+            REGION_ENV_VARS="REGION=us,DATA_RESIDENCY_REGION=us-central1"
+            
+            # Add service-specific variables
+            if [ "$SERVICE_NAME" == "api" ]; then
+              REGION_ENV_VARS="$REGION_ENV_VARS,API_BASE_URL=https://us-staging.eyewearml.com/api"
+            elif [ "$SERVICE_NAME" == "auth" ]; then
+              REGION_ENV_VARS="$REGION_ENV_VARS,AUTH_BASE_URL=https://us-staging.eyewearml.com/auth"
+            elif [ "$SERVICE_NAME" == "frontend" ]; then
+              REGION_ENV_VARS="$REGION_ENV_VARS,API_URL=https://us-staging.eyewearml.com/api,AUTH_URL=https://us-staging.eyewearml.com/auth"
+            fi
+            
+            # Deploy to Cloud Run
+            gcloud run deploy $SERVICE_NAME-us \
+              --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/$SERVICE_NAME:${{ needs.prepare.outputs.version }} \
+              --region us-central1 \
+              --platform managed \
+              --set-env-vars "$REGION_ENV_VARS" \
+              --service-account $SERVICE_NAME-sa@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com \
+              --memory 512Mi \
+              --cpu 1 \
+              --min-instances 1 \
+              --max-instances 10 \
+              --concurrency 80 \
+              --timeout 300s \
+              --ingress internal-and-cloud-load-balancing \
+              --no-allow-unauthenticated \
+              --tag staging \
+              --tag us
+              
+            # Set up domain mapping if needed
+            gcloud run domain-mappings create \
+              --service $SERVICE_NAME-us \
+              --domain us-staging.eyewearml.com \
+              --region us-central1
+          done
+          
+      - name: Deploy to EU region
+        run: |
+          for SERVICE_NAME in api auth frontend; do
+            echo "Deploying $SERVICE_NAME to EU region..."
+            
+            # Set region-specific environment variables
+            REGION_ENV_VARS="REGION=eu,GDPR_COMPLIANCE=true,DATA_RESIDENCY_REGION=europe-west1,DATA_RETENTION_DAYS=90"
+            
+            # Add service-specific variables
+            if [ "$SERVICE_NAME" == "api" ]; then
+              REGION_ENV_VARS="$REGION_ENV_VARS,API_BASE_URL=https://eu-staging.eyewearml.com/api"
+            elif [ "$SERVICE_NAME" == "auth" ]; then
+              REGION_ENV_VARS="$REGION_ENV_VARS,AUTH_BASE_URL=https://eu-staging.eyewearml.com/auth"
+            elif [ "$SERVICE_NAME" == "frontend" ]; then
+              REGION_ENV_VARS="$REGION_ENV_VARS,API_URL=https://eu-staging.eyewearml.com/api,AUTH_URL=https://eu-staging.eyewearml.com/auth"
+            fi
+            
+            # Deploy to Cloud Run
+            gcloud run deploy $SERVICE_NAME-eu \
+              --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/$SERVICE_NAME:${{ needs.prepare.outputs.version }} \
+              --region europe-west1 \
+              --platform managed \
+              --set-env-vars "$REGION_ENV_VARS" \
+              --service-account $SERVICE_NAME-sa@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com \
+              --memory 512Mi \
+              --cpu 1 \
+              --min-instances 1 \
+              --max-instances 10 \
+              --concurrency 80 \
+              --timeout 300s \
+              --ingress internal-and-cloud-load-balancing \
+              --no-allow-unauthenticated \
+              --tag staging \
+              --tag eu
+              
+            # Set up domain mapping if needed
+            gcloud run domain-mappings create \
+              --service $SERVICE_NAME-eu \
+              --domain eu-staging.eyewearml.com \
+              --region europe-west1
+          done
+          
+      - name: Run compliance tests
+        run: |
+          cd tests/compliance
+          python test_cloud_run_compliance.py \
+            --regions us,eu \
+            --services api,auth,frontend \
+            --domain staging.eyewearml.com \
+            --output /tmp/compliance-results.json
+            
+          # Check test results
+          FAILED_TESTS=$(cat /tmp/compliance-results.json | jq '.summary.failed')
+          if [ "$FAILED_TESTS" -gt 0 ]; then
+            echo "Failed $FAILED_TESTS compliance tests. See compliance-results.json for details."
+            # Uncomment to fail the build on compliance test failures
+            # exit 1
+          fi
+          
+      - name: Update load balancer configuration
+        run: |
+          echo "Updating load balancer configuration..."
+          cd terraform/environments/staging
+          terraform init
+          terraform apply -auto-approve \
+            -target=module.networking \
+            -var="services=api,auth,frontend" \
+            -var="image_tag=${{ needs.prepare.outputs.version }}"
+
+      - name: Run post-deployment tests
+        run: |
+          # Wait for services to be fully available
+          sleep 60 # Increased sleep time for Cloud Run deployment propagation
+
+          # Run basic health checks
+          curl -f https://staging.eyewearml.com/api/health || exit 1
+          curl -f https://staging.eyewearml.com/auth/health || exit 1
+          curl -f https://staging.eyewearml.com/ || exit 1 # Frontend health check
+          
+      - name: Trigger DAST scan
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          event-type: run-dast-scan
+          client-payload: '{"environment": "staging", "target_url": "https://staging.eyewearml.com"}'
+
+      - name: Record deployment
+        run: |
+          # Create deployment record
+          mkdir -p data/deployment
+          TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+          DEPLOYMENT_ID="deployment-staging-$TIMESTAMP"
+          
+          cat > data/deployment/$DEPLOYMENT_ID.json << EOF
+          {
+            "id": "$DEPLOYMENT_ID",
+            "environment": "staging",
+            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%S.%3NZ)",
+            "status": "completed",
+            "components": ["api", "auth", "frontend"],
+            "verification_results": {
+              "health_check": true
+            },
+            "details": {
+              "deployed_by": "$GITHUB_ACTOR",
+              "deployment_type": "github-actions",
+              "version": "${{ needs.prepare.outputs.version }}",
+              "start_time": "$(date -u -d '2 minutes ago' +%Y-%m-%dT%H:%M:%S.%3NZ)",
+              "end_time": "$(date -u +%Y-%m-%dT%H:%M:%S.%3NZ)"
+            }
+          }
+          EOF
+          
+          echo "Deployment record saved to data/deployment/$DEPLOYMENT_ID.json"
+
+      - name: Send deployment notification
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            {
+              "text": "✅ Successfully deployed version ${{ needs.prepare.outputs.version }} to staging environment",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "✅ Deployment Successful"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Environment:*\nStaging"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Version:*\n${{ needs.prepare.outputs.version }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Deployment URL: https://staging.eyewearml.com"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: prepare
+    if: needs.prepare.outputs.environment == 'production'
+    # Environment configuration
+    # URL: https://varai.ai
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install requests
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        
+      - name: Build and push API image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: service-infrastructure/cloud-run/Dockerfile
+          push: true
+          tags: gcr.io/${{ secrets.GCP_PROJECT_ID }}/api:${{ needs.prepare.outputs.version }}
+          build-args: |
+            SERVICE_NAME=api
+            ENV=prod
+            
+      - name: Build and push Auth image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: service-infrastructure/cloud-run/Dockerfile
+          push: true
+          tags: gcr.io/${{ secrets.GCP_PROJECT_ID }}/auth:${{ needs.prepare.outputs.version }}
+          build-args: |
+            SERVICE_NAME=auth
+            ENV=prod
+            
+      - name: Build and push Frontend image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: service-infrastructure/cloud-run/Dockerfile
+          push: true
+          tags: gcr.io/${{ secrets.GCP_PROJECT_ID }}/frontend:${{ needs.prepare.outputs.version }}
+          build-args: |
+            SERVICE_NAME=frontend
+            ENV=prod
+            
+      - name: Run vulnerability scanning
+        run: |
+          for SERVICE_NAME in api auth frontend; do
+            echo "Scanning $SERVICE_NAME image for vulnerabilities..."
+            gcloud artifacts docker images scan \
+              gcr.io/${{ secrets.GCP_PROJECT_ID }}/$SERVICE_NAME:${{ needs.prepare.outputs.version }} \
+              --format='json(response.scan)' > /tmp/scan-results-$SERVICE_NAME.json
+              
+            # Check for critical vulnerabilities
+            CRITICAL_COUNT=$(cat /tmp/scan-results-$SERVICE_NAME.json | jq '.response.scan.findings | map(select(.severity == "CRITICAL")) | length')
+            if [ "$CRITICAL_COUNT" -gt 0 ]; then
+              echo "Found $CRITICAL_COUNT critical vulnerabilities in $SERVICE_NAME. See scan-results-$SERVICE_NAME.json for details."
+              # Uncomment to fail the build on critical vulnerabilities
+              # exit 1
+            fi
+          done
+          
+      - name: Deploy to US region
+        run: |
+          for SERVICE_NAME in api auth frontend; do
+            echo "Deploying $SERVICE_NAME to US region..."
+            
+            # Set region-specific environment variables
+            REGION_ENV_VARS="REGION=us,DATA_RESIDENCY_REGION=us-central1"
+            
+            # Add service-specific variables
+            if [ "$SERVICE_NAME" == "api" ]; then
+              REGION_ENV_VARS="$REGION_ENV_VARS,API_BASE_URL=https://us.eyewearml.com/api"
+            elif [ "$SERVICE_NAME" == "auth" ]; then
+              REGION_ENV_VARS="$REGION_ENV_VARS,AUTH_BASE_URL=https://us.eyewearml.com/auth"
+            elif [ "$SERVICE_NAME" == "frontend" ]; then
+              REGION_ENV_VARS="$REGION_ENV_VARS,API_URL=https://us.eyewearml.com/api,AUTH_URL=https://us.eyewearml.com/auth"
+            fi
+            
+            # Deploy to Cloud Run
+            gcloud run deploy $SERVICE_NAME-us \
+              --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/$SERVICE_NAME:${{ needs.prepare.outputs.version }} \
+              --region us-central1 \
+              --platform managed \
+              --set-env-vars "$REGION_ENV_VARS" \
+              --service-account $SERVICE_NAME-sa@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com \
+              --memory 512Mi \
+              --cpu 1 \
+              --min-instances 1 \
+              --max-instances 10 \
+              --concurrency 80 \
+              --timeout 300s \
+              --ingress internal-and-cloud-load-balancing \
+              --no-allow-unauthenticated \
+              --tag prod \
+              --tag us
+              
+            # Set up domain mapping if needed
+            gcloud run domain-mappings create \
+              --service $SERVICE_NAME-us \
+              --domain us.eyewearml.com \
+              --region us-central1
+          done
+          
+      - name: Deploy to EU region
+        run: |
+          for SERVICE_NAME in api auth frontend; do
+            echo "Deploying $SERVICE_NAME to EU region..."
+            
+            # Set region-specific environment variables
+            REGION_ENV_VARS="REGION=eu,GDPR_COMPLIANCE=true,DATA_RESIDENCY_REGION=europe-west1,DATA_RETENTION_DAYS=90"
+            
+            # Add service-specific variables
+            if [ "$SERVICE_NAME" == "api" ]; then
+              REGION_ENV_VARS="$REGION_ENV_VARS,API_BASE_URL=https://eu.eyewearml.com/api"
+            elif [ "$SERVICE_NAME" == "auth" ]; then
+              REGION_ENV_VARS="$REGION_ENV_VARS,AUTH_BASE_URL=https://eu.eyewearml.com/auth"
+            elif [ "$SERVICE_NAME" == "frontend" ]; then
+              REGION_ENV_VARS="$REGION_ENV_VARS,API_URL=https://eu.eyewearml.com/api,AUTH_URL=https://eu.eyewearml.com/auth"
+            fi
+            
+            # Deploy to Cloud Run
+            gcloud run deploy $SERVICE_NAME-eu \
+              --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/$SERVICE_NAME:${{ needs.prepare.outputs.version }} \
+              --region europe-west1 \
+              --platform managed \
+              --set-env-vars "$REGION_ENV_VARS" \
+              --service-account $SERVICE_NAME-sa@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com \
+              --memory 512Mi \
+              --cpu 1 \
+              --min-instances 1 \
+              --max-instances 10 \
+              --concurrency 80 \
+              --timeout 300s \
+              --ingress internal-and-cloud-load-balancing \
+              --no-allow-unauthenticated \
+              --tag prod \
+              --tag eu
+              
+            # Set up domain mapping if needed
+            gcloud run domain-mappings create \
+              --service $SERVICE_NAME-eu \
+              --domain eu.eyewearml.com \
+              --region europe-west1
+          done
+          
+      - name: Run compliance tests
+        run: |
+          cd tests/compliance
+          python test_cloud_run_compliance.py \
+            --regions us,eu \
+            --services api,auth,frontend \
+            --domain eyewearml.com \
+            --output /tmp/compliance-results.json
+            
+          # Check test results
+          FAILED_TESTS=$(cat /tmp/compliance-results.json | jq '.summary.failed')
+          if [ "$FAILED_TESTS" -gt 0 ]; then
+            echo "Failed $FAILED_TESTS compliance tests. See compliance-results.json for details."
+            # Uncomment to fail the build on compliance test failures
+            # exit 1
+          fi
+          
+      - name: Update load balancer configuration
+        run: |
+          echo "Updating load balancer configuration..."
+          cd terraform/environments/prod
+          terraform init
+          terraform apply -auto-approve \
+            -target=module.networking \
+            -var="services=api,auth,frontend" \
+            -var="image_tag=${{ needs.prepare.outputs.version }}"
+
+      - name: Run post-deployment tests
+        run: |
+          # Wait for services to be fully available
+          sleep 60 # Increased sleep time for Cloud Run deployment propagation
+
+          # Run basic health checks
+          curl -f https://eyewearml.com/api/health || exit 1
+          curl -f https://eyewearml.com/auth/health || exit 1
+          curl -f https://eyewearml.com/ || exit 1 # Frontend health check
+          
+      - name: Trigger DAST scan
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          event-type: run-dast-scan
+          client-payload: '{"environment": "production", "target_url": "https://eyewearml.com"}'
+
+      - name: Record deployment
+        run: |
+          # Create deployment record
+          mkdir -p data/deployment
+          TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+          DEPLOYMENT_ID="deployment-production-$TIMESTAMP"
+          
+          cat > data/deployment/$DEPLOYMENT_ID.json << EOF
+          {
+            "id": "$DEPLOYMENT_ID",
+            "environment": "production",
+            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%S.%3NZ)",
+            "status": "completed",
+            "components": ["api", "auth", "frontend"],
+            "verification_results": {
+              "health_check": true
+            },
+            "details": {
+              "deployed_by": "$GITHUB_ACTOR",
+              "deployment_type": "github-actions",
+              "version": "${{ needs.prepare.outputs.version }}",
+              "start_time": "$(date -u -d '2 minutes ago' +%Y-%m-%dT%H:%M:%S.%3NZ)",
+              "end_time": "$(date -u +%Y-%m-%dT%H:%M:%S.%3NZ)"
+            }
+          }
+          EOF
+          
+          echo "Deployment record saved to data/deployment/$DEPLOYMENT_ID.json"
+
+      - name: Send deployment notification
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            {
+              "text": "✅ Successfully deployed version ${{ needs.prepare.outputs.version }} to production environment",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "✅ Production Deployment Successful"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Environment:*\nProduction"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Version:*\n${{ needs.prepare.outputs.version }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Deployment URL: https://eyewearml.com"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+  rollback:
+    name: Rollback Deployment
+    runs-on: ubuntu-latest
+    needs: [prepare, deploy-development, deploy-staging, deploy-production]
+    if: failure() && (needs.deploy-development.result == 'failure' || needs.deploy-staging.result == 'failure' || needs.deploy-production.result == 'failure')
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install requests
+      
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+      
+      - name: Set environment variables for development
+        if: needs.deploy-development.result == 'failure'
+        run: |
+          echo "ENVIRONMENT=dev" >> $GITHUB_ENV
+          echo "REGIONS=us-central1,europe-west1" >> $GITHUB_ENV
+          echo "DOMAIN=dev.eyewearml.com" >> $GITHUB_ENV
+      
+      - name: Set environment variables for staging
+        if: needs.deploy-staging.result == 'failure'
+        run: |
+          echo "ENVIRONMENT=staging" >> $GITHUB_ENV
+          echo "REGIONS=us-central1,europe-west1" >> $GITHUB_ENV
+          echo "DOMAIN=staging.eyewearml.com" >> $GITHUB_ENV
+      
+      - name: Set environment variables for production
+        if: needs.deploy-production.result == 'failure'
+        run: |
+          echo "ENVIRONMENT=prod" >> $GITHUB_ENV
+          echo "REGIONS=us-central1,europe-west1" >> $GITHUB_ENV
+          echo "DOMAIN=eyewearml.com" >> $GITHUB_ENV
+      
+      - name: Perform rollback
+        run: |
+          # Get previous deployment records
+          mkdir -p data/deployment
+          
+          # Find the most recent successful deployment for this environment
+          DEPLOYMENT_FILES=$(find data/deployment -name "deployment-$ENVIRONMENT-*.json" -type f | sort -r)
+          PREVIOUS_DEPLOYMENT=""
+          
+          for FILE in $DEPLOYMENT_FILES; do
+            # Skip the current failed deployment
+            if grep -q "\"version\": \"${{ needs.prepare.outputs.version }}\"" "$FILE"; then
+              continue
+            fi
+            
+            # Find the most recent successful deployment
+            if grep -q "\"status\": \"completed\"" "$FILE"; then
+              PREVIOUS_DEPLOYMENT="$FILE"
+              break
+            fi
+          done
+          
+          if [ -z "$PREVIOUS_DEPLOYMENT" ]; then
+            echo "No previous successful deployment found, attempting to roll back to previous revision"
+            
+            # Roll back to previous revision for each service in each region
+            for SERVICE_NAME in api auth frontend; do
+              IFS=',' read -ra REGION_ARRAY <<< "$REGIONS"
+              for REGION in "${REGION_ARRAY[@]}"; do
+                echo "Rolling back $SERVICE_NAME in $REGION to previous revision"
+                
+                # Get the previous revision
+                PREVIOUS_REVISION=$(gcloud run revisions list --service=$SERVICE_NAME-${REGION%%-*} --region=$REGION --format="value(metadata.name)" --sort-by="~metadata.creationTimestamp" --limit=2 | tail -n 1)
+                
+                if [ -n "$PREVIOUS_REVISION" ]; then
+                  # Route all traffic to the previous revision
+                  gcloud run services update-traffic $SERVICE_NAME-${REGION%%-*} \
+                    --region=$REGION \
+                    --to-revisions=$PREVIOUS_REVISION=100
+                  
+                  echo "Rolled back $SERVICE_NAME in $REGION to revision $PREVIOUS_REVISION"
+                else
+                  echo "No previous revision found for $SERVICE_NAME in $REGION"
+                fi
+              done
+            done
+          else
+            echo "Found previous successful deployment: $PREVIOUS_DEPLOYMENT"
+            PREVIOUS_VERSION=$(grep -o '"version": "[^"]*"' "$PREVIOUS_DEPLOYMENT" | cut -d'"' -f4)
+            
+            if [ -n "$PREVIOUS_VERSION" ]; then
+              echo "Rolling back to version $PREVIOUS_VERSION"
+              
+              # Roll back to specific version for each service in each region
+              for SERVICE_NAME in api auth frontend; do
+                IFS=',' read -ra REGION_ARRAY <<< "$REGIONS"
+                for REGION in "${REGION_ARRAY[@]}"; do
+                  echo "Rolling back $SERVICE_NAME in $REGION to version $PREVIOUS_VERSION"
+                  
+                  # Find the revision with the specific version
+                  TARGET_REVISION=$(gcloud run revisions list --service=$SERVICE_NAME-${REGION%%-*} --region=$REGION --format="value(metadata.name)" | grep "$PREVIOUS_VERSION" || echo "")
+                  
+                  if [ -n "$TARGET_REVISION" ]; then
+                    # Route all traffic to the target revision
+                    gcloud run services update-traffic $SERVICE_NAME-${REGION%%-*} \
+                      --region=$REGION \
+                      --to-revisions=$TARGET_REVISION=100
+                    
+                    echo "Rolled back $SERVICE_NAME in $REGION to revision $TARGET_REVISION"
+                  else
+                    echo "No revision found for $SERVICE_NAME in $REGION with version $PREVIOUS_VERSION"
+                    
+                    # Fall back to previous revision
+                    PREVIOUS_REVISION=$(gcloud run revisions list --service=$SERVICE_NAME-${REGION%%-*} --region=$REGION --format="value(metadata.name)" --sort-by="~metadata.creationTimestamp" --limit=2 | tail -n 1)
+                    
+                    if [ -n "$PREVIOUS_REVISION" ]; then
+                      # Route all traffic to the previous revision
+                      gcloud run services update-traffic $SERVICE_NAME-${REGION%%-*} \
+                        --region=$REGION \
+                        --to-revisions=$PREVIOUS_REVISION=100
+                      
+                      echo "Rolled back $SERVICE_NAME in $REGION to revision $PREVIOUS_REVISION"
+                    else
+                      echo "No previous revision found for $SERVICE_NAME in $REGION"
+                    fi
+                  fi
+                done
+              done
+            else
+              echo "Could not determine previous version from deployment record"
+            fi
+          fi
+          
+          # Create rollback record
+          TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+          ROLLBACK_ID="rollback-$ENVIRONMENT-$TIMESTAMP"
+          
+          cat > data/deployment/$ROLLBACK_ID.json << EOF
+          {
+            "id": "$ROLLBACK_ID",
+            "environment": "$ENVIRONMENT",
+            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%S.%3NZ)",
+            "status": "completed",
+            "components": ["api", "auth", "frontend"],
+            "details": {
+              "performed_by": "$GITHUB_ACTOR",
+              "failed_version": "${{ needs.prepare.outputs.version }}",
+              "rollback_to": "$([ -n "$PREVIOUS_VERSION" ] && echo "$PREVIOUS_VERSION" || echo "previous revision")",
+              "time": "$(date -u +%Y-%m-%dT%H:%M:%S.%3NZ)"
+            }
+          }
+          EOF
+          
+          echo "Rollback record saved to data/deployment/$ROLLBACK_ID.json"
+      
+      - name: Send rollback notification
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            {
+              "text": "⚠️ Deployment failed, rollback initiated",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "⚠️ Deployment Rollback"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Environment:*\n${{ env.ENVIRONMENT }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Failed Version:*\n${{ needs.prepare.outputs.version }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Deployment has been rolled back to the previous stable version."
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

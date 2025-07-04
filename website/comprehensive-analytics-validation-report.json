@@ -1,0 +1,702 @@
+{
+  "metadata": {
+    "testSuite": "Comprehensive Analytics Pages Validation",
+    "productionUrl": "https://varai-website-353252826752.us-central1.run.app",
+    "timestamp": "2025-06-29T02:42:28.367Z",
+    "duration": "37.86s",
+    "browser": "Puppeteer/Chrome"
+  },
+  "summary": {
+    "totalTests": 106,
+    "passedTests": 96,
+    "failedTests": 10,
+    "successRate": "90.6"
+  },
+  "testResults": {
+    "pageTests": [
+      {
+        "name": "Analytics Hub - HTTP Status",
+        "passed": true,
+        "message": "Status: 200",
+        "timestamp": "2025-06-29T02:41:52.713Z"
+      },
+      {
+        "name": "Sales Forecasting - HTTP Status",
+        "passed": true,
+        "message": "Status: 200",
+        "timestamp": "2025-06-29T02:41:58.705Z"
+      },
+      {
+        "name": "Risk Assessment - HTTP Status",
+        "passed": true,
+        "message": "Status: 200",
+        "timestamp": "2025-06-29T02:42:04.671Z"
+      },
+      {
+        "name": "Growth Opportunities - HTTP Status",
+        "passed": true,
+        "message": "Status: 200",
+        "timestamp": "2025-06-29T02:42:10.636Z"
+      },
+      {
+        "name": "Real-time Analytics - HTTP Status",
+        "passed": true,
+        "message": "Status: 200",
+        "timestamp": "2025-06-29T02:42:17.773Z"
+      },
+      {
+        "name": "Solutions Page - HTTP Status",
+        "passed": true,
+        "message": "Status: 200",
+        "timestamp": "2025-06-29T02:42:23.521Z"
+      }
+    ],
+    "navigationTests": [
+      {
+        "name": "Analytics Hub - Keyboard Navigation",
+        "passed": true,
+        "message": "Found 37 focusable elements",
+        "timestamp": "2025-06-29T02:41:57.826Z"
+      },
+      {
+        "name": "Sales Forecasting - Keyboard Navigation",
+        "passed": true,
+        "message": "Found 35 focusable elements",
+        "timestamp": "2025-06-29T02:42:03.808Z"
+      },
+      {
+        "name": "Risk Assessment - Keyboard Navigation",
+        "passed": true,
+        "message": "Found 32 focusable elements",
+        "timestamp": "2025-06-29T02:42:09.781Z"
+      },
+      {
+        "name": "Growth Opportunities - Keyboard Navigation",
+        "passed": true,
+        "message": "Found 35 focusable elements",
+        "timestamp": "2025-06-29T02:42:15.727Z"
+      },
+      {
+        "name": "Real-time Analytics - Keyboard Navigation",
+        "passed": true,
+        "message": "Found 35 focusable elements",
+        "timestamp": "2025-06-29T02:42:22.851Z"
+      },
+      {
+        "name": "Navigation - Analytics Dropdown",
+        "passed": true,
+        "message": "Analytics dropdown found",
+        "timestamp": "2025-06-29T02:42:28.359Z"
+      },
+      {
+        "name": "Navigation - Dropdown Items",
+        "passed": true,
+        "message": "Found 6/6 dropdown items",
+        "timestamp": "2025-06-29T02:42:28.364Z"
+      },
+      {
+        "name": "Navigation - Dropdown Link 1",
+        "passed": true,
+        "message": "Link: index.html",
+        "timestamp": "2025-06-29T02:42:28.365Z"
+      },
+      {
+        "name": "Navigation - Dropdown Link 2",
+        "passed": true,
+        "message": "Link: sales-forecasting.html",
+        "timestamp": "2025-06-29T02:42:28.366Z"
+      },
+      {
+        "name": "Navigation - Dropdown Link 3",
+        "passed": true,
+        "message": "Link: seasonal-intelligence.html",
+        "timestamp": "2025-06-29T02:42:28.366Z"
+      }
+    ],
+    "contentTests": [
+      {
+        "name": "Analytics Hub - Element .analytics-showcase-hero",
+        "passed": true,
+        "message": "Present and visible",
+        "timestamp": "2025-06-29T02:41:54.736Z"
+      },
+      {
+        "name": "Analytics Hub - Element .analytics-capability-card",
+        "passed": true,
+        "message": "Present and visible",
+        "timestamp": "2025-06-29T02:41:54.739Z"
+      },
+      {
+        "name": "Analytics Hub - Element .live-analytics-dashboard",
+        "passed": false,
+        "message": "Present but not visible",
+        "timestamp": "2025-06-29T02:41:54.741Z"
+      },
+      {
+        "name": "Analytics Hub - Element .analytics-grid",
+        "passed": true,
+        "message": "Present and visible",
+        "timestamp": "2025-06-29T02:41:54.743Z"
+      },
+      {
+        "name": "Analytics Hub - Headings Structure",
+        "passed": true,
+        "message": "Found 14 headings",
+        "timestamp": "2025-06-29T02:41:54.755Z"
+      },
+      {
+        "name": "Analytics Hub - Heading \"Predictive Analytics Hub\"",
+        "passed": false,
+        "message": "Missing",
+        "timestamp": "2025-06-29T02:41:54.755Z"
+      },
+      {
+        "name": "Analytics Hub - Heading \"Analytics Capabilities\"",
+        "passed": true,
+        "message": "Found",
+        "timestamp": "2025-06-29T02:41:54.755Z"
+      },
+      {
+        "name": "Analytics Hub - Apple Design Elements",
+        "passed": true,
+        "message": "Found 3/4 Apple-style elements",
+        "timestamp": "2025-06-29T02:41:54.766Z"
+      },
+      {
+        "name": "Analytics Hub - Responsive Elements",
+        "passed": true,
+        "message": "Found 9 responsive elements",
+        "timestamp": "2025-06-29T02:41:57.802Z"
+      },
+      {
+        "name": "Sales Forecasting - Element .analytics-showcase-hero",
+        "passed": true,
+        "message": "Present and visible",
+        "timestamp": "2025-06-29T02:42:00.715Z"
+      },
+      {
+        "name": "Sales Forecasting - Element .live-analytics-dashboard",
+        "passed": false,
+        "message": "Present but not visible",
+        "timestamp": "2025-06-29T02:42:00.717Z"
+      },
+      {
+        "name": "Sales Forecasting - Element .analytics-demo-container",
+        "passed": true,
+        "message": "Present and visible",
+        "timestamp": "2025-06-29T02:42:00.718Z"
+      },
+      {
+        "name": "Sales Forecasting - Headings Structure",
+        "passed": true,
+        "message": "Found 21 headings",
+        "timestamp": "2025-06-29T02:42:00.731Z"
+      },
+      {
+        "name": "Sales Forecasting - Heading \"Sales Forecasting\"",
+        "passed": true,
+        "message": "Found",
+        "timestamp": "2025-06-29T02:42:00.731Z"
+      },
+      {
+        "name": "Sales Forecasting - Heading \"How Sales Forecasting Works\"",
+        "passed": true,
+        "message": "Found",
+        "timestamp": "2025-06-29T02:42:00.731Z"
+      },
+      {
+        "name": "Sales Forecasting - Apple Design Elements",
+        "passed": true,
+        "message": "Found 3/4 Apple-style elements",
+        "timestamp": "2025-06-29T02:42:00.750Z"
+      },
+      {
+        "name": "Sales Forecasting - Responsive Elements",
+        "passed": true,
+        "message": "Found 10 responsive elements",
+        "timestamp": "2025-06-29T02:42:03.786Z"
+      },
+      {
+        "name": "Risk Assessment - Element .analytics-showcase-hero",
+        "passed": true,
+        "message": "Present and visible",
+        "timestamp": "2025-06-29T02:42:06.683Z"
+      },
+      {
+        "name": "Risk Assessment - Element .analytics-grid",
+        "passed": true,
+        "message": "Present and visible",
+        "timestamp": "2025-06-29T02:42:06.686Z"
+      },
+      {
+        "name": "Risk Assessment - Element .analytics-capability-card",
+        "passed": true,
+        "message": "Present and visible",
+        "timestamp": "2025-06-29T02:42:06.688Z"
+      },
+      {
+        "name": "Risk Assessment - Headings Structure",
+        "passed": true,
+        "message": "Found 18 headings",
+        "timestamp": "2025-06-29T02:42:06.698Z"
+      },
+      {
+        "name": "Risk Assessment - Heading \"Risk Assessment\"",
+        "passed": true,
+        "message": "Found",
+        "timestamp": "2025-06-29T02:42:06.698Z"
+      },
+      {
+        "name": "Risk Assessment - Heading \"How Risk Assessment Works\"",
+        "passed": false,
+        "message": "Missing",
+        "timestamp": "2025-06-29T02:42:06.698Z"
+      },
+      {
+        "name": "Risk Assessment - Apple Design Elements",
+        "passed": true,
+        "message": "Found 3/4 Apple-style elements",
+        "timestamp": "2025-06-29T02:42:06.715Z"
+      },
+      {
+        "name": "Risk Assessment - Responsive Elements",
+        "passed": true,
+        "message": "Found 14 responsive elements",
+        "timestamp": "2025-06-29T02:42:09.763Z"
+      },
+      {
+        "name": "Growth Opportunities - Element .analytics-showcase-hero",
+        "passed": true,
+        "message": "Present and visible",
+        "timestamp": "2025-06-29T02:42:12.648Z"
+      },
+      {
+        "name": "Growth Opportunities - Element .analytics-grid",
+        "passed": true,
+        "message": "Present and visible",
+        "timestamp": "2025-06-29T02:42:12.650Z"
+      },
+      {
+        "name": "Growth Opportunities - Element .analytics-capability-card",
+        "passed": true,
+        "message": "Present and visible",
+        "timestamp": "2025-06-29T02:42:12.652Z"
+      },
+      {
+        "name": "Growth Opportunities - Headings Structure",
+        "passed": true,
+        "message": "Found 17 headings",
+        "timestamp": "2025-06-29T02:42:12.662Z"
+      },
+      {
+        "name": "Growth Opportunities - Heading \"Growth Opportunities\"",
+        "passed": true,
+        "message": "Found",
+        "timestamp": "2025-06-29T02:42:12.662Z"
+      },
+      {
+        "name": "Growth Opportunities - Heading \"How Growth Opportunities Works\"",
+        "passed": false,
+        "message": "Missing",
+        "timestamp": "2025-06-29T02:42:12.662Z"
+      },
+      {
+        "name": "Growth Opportunities - Apple Design Elements",
+        "passed": true,
+        "message": "Found 3/4 Apple-style elements",
+        "timestamp": "2025-06-29T02:42:12.678Z"
+      },
+      {
+        "name": "Growth Opportunities - Responsive Elements",
+        "passed": true,
+        "message": "Found 13 responsive elements",
+        "timestamp": "2025-06-29T02:42:15.714Z"
+      },
+      {
+        "name": "Real-time Analytics - Element .analytics-showcase-hero",
+        "passed": true,
+        "message": "Present and visible",
+        "timestamp": "2025-06-29T02:42:19.784Z"
+      },
+      {
+        "name": "Real-time Analytics - Element .live-analytics-dashboard",
+        "passed": false,
+        "message": "Present but not visible",
+        "timestamp": "2025-06-29T02:42:19.786Z"
+      },
+      {
+        "name": "Real-time Analytics - Element .analytics-grid",
+        "passed": false,
+        "message": "Present but not visible",
+        "timestamp": "2025-06-29T02:42:19.788Z"
+      },
+      {
+        "name": "Real-time Analytics - Element #alertsContainer",
+        "passed": true,
+        "message": "Present and visible",
+        "timestamp": "2025-06-29T02:42:19.789Z"
+      },
+      {
+        "name": "Real-time Analytics - Headings Structure",
+        "passed": true,
+        "message": "Found 19 headings",
+        "timestamp": "2025-06-29T02:42:19.802Z"
+      },
+      {
+        "name": "Real-time Analytics - Heading \"Real-time Analytics\"",
+        "passed": true,
+        "message": "Found",
+        "timestamp": "2025-06-29T02:42:19.802Z"
+      },
+      {
+        "name": "Real-time Analytics - Heading \"Live Business Intelligence Dashboard\"",
+        "passed": true,
+        "message": "Found",
+        "timestamp": "2025-06-29T02:42:19.802Z"
+      },
+      {
+        "name": "Real-time Analytics - Apple Design Elements",
+        "passed": true,
+        "message": "Found 3/4 Apple-style elements",
+        "timestamp": "2025-06-29T02:42:19.812Z"
+      },
+      {
+        "name": "Real-time Analytics - Responsive Elements",
+        "passed": true,
+        "message": "Found 17 responsive elements",
+        "timestamp": "2025-06-29T02:42:22.837Z"
+      },
+      {
+        "name": "Solutions Page - Content Quality",
+        "passed": false,
+        "message": "Contains placeholder content",
+        "timestamp": "2025-06-29T02:42:25.542Z"
+      }
+    ],
+    "functionalityTests": [
+      {
+        "name": "Sales Forecasting - Chart.js Library",
+        "passed": true,
+        "message": "Chart.js loaded",
+        "timestamp": "2025-06-29T02:42:00.731Z"
+      },
+      {
+        "name": "Sales Forecasting - Chart seasonalPatternChart",
+        "passed": true,
+        "message": "Chart rendered with content",
+        "timestamp": "2025-06-29T02:42:00.735Z"
+      },
+      {
+        "name": "Sales Forecasting - Chart confidenceChart",
+        "passed": true,
+        "message": "Chart rendered with content",
+        "timestamp": "2025-06-29T02:42:00.736Z"
+      },
+      {
+        "name": "Sales Forecasting - Chart multiProductChart",
+        "passed": true,
+        "message": "Chart rendered with content",
+        "timestamp": "2025-06-29T02:42:00.738Z"
+      },
+      {
+        "name": "Sales Forecasting - Chart modelUpdateChart",
+        "passed": true,
+        "message": "Chart rendered with content",
+        "timestamp": "2025-06-29T02:42:00.739Z"
+      },
+      {
+        "name": "Risk Assessment - Chart.js Library",
+        "passed": true,
+        "message": "Chart.js loaded",
+        "timestamp": "2025-06-29T02:42:06.699Z"
+      },
+      {
+        "name": "Risk Assessment - Chart operationalRiskChart",
+        "passed": true,
+        "message": "Chart rendered with content",
+        "timestamp": "2025-06-29T02:42:06.701Z"
+      },
+      {
+        "name": "Risk Assessment - Chart complianceRiskChart",
+        "passed": true,
+        "message": "Chart rendered with content",
+        "timestamp": "2025-06-29T02:42:06.703Z"
+      },
+      {
+        "name": "Risk Assessment - Chart riskDashboardChart",
+        "passed": true,
+        "message": "Chart rendered with content",
+        "timestamp": "2025-06-29T02:42:06.705Z"
+      },
+      {
+        "name": "Growth Opportunities - Chart.js Library",
+        "passed": true,
+        "message": "Chart.js loaded",
+        "timestamp": "2025-06-29T02:42:12.662Z"
+      },
+      {
+        "name": "Growth Opportunities - Chart clvChart",
+        "passed": true,
+        "message": "Chart rendered with content",
+        "timestamp": "2025-06-29T02:42:12.664Z"
+      },
+      {
+        "name": "Growth Opportunities - Chart digitalTransformationChart",
+        "passed": true,
+        "message": "Chart rendered with content",
+        "timestamp": "2025-06-29T02:42:12.665Z"
+      },
+      {
+        "name": "Growth Opportunities - Chart opportunityMatrix",
+        "passed": true,
+        "message": "Chart rendered with content",
+        "timestamp": "2025-06-29T02:42:12.667Z"
+      },
+      {
+        "name": "Real-time Analytics - Chart.js Library",
+        "passed": true,
+        "message": "Chart.js loaded",
+        "timestamp": "2025-06-29T02:42:19.802Z"
+      },
+      {
+        "name": "Real-time Analytics - Chart liveSalesChart",
+        "passed": false,
+        "message": "Chart container exists but empty",
+        "timestamp": "2025-06-29T02:42:19.804Z"
+      },
+      {
+        "name": "Real-time Analytics - Chart liveCustomerChart",
+        "passed": false,
+        "message": "Chart container exists but empty",
+        "timestamp": "2025-06-29T02:42:19.805Z"
+      }
+    ],
+    "designTests": [
+      {
+        "name": "Analytics Hub - Apple Typography",
+        "passed": true,
+        "message": "Apple-style fonts detected",
+        "timestamp": "2025-06-29T02:41:54.767Z"
+      },
+      {
+        "name": "Sales Forecasting - Apple Typography",
+        "passed": true,
+        "message": "Apple-style fonts detected",
+        "timestamp": "2025-06-29T02:42:00.750Z"
+      },
+      {
+        "name": "Risk Assessment - Apple Typography",
+        "passed": true,
+        "message": "Apple-style fonts detected",
+        "timestamp": "2025-06-29T02:42:06.715Z"
+      },
+      {
+        "name": "Growth Opportunities - Apple Typography",
+        "passed": true,
+        "message": "Apple-style fonts detected",
+        "timestamp": "2025-06-29T02:42:12.679Z"
+      },
+      {
+        "name": "Real-time Analytics - Apple Typography",
+        "passed": true,
+        "message": "Apple-style fonts detected",
+        "timestamp": "2025-06-29T02:42:19.812Z"
+      }
+    ],
+    "performanceTests": [
+      {
+        "name": "Analytics Hub - Load Performance",
+        "passed": true,
+        "message": "Load time: 1197ms (Good)",
+        "timestamp": "2025-06-29T02:41:52.714Z"
+      },
+      {
+        "name": "Analytics Hub - Page Title",
+        "passed": true,
+        "message": "Title: \"Predictive Analytics Hub - VARAi Commerce Studio\"",
+        "timestamp": "2025-06-29T02:41:54.721Z"
+      },
+      {
+        "name": "Analytics Hub - Mobile Menu Toggle",
+        "passed": true,
+        "message": "Mobile menu toggle present",
+        "timestamp": "2025-06-29T02:41:55.775Z"
+      },
+      {
+        "name": "Analytics Hub - ARIA Labels",
+        "passed": true,
+        "message": "Found 2 ARIA elements",
+        "timestamp": "2025-06-29T02:41:57.811Z"
+      },
+      {
+        "name": "Analytics Hub - Image Alt Text",
+        "passed": true,
+        "message": "0/0 images have alt text",
+        "timestamp": "2025-06-29T02:41:57.814Z"
+      },
+      {
+        "name": "Sales Forecasting - Load Performance",
+        "passed": true,
+        "message": "Load time: 879ms (Good)",
+        "timestamp": "2025-06-29T02:41:58.705Z"
+      },
+      {
+        "name": "Sales Forecasting - Page Title",
+        "passed": true,
+        "message": "Title: \"Sales Forecasting - VARAi Commerce Studio\"",
+        "timestamp": "2025-06-29T02:42:00.707Z"
+      },
+      {
+        "name": "Sales Forecasting - Mobile Menu Toggle",
+        "passed": true,
+        "message": "Mobile menu toggle present",
+        "timestamp": "2025-06-29T02:42:01.758Z"
+      },
+      {
+        "name": "Sales Forecasting - ARIA Labels",
+        "passed": true,
+        "message": "Found 2 ARIA elements",
+        "timestamp": "2025-06-29T02:42:03.790Z"
+      },
+      {
+        "name": "Sales Forecasting - Image Alt Text",
+        "passed": true,
+        "message": "0/0 images have alt text",
+        "timestamp": "2025-06-29T02:42:03.793Z"
+      },
+      {
+        "name": "Risk Assessment - Load Performance",
+        "passed": true,
+        "message": "Load time: 863ms (Good)",
+        "timestamp": "2025-06-29T02:42:04.671Z"
+      },
+      {
+        "name": "Risk Assessment - Page Title",
+        "passed": true,
+        "message": "Title: \"Risk Assessment - VARAi Commerce Studio\"",
+        "timestamp": "2025-06-29T02:42:06.675Z"
+      },
+      {
+        "name": "Risk Assessment - Mobile Menu Toggle",
+        "passed": true,
+        "message": "Mobile menu toggle present",
+        "timestamp": "2025-06-29T02:42:07.727Z"
+      },
+      {
+        "name": "Risk Assessment - ARIA Labels",
+        "passed": true,
+        "message": "Found 2 ARIA elements",
+        "timestamp": "2025-06-29T02:42:09.768Z"
+      },
+      {
+        "name": "Risk Assessment - Image Alt Text",
+        "passed": true,
+        "message": "0/0 images have alt text",
+        "timestamp": "2025-06-29T02:42:09.770Z"
+      },
+      {
+        "name": "Growth Opportunities - Load Performance",
+        "passed": true,
+        "message": "Load time: 855ms (Good)",
+        "timestamp": "2025-06-29T02:42:10.636Z"
+      },
+      {
+        "name": "Growth Opportunities - Page Title",
+        "passed": true,
+        "message": "Title: \"Growth Opportunities - VARAi Commerce Studio\"",
+        "timestamp": "2025-06-29T02:42:12.641Z"
+      },
+      {
+        "name": "Growth Opportunities - Mobile Menu Toggle",
+        "passed": true,
+        "message": "Mobile menu toggle present",
+        "timestamp": "2025-06-29T02:42:13.689Z"
+      },
+      {
+        "name": "Growth Opportunities - ARIA Labels",
+        "passed": true,
+        "message": "Found 2 ARIA elements",
+        "timestamp": "2025-06-29T02:42:15.717Z"
+      },
+      {
+        "name": "Growth Opportunities - Image Alt Text",
+        "passed": true,
+        "message": "0/0 images have alt text",
+        "timestamp": "2025-06-29T02:42:15.718Z"
+      },
+      {
+        "name": "Real-time Analytics - Load Performance",
+        "passed": true,
+        "message": "Load time: 2046ms (Good)",
+        "timestamp": "2025-06-29T02:42:17.773Z"
+      },
+      {
+        "name": "Real-time Analytics - Page Title",
+        "passed": true,
+        "message": "Title: \"Real-time Analytics - VARAi Commerce Studio\"",
+        "timestamp": "2025-06-29T02:42:19.777Z"
+      },
+      {
+        "name": "Real-time Analytics - Mobile Menu Toggle",
+        "passed": true,
+        "message": "Mobile menu toggle present",
+        "timestamp": "2025-06-29T02:42:20.819Z"
+      },
+      {
+        "name": "Real-time Analytics - ARIA Labels",
+        "passed": true,
+        "message": "Found 2 ARIA elements",
+        "timestamp": "2025-06-29T02:42:22.840Z"
+      },
+      {
+        "name": "Real-time Analytics - Image Alt Text",
+        "passed": true,
+        "message": "0/0 images have alt text",
+        "timestamp": "2025-06-29T02:42:22.841Z"
+      },
+      {
+        "name": "Solutions Page - Solution Cards",
+        "passed": true,
+        "message": "Found 13 solution cards",
+        "timestamp": "2025-06-29T02:42:25.541Z"
+      }
+    ]
+  },
+  "testedPages": [
+    {
+      "name": "Analytics Hub",
+      "url": "https://varai-website-353252826752.us-central1.run.app/analytics/",
+      "expectedElements": 4,
+      "expectedCharts": 0
+    },
+    {
+      "name": "Sales Forecasting",
+      "url": "https://varai-website-353252826752.us-central1.run.app/analytics/sales-forecasting.html",
+      "expectedElements": 3,
+      "expectedCharts": 4
+    },
+    {
+      "name": "Risk Assessment",
+      "url": "https://varai-website-353252826752.us-central1.run.app/analytics/risk-assessment.html",
+      "expectedElements": 3,
+      "expectedCharts": 3
+    },
+    {
+      "name": "Growth Opportunities",
+      "url": "https://varai-website-353252826752.us-central1.run.app/analytics/growth-opportunities.html",
+      "expectedElements": 3,
+      "expectedCharts": 3
+    },
+    {
+      "name": "Real-time Analytics",
+      "url": "https://varai-website-353252826752.us-central1.run.app/analytics/real-time-analytics.html",
+      "expectedElements": 4,
+      "expectedCharts": 2
+    }
+  ],
+  "recommendations": [
+    "Review and fix failed test cases listed in the detailed report",
+    "Add missing page elements and improve content structure",
+    "Fix chart rendering and interactive functionality"
+  ]
+}

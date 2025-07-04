@@ -1,7 +1,0 @@
-steps:
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-f', 'Dockerfile.simple', '-t', 'gcr.io/ml-datadriven-recos/commerce-studio-frontend', '.']
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/ml-datadriven-recos/commerce-studio-frontend']
-images:
-- 'gcr.io/ml-datadriven-recos/commerce-studio-frontend'

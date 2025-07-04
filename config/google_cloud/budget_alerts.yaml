@@ -1,0 +1,167 @@
+# Budget Alerts Configuration for EyewearML Conversational AI
+
+# Primary Budget Alert Configuration
+primary_budget:
+  name: "eyewearml-conversational-ai-monthly-budget"
+  display_name: "EyewearML Conversational AI Monthly Budget"
+  amount: 1000.00                                      # Monthly budget amount in USD
+  currency_code: "USD"
+  threshold_rules:                                     # Alert thresholds as percentage of budget
+    - threshold_percent: 50.0
+      trigger_notification: true
+    - threshold_percent: 75.0
+      trigger_notification: true
+    - threshold_percent: 90.0
+      trigger_notification: true
+    - threshold_percent: 100.0
+      trigger_notification: true
+  time_period: "CALENDAR_MONTH"                        # Budget period (CALENDAR_MONTH or custom)
+  refresh_schedule: "daily"                            # How often the budget amount is calculated
+  include_credits: false                               # Whether to include Google credits in budget calculation
+
+# Service-Specific Budget Alerts
+service_budgets:
+  # Dialogflow Budget
+  dialogflow:
+    name: "eyewearml-conversational-ai-dialogflow-budget"
+    display_name: "Dialogflow CX Budget"
+    amount: 500.00                                     # Monthly budget amount in USD
+    currency_code: "USD"
+    threshold_rules:
+      - threshold_percent: 50.0
+        trigger_notification: true
+      - threshold_percent: 80.0
+        trigger_notification: true
+      - threshold_percent: 100.0
+        trigger_notification: true
+    service_filters:
+      - service_id: "dialogflow.googleapis.com"
+    time_period: "CALENDAR_MONTH"
+    refresh_schedule: "daily"
+    include_credits: false
+
+  # Cloud Functions Budget
+  cloud_functions:
+    name: "eyewearml-conversational-ai-functions-budget"
+    display_name: "Webhook Functions Budget"
+    amount: 200.00                                     # Monthly budget amount in USD
+    currency_code: "USD"
+    threshold_rules:
+      - threshold_percent: 50.0
+        trigger_notification: true
+      - threshold_percent: 80.0
+        trigger_notification: true
+      - threshold_percent: 100.0
+        trigger_notification: true
+    service_filters:
+      - service_id: "cloudfunctions.googleapis.com"
+    time_period: "CALENDAR_MONTH"
+    refresh_schedule: "daily"
+    include_credits: false
+
+  # Natural Language API Budget
+  natural_language:
+    name: "eyewearml-conversational-ai-nl-budget"
+    display_name: "Natural Language API Budget"
+    amount: 150.00                                     # Monthly budget amount in USD
+    currency_code: "USD"
+    threshold_rules:
+      - threshold_percent: 50.0
+        trigger_notification: true
+      - threshold_percent: 80.0
+        trigger_notification: true
+      - threshold_percent: 100.0
+        trigger_notification: true
+    service_filters:
+      - service_id: "language.googleapis.com"
+    time_period: "CALENDAR_MONTH"
+    refresh_schedule: "daily"
+    include_credits: false
+
+# Environment-Specific Budget Alerts
+${BUDGET_ALERTS_SECRET_1}_budgets:
+  # Development Environment
+  development:
+    name: "eyewearml-conversational-ai-dev-budget"
+    display_name: "Development Environment Budget"
+    amount: 300.00                                     # Monthly budget amount in USD
+    currency_code: "USD"
+    threshold_rules:
+      - threshold_percent: 70.0
+        trigger_notification: true
+      - threshold_percent: 90.0
+        trigger_notification: true
+      - threshold_percent: 100.0
+        trigger_notification: true
+    label_filters:
+      - key: "${BUDGET_ALERTS_SECRET_1}"
+        value: "development"
+    time_period: "CALENDAR_MONTH"
+    refresh_schedule: "daily"
+    include_credits: false
+
+  # Testing Environment
+  testing:
+    name: "eyewearml-conversational-ai-test-budget"
+    display_name: "Testing Environment Budget"
+    amount: 200.00                                     # Monthly budget amount in USD
+    currency_code: "USD"
+    threshold_rules:
+      - threshold_percent: 70.0
+        trigger_notification: true
+      - threshold_percent: 90.0
+        trigger_notification: true
+      - threshold_percent: 100.0
+        trigger_notification: true
+    label_filters:
+      - key: "${BUDGET_ALERTS_SECRET_1}"
+        value: "testing"
+    time_period: "CALENDAR_MONTH"
+    refresh_schedule: "daily"
+    include_credits: false
+
+  # Production Environment
+  production:
+    name: "eyewearml-conversational-ai-prod-budget"
+    display_name: "Production Environment Budget"
+    amount: 500.00                                     # Monthly budget amount in USD
+    currency_code: "USD"
+    threshold_rules:
+      - threshold_percent: 50.0
+        trigger_notification: true
+      - threshold_percent: 75.0
+        trigger_notification: true
+      - threshold_percent: 90.0
+        trigger_notification: true
+      - threshold_percent: 100.0
+        trigger_notification: true
+    label_filters:
+      - key: "${BUDGET_ALERTS_SECRET_1}"
+        value: "production"
+    time_period: "CALENDAR_MONTH"
+    refresh_schedule: "daily"
+    include_credits: false
+
+# Notification Channels
+notification_channels:
+  - type: "email"
+    display_name: "Budget Admin Alerts"
+    email_address: "budget-admin@eyewearml.com"        # Replace with actual email
+    description: "Primary notification channel for budget alerts"
+  
+  - type: "email"
+    display_name: "Conversational AI Team Alerts"
+    email_address: "conversational-ai-team@eyewearml.com"  # Replace with actual email
+    description: "Notification channel for the Conversational AI team"
+  
+  - type: "slack"
+    display_name: "Budget Alerts Slack Channel"
+    slack_webhook_url: "SLACK_WEBHOOK_URL_TO_BE_REPLACED"  # Replace with actual Slack webhook URL
+    description: "Slack channel for budget alerts"
+
+# Alert Policy
+alert_policy:
+  auto_disable_budget: false                           # Whether to disable billing when budget is exceeded
+  alert_on_actual_cost: true                           # Alert based on actual costs
+  alert_on_forecasted_cost: true                       # Alert based on forecasted costs
+  grace_period_days: 2                                 # Days before disabling billing after budget exceeded

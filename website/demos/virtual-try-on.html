@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Try-On Demo - VARAi Commerce Studio</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../style.css">
+    <script src="../js/main.js" defer></script>
+    <style>
+        .demo-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .try-on-interface {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .webcam-section {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .frames-section {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .webcam-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background-color: #f0f0f0;
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+        
+        .webcam-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .webcam-placeholder svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 1rem;
+            color: var(--gray-500);
+        }
+        
+        .webcam-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .webcam-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .frame-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .frame-item {
+            border: 2px solid transparent;
+            border-radius: var(--border-radius);
+            padding: 0.5rem;
+            cursor: pointer;
+            transition: var(--transition-base);
+        }
+        
+        .frame-item:hover {
+            border-color: var(--primary-light);
+        }
+        
+        .frame-item.active {
+            border-color: var(--primary);
+            background-color: rgba(10, 36, 99, 0.05);
+        }
+        
+        .frame-image {
+            width: 100%;
+            height: auto;
+            border-radius: var(--border-radius-sm);
+        }
+        
+        .frame-name {
+            font-size: var(--font-size-sm);
+            margin-top: 0.5rem;
+            text-align: center;
+        }
+        
+        .frame-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .filter-tag {
+            background-color: var(--gray-200);
+            color: var(--gray-700);
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--border-radius-full);
+            font-size: var(--font-size-sm);
+            cursor: pointer;
+            transition: var(--transition-base);
+        }
+        
+        .filter-tag:hover {
+            background-color: var(--gray-300);
+        }
+        
+        .filter-tag.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .comparison-view {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .comparison-image {
+            flex: 1;
+            min-width: 300px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+        
+        .comparison-image img {
+            width: 100%;
+            height: auto;
+        }
+        
+        .comparison-title {
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+        
+        .demo-cta {
+            margin-top: 3rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header class="bg-primary text-white">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg">
+                <a href="../index.html" class="navbar-brand">VARAi Commerce Studio</a>
+                <button class="mobile-menu-toggle" aria-label="Toggle navigation menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="navbar-nav">
+                    <a href="../index.html" class="nav-link">Home</a>
+                    <a href="../features.html" class="nav-link">Features</a>
+                    <a href="../pricing.html" class="nav-link">Pricing</a>
+                    <a href="../contact.html" class="nav-link">Contact</a>
+                    <a href="../data-privacy.html" class="nav-link">Data Privacy</a>
+                    <a href="../ehr-platforms.html" class="nav-link">EHR Platforms</a>
+                </div>
+                <div class="d-flex">
+                    <a href="../signup/index.html" class="btn btn-secondary ml-4">Get Started</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="py-8 bg-light">
+            <div class="container">
+                <div class="text-center mb-6">
+                    <h1>Virtual Try-On Demo</h1>
+                    <p class="fs-lg text-muted">Experience how your customers can try on frames virtually before making a purchase.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-8">
+            <div class="demo-container">
+                <div class="try-on-interface">
+                    <div class="webcam-section">
+                        <h2 class="mb-4">Try On Frames</h2>
+                        <div class="webcam-container">
+                            <div class="webcam-placeholder">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                <p>For this demo, we're showing a static image.<br>In the actual product, this would be your live webcam feed.</p>
+                                <button class="btn btn-primary mt-4" id="enable-camera">Enable Camera</button>
+                            </div>
+                            <img src="../images/demo-face.jpg" alt="Demo face" class="webcam-overlay" style="display: none;" id="demo-face">
+                            <img src="../images/frame-overlay-1.png" alt="Frame overlay" class="webcam-overlay" style="display: none;" id="frame-overlay">
+                        </div>
+                        <div class="webcam-controls">
+                            <button class="btn btn-outline-primary" id="take-photo">Take Photo</button>
+                            <button class="btn btn-outline-primary" id="reset-camera">Reset</button>
+                        </div>
+                        <div class="comparison-view" style="display: none;" id="comparison-view">
+                            <div class="comparison-image">
+                                <img src="../images/before-try-on.jpg" alt="Before try-on">
+                                <div class="comparison-title">Without Frames</div>
+                            </div>
+                            <div class="comparison-image">
+                                <img src="../images/after-try-on.jpg" alt="After try-on">
+                                <div class="comparison-title">With Selected Frames</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="frames-section">
+                        <h2 class="mb-4">Select Frames</h2>
+                        <div class="frame-filters">
+                            <div class="filter-tag active">All</div>
+                            <div class="filter-tag">Rectangular</div>
+                            <div class="filter-tag">Round</div>
+                            <div class="filter-tag">Cat Eye</div>
+                            <div class="filter-tag">Aviator</div>
+                            <div class="filter-tag">Oversized</div>
+                        </div>
+                        <div class="frame-grid">
+                            <div class="frame-item active" data-frame="1">
+                                <img src="../images/frame-1.jpg" alt="Ray-Ban Wayfarer" class="frame-image">
+                                <div class="frame-name">Ray-Ban Wayfarer</div>
+                            </div>
+                            <div class="frame-item" data-frame="2">
+                                <img src="../images/frame-2.jpg" alt="Oakley Holbrook" class="frame-image">
+                                <div class="frame-name">Oakley Holbrook</div>
+                            </div>
+                            <div class="frame-item" data-frame="3">
+                                <img src="../images/frame-3.jpg" alt="Warby Parker Harper" class="frame-image">
+                                <div class="frame-name">Warby Parker Harper</div>
+                            </div>
+                            <div class="frame-item" data-frame="4">
+                                <img src="../images/frame-4.jpg" alt="Persol 649" class="frame-image">
+                                <div class="frame-name">Persol 649</div>
+                            </div>
+                            <div class="frame-item" data-frame="5">
+                                <img src="../images/frame-5.jpg" alt="Tom Ford FT5401" class="frame-image">
+                                <div class="frame-name">Tom Ford FT5401</div>
+                            </div>
+                            <div class="frame-item" data-frame="6">
+                                <img src="../images/frame-6.jpg" alt="Gucci GG0396S" class="frame-image">
+                                <div class="frame-name">Gucci GG0396S</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="demo-cta">
+                    <h2 class="mb-4">Ready to implement Virtual Try-On in your store?</h2>
+                    <p class="mb-6">Our AI-powered virtual try-on technology can help increase conversion rates by up to 40%.</p>
+                    <a href="../signup/index.html" class="btn btn-primary btn-lg">Start Free Trial</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-dark text-white py-8">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-6 mb-lg-0">
+                    <h4>VARAi Commerce Studio</h4>
+                    <p>AI-powered solutions for the modern eyewear retailer.</p>
+                </div>
+                <div class="col-sm-6 col-lg-2 mb-6 mb-lg-0">
+                    <h5>Product</h5>
+                    <ul class="footer-links">
+                        <li><a href="../features.html">Features</a></li>
+                        <li><a href="../pricing.html">Pricing</a></li>
+                    </ul>
+                </div>
+                <div class="col-sm-6 col-lg-2 mb-6 mb-lg-0">
+                    <h5>Company</h5>
+                    <ul class="footer-links">
+                        <li><a href="../company.html">About Us</a></li>
+                        <li><a href="../contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-sm-6 col-lg-2 mb-6 mb-lg-0">
+                    <h5>Resources</h5>
+                    <ul class="footer-links">
+                        <li><a href="../resources.html">Documentation</a></li>
+                        <li><a href="../resources.html#api">API Reference</a></li>
+                    </ul>
+                </div>
+                <div class="col-sm-6 col-lg-2">
+                    <h5>Legal</h5>
+                    <ul class="footer-links">
+                        <li><a href="../legal.html#terms">Terms of Service</a></li>
+                        <li><a href="../legal.html#privacy">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-top border-gray-700 mt-8 pt-6 text-center">
+                <p>&copy; 2025 VARAi Inc. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Demo functionality for virtual try-on
+            const enableCameraBtn = document.getElementById('enable-camera');
+            const takePhotoBtn = document.getElementById('take-photo');
+            const resetCameraBtn = document.getElementById('reset-camera');
+            const demoFace = document.getElementById('demo-face');
+            const frameOverlay = document.getElementById('frame-overlay');
+            const comparisonView = document.getElementById('comparison-view');
+            const frameItems = document.querySelectorAll('.frame-item');
+            const filterTags = document.querySelectorAll('.filter-tag');
+            
+            // Enable camera button click
+            enableCameraBtn.addEventListener('click', function() {
+                this.closest('.webcam-placeholder').style.display = 'none';
+                demoFace.style.display = 'block';
+                frameOverlay.style.display = 'block';
+            });
+            
+            // Take photo button click
+            takePhotoBtn.addEventListener('click', function() {
+                comparisonView.style.display = 'flex';
+                window.scrollTo({
+                    top: comparisonView.offsetTop,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Reset camera button click
+            resetCameraBtn.addEventListener('click', function() {
+                comparisonView.style.display = 'none';
+            });
+            
+            // Frame selection
+            frameItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // Remove active class from all frames
+                    frameItems.forEach(frame => frame.classList.remove('active'));
+                    
+                    // Add active class to clicked frame
+                    this.classList.add('active');
+                    
+                    // Update frame overlay
+                    const frameId = this.dataset.frame;
+                    frameOverlay.src = `../images/frame-overlay-${frameId}.png`;
+                });
+            });
+            
+            // Filter tags
+            filterTags.forEach(tag => {
+                tag.addEventListener('click', function() {
+                    // Remove active class from all tags
+                    filterTags.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tag
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
