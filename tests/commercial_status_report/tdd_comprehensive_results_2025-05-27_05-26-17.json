@@ -1,0 +1,222 @@
+{
+  "test_run_metadata": {
+    "timestamp": "2025-05-27T05:26:17.566553",
+    "duration_seconds": 0.005409,
+    "framework_version": "1.0.0",
+    "tdd_compliance": true
+  },
+  "overall_score": {
+    "total_score": 26.7,
+    "grade": "A",
+    "target_achieved": true
+  },
+  "category_results": {
+    "executive_summary": {
+      "status": "completed",
+      "tests_run": 1,
+      "tests_passed": 0,
+      "tests_failed": 1,
+      "success_rate": 0.0,
+      "details": [
+        {
+          "test_name": "executive_summary_exists",
+          "passed": false,
+          "message": "Executive Summary section not found",
+          "details": null,
+          "severity": "error"
+        }
+      ],
+      "score": 0.0,
+      "weight": 0.2,
+      "weighted_score": 0.0
+    },
+    "security_compliance": {
+      "status": "completed",
+      "tests_run": 6,
+      "tests_passed": 0,
+      "tests_failed": 6,
+      "success_rate": 0.0,
+      "hipaa_compliance_rate": 0,
+      "details": [
+        {
+          "test_name": "security_section_exists",
+          "passed": false,
+          "message": "Security section not found",
+          "details": null,
+          "severity": "error"
+        },
+        {
+          "test_name": "security_metric_uptime_security",
+          "passed": false,
+          "message": "Missing uptime_security metric",
+          "details": null,
+          "severity": "error"
+        },
+        {
+          "test_name": "security_metric_incident_response_time",
+          "passed": false,
+          "message": "Missing incident_response_time metric",
+          "details": null,
+          "severity": "error"
+        },
+        {
+          "test_name": "security_metric_vulnerability_count",
+          "passed": false,
+          "message": "Missing vulnerability_count metric",
+          "details": null,
+          "severity": "error"
+        },
+        {
+          "test_name": "security_metric_compliance_score",
+          "passed": false,
+          "message": "Missing compliance_score metric",
+          "details": null,
+          "severity": "error"
+        },
+        {
+          "test_name": "security_metric_security_scan_frequency",
+          "passed": false,
+          "message": "Missing security_scan_frequency metric",
+          "details": null,
+          "severity": "error"
+        }
+      ],
+      "score": 0.5,
+      "weight": 0.25,
+      "weighted_score": 0.125
+    },
+    "edge_cases": {
+      "status": "error",
+      "error": "'charmap' codec can't encode characters in position 318-322: character maps to <undefined>",
+      "score": 0.0,
+      "weight": 0.2,
+      "weighted_score": 0.0
+    },
+    "aigi_integration": {
+      "status": "completed",
+      "tests_run": 6,
+      "tests_passed": 5,
+      "tests_failed": 1,
+      "success_rate": 0.8333333333333334,
+      "mcp_features_tested": [
+        "mcp_connection",
+        "external_link_validation",
+        "project_state_integration",
+        "memory_persistence",
+        "reflection_capabilities",
+        "performance_trends"
+      ],
+      "aigi_integration_level": 0.85,
+      "details": [
+        {
+          "test_name": "mcp_connection",
+          "passed": true,
+          "message": "MCP mcp_connection test"
+        },
+        {
+          "test_name": "external_link_validation",
+          "passed": true,
+          "message": "MCP external_link_validation test"
+        },
+        {
+          "test_name": "project_state_integration",
+          "passed": true,
+          "message": "MCP project_state_integration test"
+        },
+        {
+          "test_name": "memory_persistence",
+          "passed": true,
+          "message": "MCP memory_persistence test"
+        },
+        {
+          "test_name": "reflection_capabilities",
+          "passed": true,
+          "message": "MCP reflection_capabilities test"
+        },
+        {
+          "test_name": "performance_trends",
+          "passed": false,
+          "message": "MCP performance_trends test"
+        }
+      ],
+      "score": 7.166666666666667,
+      "weight": 0.2,
+      "weighted_score": 1.4333333333333336
+    },
+    "performance_benchmarks": {
+      "status": "completed",
+      "tests_run": 5,
+      "tests_passed": 4,
+      "tests_failed": 1,
+      "success_rate": 0.8,
+      "performance_grade": "B",
+      "execution_time": 0.0010859966278076172,
+      "memory_peak_mb": 0.01263427734375,
+      "throughput": 3683.25268935236,
+      "optimization_suggestions": [
+        "Improve caching strategy for file operations"
+      ],
+      "details": [
+        {
+          "test_name": "threshold_execution_time",
+          "passed": true,
+          "message": "Performance threshold for execution_time"
+        },
+        {
+          "test_name": "threshold_memory_usage",
+          "passed": true,
+          "message": "Performance threshold for memory_usage"
+        },
+        {
+          "test_name": "threshold_throughput",
+          "passed": true,
+          "message": "Performance threshold for throughput"
+        },
+        {
+          "test_name": "threshold_cpu_usage",
+          "passed": true,
+          "message": "Performance threshold for cpu_usage"
+        },
+        {
+          "test_name": "threshold_cache_efficiency",
+          "passed": false,
+          "message": "Performance threshold for cache_efficiency"
+        }
+      ],
+      "score": 7.4,
+      "weight": 0.15,
+      "weighted_score": 1.11
+    }
+  },
+  "category_scores": {
+    "executive_summary": 0.0,
+    "security_compliance": 0.5,
+    "edge_cases": 0.0,
+    "aigi_integration": 7.166666666666667,
+    "performance_benchmarks": 7.4
+  },
+  "summary_statistics": {
+    "total_tests_run": 18,
+    "total_tests_passed": 9,
+    "overall_success_rate": 0.5,
+    "categories_passing": 0,
+    "categories_total": 5
+  },
+  "recommendations": [
+    "Improve executive summary testing (current score: 0.0/10.0)",
+    "Improve security compliance testing (current score: 0.5/10.0)",
+    "Improve edge cases testing (current score: 0.0/10.0)",
+    "Improve aigi integration testing (current score: 7.2/10.0)",
+    "Improve performance benchmarks testing (current score: 7.4/10.0)",
+    "Enhance HIPAA compliance documentation and security measures",
+    "Optimize validation performance and implement benchmarking",
+    "Improve aiGI workflow integration and MCP tool usage"
+  ],
+  "next_steps": [
+    "\u2705 Target score achieved! Focus on maintaining quality and adding advanced features.",
+    "Implement continuous integration for automated TDD validation",
+    "Set up performance monitoring and alerting thresholds",
+    "Integrate with aiGI workflow for enhanced validation capabilities",
+    "Establish regular review cycles for test coverage and effectiveness"
+  ]
+}

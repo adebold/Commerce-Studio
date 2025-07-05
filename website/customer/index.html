@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Portal - VARAi Commerce Studio</title>
+    <link rel="stylesheet" href="../css/varai-design-system.css">
+    <link rel="stylesheet" href="../css/enterprise-enhancements.css">
+    <link rel="stylesheet" href="../css/apple-hero-sections.css">
+    <style>
+        .customer-portal-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--varai-background) 0%, var(--varai-gray-50) 100%);
+        }
+        
+        .customer-navbar {
+            background: var(--varai-background);
+            border-bottom: 1px solid var(--varai-border);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        
+        .customer-nav-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .customer-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--varai-primary);
+            text-decoration: none;
+            background: linear-gradient(135deg, var(--varai-primary) 0%, var(--varai-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .customer-nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .customer-nav-link {
+            color: var(--varai-gray-600);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--varai-transition);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+        }
+        
+        .customer-nav-link:hover,
+        .customer-nav-link.active {
+            color: var(--varai-accent);
+            background: rgba(30, 150, 252, 0.1);
+        }
+        
+        .customer-user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .customer-user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, var(--varai-gray-50) 0%, var(--varai-gray-100) 100%);
+            border-radius: 8px;
+            border: 1px solid var(--varai-border);
+        }
+        
+        .customer-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--varai-primary) 0%, var(--varai-accent) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .customer-user-name {
+            font-weight: 600;
+            color: var(--varai-foreground);
+            font-size: 0.9rem;
+        }
+        
+        .logout-button {
+            background: none;
+            border: 1px solid var(--varai-border);
+            color: var(--varai-gray-600);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--varai-transition);
+            font-size: 0.9rem;
+        }
+        
+        .logout-button:hover {
+            background: var(--varai-error);
+            color: white;
+            border-color: var(--varai-error);
+        }
+        
+        .customer-main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+        
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .welcome-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--varai-foreground);
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--varai-foreground) 0%, var(--varai-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .welcome-subtitle {
+            font-size: 1.2rem;
+            color: var(--varai-gray-600);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .portal-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .portal-card {
+            background: var(--varai-background);
+            border: 1px solid var(--varai-border);
+            border-radius: 16px;
+            padding: 2rem;
+            text-decoration: none;
+            color: inherit;
+            transition: var(--varai-transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .portal-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, var(--varai-primary) 0%, var(--varai-accent) 100%);
+            transform: scaleX(0);
+            transition: var(--varai-transition);
+        }
+        
+        .portal-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--varai-shadow-xl);
+        }
+        
+        .portal-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .portal-card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--varai-primary) 0%, var(--varai-accent) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+        
+        .portal-card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--varai-foreground);
+            margin-bottom: 0.75rem;
+        }
+        
+        .portal-card-description {
+            color: var(--varai-gray-600);
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+        }
+        
+        .portal-card-features {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .portal-card-features li {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--varai-gray-600);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .portal-card-features li::before {
+            content: '✓';
+            color: var(--varai-success);
+            font-weight: bold;
+        }
+        
+        .quick-actions {
+            background: var(--varai-background);
+            border: 1px solid var(--varai-border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .quick-actions-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--varai-foreground);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .quick-action-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.5rem 1rem;
+            background: linear-gradient(135deg, var(--varai-gray-50) 0%, var(--varai-gray-100) 100%);
+            border: 1px solid var(--varai-border);
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--varai-foreground);
+            transition: var(--varai-transition);
+            cursor: pointer;
+        }
+        
+        .quick-action-button:hover {
+            background: linear-gradient(135deg, var(--varai-gray-100) 0%, var(--varai-gray-200) 100%);
+            transform: translateY(-2px);
+            box-shadow: var(--varai-shadow-md);
+        }
+        
+        .quick-action-icon {
+            width: 32px;
+            height: 32px;
+            color: var(--varai-accent);
+        }
+        
+        .quick-action-text {
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        
+        .support-section {
+            background: linear-gradient(135deg, var(--varai-primary) 0%, var(--varai-accent) 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .support-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .support-description {
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .support-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .support-button {
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--varai-transition);
+            backdrop-filter: blur(10px);
+        }
+        
+        .support-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+        
+        @media (max-width: 768px) {
+            .customer-nav-content {
+                padding: 0 1rem;
+            }
+            
+            .customer-nav-links {
+                display: none;
+            }
+            
+            .customer-main {
+                padding: 2rem 1rem;
+            }
+            
+            .welcome-title {
+                font-size: 2rem;
+            }
+            
+            .portal-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-actions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .support-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="customer-portal-container">
+        <!-- Customer Navigation -->
+        <nav class="customer-navbar">
+            <div class="customer-nav-content">
+                <a href="index.html" class="customer-logo">VARAi Customer Portal</a>
+                
+                <div class="customer-nav-links">
+                    <a href="index.html" class="customer-nav-link active">Overview</a>
+                    <a href="dashboard.html" class="customer-nav-link">Dashboard</a>
+                    <a href="settings.html" class="customer-nav-link">Settings</a>
+                </div>
+                
+                <div class="customer-user-menu">
+                    <div class="customer-user-info">
+                        <div class="customer-avatar" id="customerAvatar">V</div>
+                        <span class="customer-user-name" id="customerName">Loading...</span>
+                    </div>
+                    <button class="logout-button" onclick="logout()">Sign Out</button>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Main Content -->
+        <main class="customer-main">
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+                <h1 class="welcome-title">Welcome to Your Customer Portal</h1>
+                <p class="welcome-subtitle">
+                    Manage your VARAi Commerce Studio integrations, view analytics, and access all the tools you need to grow your eyewear business.
+                </p>
+            </section>
+            
+            <!-- Portal Cards -->
+            <section class="portal-cards">
+                <a href="dashboard.html" class="portal-card">
+                    <div class="portal-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 13H11V3H3V13ZM3 21H11V15H3V21ZM13 21H21V11H13V21ZM13 3V9H21V3H13Z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3 class="portal-card-title">Analytics Dashboard</h3>
+                    <p class="portal-card-description">
+                        View comprehensive analytics, sales metrics, and performance insights for your eyewear business.
+                    </p>
+                    <ul class="portal-card-features">
+                        <li>Real-time sales analytics</li>
+                        <li>Customer behavior insights</li>
+                        <li>Product performance metrics</li>
+                        <li>Revenue tracking</li>
+                    </ul>
+                </a>
+                
+                <a href="settings.html" class="portal-card">
+                    <div class="portal-card-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 15.5A3.5 3.5 0 0 1 8.5 12A3.5 3.5 0 0 1 12 8.5A3.5 3.5 0 0 1 15.5 12A3.5 3.5 0 0 1 12 15.5M19.43 12.98C19.47 12.66 19.5 12.34 19.5 12C19.5 11.66 19.47 11.34 19.43 11.02L21.54 9.37C21.73 9.22 21.78 8.95 21.66 8.73L19.66 5.27C19.54 5.05 19.27 4.96 19.05 5.05L16.56 6.05C16.04 5.65 15.48 5.32 14.87 5.07L14.49 2.42C14.46 2.18 14.25 2 14 2H10C9.75 2 9.54 2.18 9.51 2.42L9.13 5.07C8.52 5.32 7.96 5.66 7.44 6.05L4.95 5.05C4.73 4.96 4.46 5.05 4.34 5.27L2.34 8.73C2.22 8.95 2.27 9.22 2.46 9.37L4.57 11.02C4.53 11.34 4.5 11.67 4.5 12C4.5 12.33 4.53 12.66 4.57 12.98L2.46 14.63C2.27 14.78 2.22 15.05 2.34 15.27L4.34 18.73C4.46 18.95 4.73 19.03 4.95 18.95L7.44 17.94C7.96 18.34 8.52 18.68 9.13 18.93L9.51 21.58C9.54 21.82 9.75 22 10 22H14C14.25 22 14.46 21.82 14.49 21.58L14.87 18.93C15.48 18.68 16.04 18.34 16.56 17.94L19.05 18.95C19.27 19.03 19.54 18.95 19.66 18.73L21.66 15.27C21.78 15.05 21.73 14.78 21.54 14.63L19.43 12.98Z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3 class="portal-card-title">Account Settings</h3>
+                    <p class="portal-card-description">
+                        Manage your account preferences, API keys, integrations, and security settings.
+                    </p>
+                    <ul class="portal-card-features">
+                        <li>Store integrations management</li>
+                        <li>API key configuration</li>
+                        <li>Security preferences</li>
+                        <li>Notification settings</li>
+                    </ul>
+                </a>
+            </section>
+            
+            <!-- Quick Actions -->
+            <section class="quick-actions">
+                <h2 class="quick-actions-title">Quick Actions</h2>
+                <div class="quick-actions-grid">
+                    <button class="quick-action-button" onclick="openIntegrationWizard()">
+                        <svg class="quick-action-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="quick-action-text">Connect Store</span>
+                    </button>
+                    
+                    <button class="quick-action-button" onclick="viewAnalytics()">
+                        <svg class="quick-action-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M18 20V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M12 20V4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M6 20V14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="quick-action-text">View Analytics</span>
+                    </button>
+                    
+                    <button class="quick-action-button" onclick="manageAPIKeys()">
+                        <svg class="quick-action-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M21 2L19 4L15 8L22 15L21 16L14 9L10 13L8 11L12 7L16 3L21 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M5 12L2 15L5 18L8 15L5 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="quick-action-text">API Keys</span>
+                    </button>
+                    
+                    <button class="quick-action-button" onclick="contactSupport()">
+                        <svg class="quick-action-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M21 15A2 2 0 0 1 19 17H7L4 20V5A2 2 0 0 1 6 3H19A2 2 0 0 1 21 5V15Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="quick-action-text">Get Support</span>
+                    </button>
+                </div>
+            </section>
+            
+            <!-- Support Section -->
+            <section class="support-section">
+                <h2 class="support-title">Need Help Getting Started?</h2>
+                <p class="support-description">
+                    Our team is here to help you maximize your VARAi Commerce Studio experience. Access documentation, tutorials, and direct support.
+                </p>
+                <div class="support-buttons">
+                    <a href="#" class="support-button" onclick="openDocumentation()">📚 Documentation</a>
+                    <a href="#" class="support-button" onclick="watchTutorials()">🎥 Video Tutorials</a>
+                    <a href="#" class="support-button" onclick="contactSupport()">💬 Contact Support</a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Customer portal functionality
+        class CustomerPortal {
+            constructor() {
+                this.initializePortal();
+                this.loadCustomerData();
+            }
+            
+            initializePortal() {
+                // Check authentication
+                const authToken = localStorage.getItem('varai_customer_token');
+                if (!authToken || !this.isValidToken(authToken)) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+            }
+            
+            loadCustomerData() {
+                const customerData = localStorage.getItem('varai_customer_data');
+                if (customerData) {
+                    try {
+                        const data = JSON.parse(customerData);
+                        this.updateUserInterface(data);
+                    } catch (error) {
+                        console.error('Error parsing customer data:', error);
+                        this.setDefaultUserData();
+                    }
+                } else {
+                    this.setDefaultUserData();
+                }
+            }
+            
+            updateUserInterface(data) {
+                const nameElement = document.getElementById('customerName');
+                const avatarElement = document.getElementById('customerAvatar');
+                
+                if (nameElement) {
+                    nameElement.textContent = data.name || 'Customer';
+                }
+                
+                if (avatarElement) {
+                    const initial = (data.name || 'C').charAt(0).toUpperCase();
+                    avatarElement.textContent = initial;
+                }
+            }
+            
+            setDefaultUserData() {
+                const nameElement = document.getElementById('customerName');
+                const avatarElement = document.getElementById('customerAvatar');
+                
+                if (nameElement) {
+                    nameElement.textContent = 'Customer';
+                }
+                
+                if (avatarElement) {
+                    avatarElement.textContent = 'C';
+                }
+            }
+            
+            isValidToken(token) {
+                return token && token.startsWith('varai_') && token.length > 20;
+            }
+        }
+        
+        // Quick action functions
+        function openIntegrationWizard() {
+            // Navigate to settings page with integration focus
+            window.location.href = 'settings.html#integrations';
+        }
+        
+        function viewAnalytics() {
+            // Navigate to dashboard
+            window.location.href = 'dashboard.html';
+        }
+        
+        function manageAPIKeys() {
+            // Navigate to settings page with API keys focus
+            window.location.href = 'settings.html#api-keys';
+        }
+        
+        function contactSupport() {
+            // Open support modal or redirect
+            alert('Support functionality would be implemented here.\n\nFor demo purposes, you can explore the dashboard and settings pages.');
+        }
+        
+        function openDocumentation() {
+            // Open documentation in new tab
+            window.open('../api-docs.html', '_blank');
+        }
+        
+        function watchTutorials() {
+            // Open tutorials or video library
+            alert('Video tutorials would be available here.\n\nFor demo purposes, explore the dashboard to see analytics and the settings page to manage integrations.');
+        }
+        
+        // Logout functionality
+        function logout() {
+            if (confirm('Are you sure you want to sign out?')) {
+                localStorage.removeItem('varai_customer_token');
+                localStorage.removeItem('varai_customer_data');
+                window.location.href = 'login.html';
+            }
+        }
+        
+        // Initialize portal when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new CustomerPortal();
+        });
+    </script>
+</body>
+</html>

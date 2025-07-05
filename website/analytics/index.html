@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predictive Analytics Hub - VARAi Commerce Studio</title>
+    <meta name="description" content="Discover VARAi's comprehensive predictive analytics capabilities: sales forecasting, seasonal intelligence, risk assessment, growth opportunities, and real-time analytics for eyewear retailers.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=SF+Pro+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/varai-design-system.css">
+    <link rel="stylesheet" href="../css/enterprise-enhancements.css">
+    <link rel="stylesheet" href="../css/apple-hero-sections.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/predictive-analytics.js" defer></script>
+    <script src="../js/analytics-showcase.js" defer></script>
+    <script src="../js/main.js" defer></script>
+</head>
+<body>
+    <header class="varai-navbar">
+        <div class="varai-container">
+            <nav class="varai-flex varai-items-center varai-justify-between">
+                <a href="../index.html" class="varai-navbar-brand">VARAi Commerce Studio</a>
+                <button class="varai-mobile-menu-toggle" aria-label="Toggle navigation menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="varai-navbar-nav varai-d-none varai-d-md-flex varai-items-center" style="gap: 2rem;">
+                    <a href="../index.html" class="varai-nav-link">Home</a>
+                    <a href="../products.html" class="varai-nav-link">Products</a>
+                    <a href="../solutions.html" class="varai-nav-link">Solutions</a>
+                    <div class="varai-nav-dropdown">
+                        <a href="index.html" class="varai-nav-link varai-dropdown-toggle active">
+                            Analytics
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="margin-left: 0.5rem;">
+                                <path d="M7 10l5 5 5-5z"/>
+                            </svg>
+                        </a>
+                        <div class="varai-dropdown-menu">
+                            <a href="index.html" class="varai-dropdown-item">Analytics Hub</a>
+                            <a href="sales-forecasting.html" class="varai-dropdown-item">Sales Forecasting</a>
+                            <a href="seasonal-intelligence.html" class="varai-dropdown-item">Seasonal Intelligence</a>
+                            <a href="risk-assessment.html" class="varai-dropdown-item">Risk Assessment</a>
+                            <a href="growth-opportunities.html" class="varai-dropdown-item">Growth Opportunities</a>
+                            <a href="real-time-analytics.html" class="varai-dropdown-item">Real-time Analytics</a>
+                        </div>
+                    </div>
+                    <a href="../pricing.html" class="varai-nav-link">Pricing</a>
+                    <a href="../company.html" class="varai-nav-link">Company</a>
+                    <a href="https://visioncraft-store-353252826752.us-central1.run.app" class="varai-nav-link" target="_blank">Demo Store</a>
+                </div>
+                <div class="varai-d-none varai-d-md-flex">
+                    <a href="../customer/login.html" class="varai-nav-link" style="margin-right: 1rem;">Customer Portal</a>
+                    <a href="../signup/index.html" class="varai-btn varai-btn-primary">Get Started</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Analytics Hero Section -->
+        <section class="analytics-showcase-hero">
+            <div class="varai-container">
+                <div class="varai-text-center varai-mb-8 animate-on-scroll">
+                    <h1 style="font-size: 3.5rem; font-weight: 700; line-height: 1.1; margin-bottom: 2rem;">
+                        AI-Powered Predictive Analytics
+                    </h1>
+                    <p style="font-size: 1.25rem; opacity: 0.9; max-width: 800px; margin: 0 auto;">
+                        The only eyewear commerce platform with enterprise-grade business intelligence. 
+                        Predict future sales, identify risks, and discover growth opportunities with 95% accuracy.
+                    </p>
+                </div>
+                
+                <!-- Key Metrics -->
+                <div class="analytics-grid animate-on-scroll">
+                    <div class="analytics-stat-card">
+                        <div class="analytics-stat-value">95%</div>
+                        <div class="analytics-stat-label">Forecast Accuracy</div>
+                        <div class="analytics-stat-change positive">+12% vs industry standard</div>
+                    </div>
+                    <div class="analytics-stat-card">
+                        <div class="analytics-stat-value">47%</div>
+                        <div class="analytics-stat-label">Revenue Increase</div>
+                        <div class="analytics-stat-change positive">Average customer improvement</div>
+                    </div>
+                    <div class="analytics-stat-card">
+                        <div class="analytics-stat-value">3 Months</div>
+                        <div class="analytics-stat-label">Forecast Horizon</div>
+                        <div class="analytics-stat-change neutral">With confidence intervals</div>
+                    </div>
+                    <div class="analytics-stat-card">
+                        <div class="analytics-stat-value">Real-time</div>
+                        <div class="analytics-stat-label">Data Processing</div>
+                        <div class="analytics-stat-change positive">Live insights & alerts</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Analytics Capabilities Overview -->
+        <section class="varai-section">
+            <div class="varai-container">
+                <div class="varai-text-center varai-mb-8 animate-on-scroll">
+                    <h2>Five Core Analytics Capabilities</h2>
+                    <p class="varai-text-xl varai-text-muted">Comprehensive business intelligence for modern eyewear retailers</p>
+                </div>
+                
+                <div class="varai-grid varai-grid-cols-2" style="gap: 2rem;">
+                    <!-- Sales Forecasting -->
+                    <div class="analytics-capability-card animate-on-scroll">
+                        <div class="analytics-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
+                            </svg>
+                        </div>
+                        <h3>Sales Forecasting</h3>
+                        <p class="varai-text-muted varai-mb-4">
+                            Predict future sales trends with 95% accuracy using advanced machine learning algorithms 
+                            and seasonal pattern recognition.
+                        </p>
+                        <div class="analytics-metric">
+                            <span>Accuracy:</span>
+                            <span class="analytics-metric-value">95%</span>
+                        </div>
+                        <div class="analytics-metric">
+                            <span>Forecast Range:</span>
+                            <span class="analytics-metric-value">3-12 months</span>
+                        </div>
+                        <div class="analytics-metric">
+                            <span>Confidence Intervals:</span>
+                            <span class="analytics-metric-value">Yes</span>
+                        </div>
+                        <div class="analytics-demo-container">
+                            <canvas id="salesForecastChart" width="400" height="200"></canvas>
+                        </div>
+                        <div class="varai-mt-4">
+                            <a href="sales-forecasting.html" class="varai-btn varai-btn-primary">Explore Sales Forecasting</a>
+                        </div>
+                    </div>
+
+                    <!-- Seasonal Intelligence -->
+                    <div class="analytics-capability-card animate-on-scroll">
+                        <div class="analytics-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                        </div>
+                        <h3>Seasonal Intelligence</h3>
+                        <p class="varai-text-muted varai-mb-4">
+                            Identify seasonal patterns and trends with strength calculations to optimize inventory 
+                            and marketing campaigns.
+                        </p>
+                        <div class="analytics-metric">
+                            <span>Pattern Recognition:</span>
+                            <span class="analytics-metric-value">Advanced AI</span>
+                        </div>
+                        <div class="analytics-metric">
+                            <span>Seasonal Strength:</span>
+                            <span class="analytics-metric-value">0-100 scale</span>
+                        </div>
+                        <div class="analytics-metric">
+                            <span>Peak Detection:</span>
+                            <span class="analytics-metric-value">Automatic</span>
+                        </div>
+                        <div class="analytics-demo-container">
+                            <canvas id="seasonalChart" width="400" height="200"></canvas>
+                        </div>
+                        <div class="varai-mt-4">
+                            <a href="seasonal-intelligence.html" class="varai-btn varai-btn-primary">Explore Seasonal Intelligence</a>
+                        </div>
+                    </div>
+
+                    <!-- Risk Assessment -->
+                    <div class="analytics-capability-card animate-on-scroll">
+                        <div class="analytics-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
+                            </svg>
+                        </div>
+                        <h3>Risk Assessment</h3>
+                        <p class="varai-text-muted varai-mb-4">
+                            Identify potential business risks before they impact revenue with comprehensive 
+                            risk scoring and mitigation recommendations.
+                        </p>
+                        <div class="analytics-metric">
+                            <span>Risk Categories:</span>
+                            <span class="analytics-metric-value">5 Types</span>
+                        </div>
+                        <div class="analytics-metric">
+                            <span>Severity Levels:</span>
+                            <span class="analytics-metric-value">Low/Medium/High</span>
+                        </div>
+                        <div class="analytics-metric">
+                            <span>Mitigation Plans:</span>
+                            <span class="analytics-metric-value">Automated</span>
+                        </div>
+                        <div class="analytics-demo-container">
+                            <canvas id="riskChart" width="400" height="200"></canvas>
+                        </div>
+                        <div class="varai-mt-4">
+                            <a href="risk-assessment.html" class="varai-btn varai-btn-primary">Explore Risk Assessment</a>
+                        </div>
+                    </div>
+
+                    <!-- Growth Opportunities -->
+                    <div class="analytics-capability-card animate-on-scroll">
+                        <div class="analytics-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg>
+                        </div>
+                        <h3>Growth Opportunities</h3>
+                        <p class="varai-text-muted varai-mb-4">
+                            Discover untapped market opportunities and optimize your product mix with 
+                            AI-powered opportunity identification and ROI estimates.
+                        </p>
+                        <div class="analytics-metric">
+                            <span>ROI Estimates:</span>
+                            <span class="analytics-metric-value">Detailed</span>
+                        </div>
+                        <div class="analytics-metric">
+                            <span>Market Insights:</span>
+                            <span class="analytics-metric-value">Real-time</span>
+                        </div>
+                        <div class="analytics-metric">
+                            <span>Priority Scoring:</span>
+                            <span class="analytics-metric-value">AI-powered</span>
+                        </div>
+                        <div class="analytics-demo-container">
+                            <canvas id="opportunityChart" width="400" height="200"></canvas>
+                        </div>
+                        <div class="varai-mt-4">
+                            <a href="growth-opportunities.html" class="varai-btn varai-btn-primary">Explore Growth Opportunities</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Real-time Analytics - Full Width -->
+                <div class="varai-mt-8 animate-on-scroll">
+                    <div class="analytics-capability-card">
+                        <div class="varai-grid varai-grid-cols-2 varai-items-center" style="gap: 3rem;">
+                            <div>
+                                <div class="analytics-icon">
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                    </svg>
+                                </div>
+                                <h3>Real-time Analytics</h3>
+                                <p class="varai-text-muted varai-mb-4">
+                                    Live data processing with Chart.js visualizations, instant alerts, and 
+                                    real-time business intelligence dashboards.
+                                </p>
+                                <div class="analytics-metric">
+                                    <span>Data Processing:</span>
+                                    <span class="analytics-metric-value">Real-time</span>
+                                </div>
+                                <div class="analytics-metric">
+                                    <span>Visualization:</span>
+                                    <span class="analytics-metric-value">Chart.js</span>
+                                </div>
+                                <div class="analytics-metric">
+                                    <span>Alerts:</span>
+                                    <span class="analytics-metric-value">Instant</span>
+                                </div>
+                                <div class="varai-mt-4">
+                                    <a href="real-time-analytics.html" class="varai-btn varai-btn-primary">Explore Real-time Analytics</a>
+                                </div>
+                            </div>
+                            <div class="analytics-demo-container">
+                                <canvas id="realtimeChart" width="400" height="300"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Demo Section -->
+        <section class="varai-section varai-bg-light">
+            <div class="varai-container">
+                <div class="varai-text-center varai-mb-8 animate-on-scroll">
+                    <h2>See It In Action</h2>
+                    <p class="varai-text-xl varai-text-muted">Experience our predictive analytics with live eyewear retail data</p>
+                </div>
+                
+                <div class="live-analytics-dashboard animate-on-scroll">
+                    <div class="varai-flex varai-items-center varai-justify-between varai-mb-6">
+                        <h3>Live Analytics Dashboard</h3>
+                        <div class="varai-flex varai-items-center" style="gap: 0.5rem;">
+                            <div style="width: 8px; height: 8px; background: #30D158; border-radius: 50%; animation: pulse 2s infinite;"></div>
+                            <span style="font-size: 0.9rem; color: var(--varai-success);">Live Data</span>
+                        </div>
+                    </div>
+                    
+                    <div class="analytics-grid">
+                        <div class="analytics-stat-card">
+                            <div class="analytics-stat-value" id="liveRevenue">$0</div>
+                            <div class="analytics-stat-label">Monthly Revenue</div>
+                            <div class="analytics-stat-change positive" id="revenueChange">+0%</div>
+                        </div>
+                        <div class="analytics-stat-card">
+                            <div class="analytics-stat-value" id="liveSales">0</div>
+                            <div class="analytics-stat-label">Units Sold</div>
+                            <div class="analytics-stat-change positive" id="salesChange">+0%</div>
+                        </div>
+                        <div class="analytics-stat-card">
+                            <div class="analytics-stat-value" id="liveCustomers">0</div>
+                            <div class="analytics-stat-label">Active Customers</div>
+                            <div class="analytics-stat-change positive" id="customersChange">+0%</div>
+                        </div>
+                        <div class="analytics-stat-card">
+                            <div class="analytics-stat-value" id="liveRisk">Low</div>
+                            <div class="analytics-stat-label">Risk Level</div>
+                            <div class="analytics-stat-change neutral" id="riskChange">Stable</div>
+                        </div>
+                    </div>
+                    
+                    <div class="varai-mt-6">
+                        <canvas id="liveDashboardChart" width="800" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="varai-hero varai-text-center">
+            <div class="varai-container">
+                <div class="varai-container-sm animate-on-scroll">
+                    <h2 class="varai-mb-6">Ready to Transform Your Business with Predictive Analytics?</h2>
+                    <p class="varai-text-xl varai-mb-8" style="opacity: 0.95;">
+                        Join hundreds of eyewear retailers who are already using VARAi's predictive analytics 
+                        to increase revenue by 47% and reduce risks.
+                    </p>
+                    <div class="varai-flex varai-flex-wrap varai-justify-center" style="gap: 1rem;">
+                        <a href="../signup/index.html" class="varai-btn varai-btn-secondary varai-btn-lg">Start Free Trial</a>
+                        <a href="../customer/dashboard-predictive.html" class="varai-btn varai-btn-outline varai-btn-lg">View Live Demo</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="varai-footer">
+        <div class="varai-container">
+            <div class="varai-grid varai-grid-cols-4" style="gap: 2rem;">
+                <div class="varai-mb-6">
+                    <h4>VARAi Commerce Studio</h4>
+                    <p>AI-powered solutions for the modern eyewear retailer.</p>
+                </div>
+                <div class="varai-mb-6">
+                    <h5>Analytics</h5>
+                    <ul class="varai-footer-links">
+                        <li><a href="sales-forecasting.html">Sales Forecasting</a></li>
+                        <li><a href="seasonal-intelligence.html">Seasonal Intelligence</a></li>
+                        <li><a href="risk-assessment.html">Risk Assessment</a></li>
+                        <li><a href="growth-opportunities.html">Growth Opportunities</a></li>
+                        <li><a href="real-time-analytics.html">Real-time Analytics</a></li>
+                    </ul>
+                </div>
+                <div class="varai-mb-6">
+                    <h5>Company</h5>
+                    <ul class="varai-footer-links">
+                        <li><a href="../company.html">About Us</a></li>
+                        <li><a href="../contact.html">Contact</a></li>
+                        <li><a href="../careers.html">Careers</a></li>
+                        <li><a href="../blog.html">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="varai-mb-6">
+                    <h5>Support</h5>
+                    <ul class="varai-footer-links">
+                        <li><a href="../api-docs.html">API Documentation</a></li>
+                        <li><a href="../customer/login.html">Customer Portal</a></li>
+                        <li><a href="../demo-login.html">Demo Login</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div style="border-top: 1px solid var(--varai-gray-700); margin-top: 3rem; padding-top: 2rem; text-align: center;">
+                <p>&copy; 2025 VARAi Inc. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+
+    <script>
+        // Scroll animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animated');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Mobile menu toggle
+        const mobileMenuToggle = document.querySelector('.varai-mobile-menu-toggle');
+        const navbarNav = document.querySelector('.varai-navbar-nav');
+
+        if (mobileMenuToggle && navbarNav) {
+            mobileMenuToggle.addEventListener('click', () => {
+                navbarNav.classList.toggle('active');
+            });
+        }
+    </script>
+</body>
+</html>

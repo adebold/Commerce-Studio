@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Login - VARAi Commerce Studio</title>
+    <link rel="stylesheet" href="../css/varai-design-system.css">
+    <link rel="stylesheet" href="../css/enterprise-enhancements.css">
+    <style>
+        .customer-login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--varai-background) 0%, var(--varai-gray-50) 100%);
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .customer-login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at top right, rgba(30, 150, 252, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        
+        .customer-login-card {
+            background: var(--varai-background);
+            border: 1px solid var(--varai-border);
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: var(--varai-shadow-xl);
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .customer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--varai-primary);
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--varai-primary) 0%, var(--varai-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .customer-subtitle {
+            color: var(--varai-gray-600);
+            margin-bottom: 2.5rem;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        .login-form {
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: var(--varai-foreground);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid var(--varai-border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--varai-transition);
+            background: var(--varai-background);
+            color: var(--varai-foreground);
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--varai-accent);
+            box-shadow: 0 0 0 3px rgba(30, 150, 252, 0.1);
+        }
+        
+        .form-input::placeholder {
+            color: var(--varai-gray-400);
+        }
+        
+        .login-button {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--varai-primary) 0%, var(--varai-accent) 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--varai-transition);
+            margin-bottom: 1rem;
+        }
+        
+        .login-button:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--varai-shadow-lg);
+        }
+        
+        .login-button:active {
+            transform: translateY(0);
+        }
+        
+        .demo-section {
+            padding: 1.5rem 0;
+            border-top: 1px solid var(--varai-border);
+            margin-top: 1.5rem;
+        }
+        
+        .demo-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--varai-gray-700);
+            margin-bottom: 1rem;
+        }
+        
+        .demo-accounts {
+            display: grid;
+            gap: 0.75rem;
+        }
+        
+        .demo-account {
+            padding: 0.875rem 1rem;
+            background: linear-gradient(135deg, var(--varai-gray-50) 0%, var(--varai-gray-100) 100%);
+            border: 1px solid var(--varai-border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--varai-transition);
+            text-align: left;
+        }
+        
+        .demo-account:hover {
+            background: linear-gradient(135deg, var(--varai-gray-100) 0%, var(--varai-gray-200) 100%);
+            transform: translateY(-1px);
+            box-shadow: var(--varai-shadow-md);
+        }
+        
+        .demo-account-name {
+            font-weight: 600;
+            color: var(--varai-foreground);
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .demo-account-type {
+            font-size: 0.8rem;
+            color: var(--varai-gray-600);
+        }
+        
+        .forgot-password {
+            text-align: center;
+            margin-top: 1rem;
+        }
+        
+        .forgot-password a {
+            color: var(--varai-accent);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+        
+        .back-to-site {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            color: var(--varai-gray-600);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--varai-transition);
+        }
+        
+        .back-to-site:hover {
+            color: var(--varai-accent);
+        }
+        
+        .error-message {
+            background: rgba(255, 59, 48, 0.1);
+            color: var(--varai-error);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        
+        .success-message {
+            background: rgba(48, 209, 88, 0.1);
+            color: var(--varai-success);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .customer-login-container {
+                padding: 1rem;
+            }
+            
+            .customer-login-card {
+                padding: 2rem;
+            }
+            
+            .back-to-site {
+                position: static;
+                margin-bottom: 2rem;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="customer-login-container">
+        <a href="../index.html" class="back-to-site">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19 12H5M12 19L5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Back to VARAi Commerce Studio
+        </a>
+        
+        <div class="customer-login-card">
+            <div class="customer-logo">VARAi Customer Portal</div>
+            <p class="customer-subtitle">
+                Access your dashboard, manage integrations, and view analytics for your eyewear business.
+            </p>
+            
+            <div id="error-message" class="error-message"></div>
+            <div id="success-message" class="success-message"></div>
+            
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" id="email" name="email" class="form-input" placeholder="Enter your email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" name="password" class="form-input" placeholder="Enter your password" required>
+                </div>
+                
+                <button type="submit" class="login-button">
+                    Sign In to Customer Portal
+                </button>
+            </form>
+            
+            <div class="forgot-password">
+                <a href="#" onclick="showForgotPassword()">Forgot your password?</a>
+            </div>
+            
+            <div class="demo-section">
+                <div class="demo-title">Try Demo Accounts</div>
+                <div class="demo-accounts">
+                    <div class="demo-account" onclick="loginDemo('retail')">
+                        <div class="demo-account-name">VisionCraft Retail</div>
+                        <div class="demo-account-type">Multi-store eyewear retailer</div>
+                    </div>
+                    <div class="demo-account" onclick="loginDemo('boutique')">
+                        <div class="demo-account-name">Boutique Optics</div>
+                        <div class="demo-account-type">Premium boutique store</div>
+                    </div>
+                    <div class="demo-account" onclick="loginDemo('enterprise')">
+                        <div class="demo-account-name">Enterprise Vision</div>
+                        <div class="demo-account-type">Large enterprise account</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Customer authentication functionality
+        class CustomerAuth {
+            constructor() {
+                this.initializeAuth();
+                this.setupEventListeners();
+            }
+            
+            initializeAuth() {
+                // Check if already logged in
+                const authToken = localStorage.getItem('varai_customer_token');
+                if (authToken && this.isValidToken(authToken)) {
+                    window.location.href = 'index.html';
+                }
+            }
+            
+            setupEventListeners() {
+                const loginForm = document.getElementById('loginForm');
+                loginForm.addEventListener('submit', this.handleLogin.bind(this));
+            }
+            
+            async handleLogin(event) {
+                event.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                this.showLoading(true);
+                this.hideMessages();
+                
+                try {
+                    const result = await this.authenticateUser(email, password);
+                    if (result.success) {
+                        this.showSuccess('Login successful! Redirecting to dashboard...');
+                        localStorage.setItem('varai_customer_token', result.token);
+                        localStorage.setItem('varai_customer_data', JSON.stringify(result.user));
+                        
+                        setTimeout(() => {
+                            window.location.href = 'index.html';
+                        }, 1500);
+                    } else {
+                        this.showError(result.message || 'Invalid credentials. Please try again.');
+                    }
+                } catch (error) {
+                    this.showError('Login failed. Please check your connection and try again.');
+                } finally {
+                    this.showLoading(false);
+                }
+            }
+            
+            async authenticateUser(email, password) {
+                // Simulate API call - replace with actual authentication
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        // Demo authentication logic
+                        const validCredentials = [
+                            { email: 'demo@visioncraft.com', password: 'demo123', type: 'retail' },
+                            { email: 'admin@boutiqueoptics.com', password: 'admin123', type: 'boutique' },
+                            { email: 'manager@enterprisevision.com', password: 'manager123', type: 'enterprise' }
+                        ];
+                        
+                        const user = validCredentials.find(cred => 
+                            cred.email === email && cred.password === password
+                        );
+                        
+                        if (user) {
+                            resolve({
+                                success: true,
+                                token: this.generateToken(),
+                                user: {
+                                    email: user.email,
+                                    type: user.type,
+                                    name: this.getDisplayName(user.type),
+                                    loginTime: new Date().toISOString()
+                                }
+                            });
+                        } else {
+                            resolve({
+                                success: false,
+                                message: 'Invalid email or password'
+                            });
+                        }
+                    }, 1000);
+                });
+            }
+            
+            generateToken() {
+                return 'varai_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+            }
+            
+            getDisplayName(type) {
+                const names = {
+                    retail: 'VisionCraft Retail',
+                    boutique: 'Boutique Optics',
+                    enterprise: 'Enterprise Vision'
+                };
+                return names[type] || 'Customer';
+            }
+            
+            isValidToken(token) {
+                // Simple token validation - replace with proper JWT validation
+                return token && token.startsWith('varai_') && token.length > 20;
+            }
+            
+            showLoading(show) {
+                const button = document.querySelector('.login-button');
+                if (show) {
+                    button.textContent = 'Signing In...';
+                    button.disabled = true;
+                } else {
+                    button.textContent = 'Sign In to Customer Portal';
+                    button.disabled = false;
+                }
+            }
+            
+            showError(message) {
+                const errorDiv = document.getElementById('error-message');
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+            }
+            
+            showSuccess(message) {
+                const successDiv = document.getElementById('success-message');
+                successDiv.textContent = message;
+                successDiv.style.display = 'block';
+            }
+            
+            hideMessages() {
+                document.getElementById('error-message').style.display = 'none';
+                document.getElementById('success-message').style.display = 'none';
+            }
+        }
+        
+        // Demo login functionality
+        function loginDemo(type) {
+            const credentials = {
+                retail: { email: 'demo@visioncraft.com', password: 'demo123' },
+                boutique: { email: 'admin@boutiqueoptics.com', password: 'admin123' },
+                enterprise: { email: 'manager@enterprisevision.com', password: 'manager123' }
+            };
+            
+            const cred = credentials[type];
+            if (cred) {
+                document.getElementById('email').value = cred.email;
+                document.getElementById('password').value = cred.password;
+                
+                // Auto-submit after a brief delay
+                setTimeout(() => {
+                    document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+                }, 500);
+            }
+        }
+        
+        // Forgot password functionality
+        function showForgotPassword() {
+            alert('Password reset functionality would be implemented here.\n\nFor demo purposes, use one of the demo accounts below.');
+        }
+        
+        // Initialize authentication
+        document.addEventListener('DOMContentLoaded', () => {
+            new CustomerAuth();
+        });
+    </script>
+</body>
+</html>

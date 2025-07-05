@@ -1,0 +1,103 @@
+# Dialogflow CX Agent Configuration for EyewearML Conversational AI
+
+# Agent Basic Configuration
+agent:
+  display_name: "EyewearML Virtual Style Assistant"
+  description: "AI-powered virtual style assistant for eyewear shopping and recommendations"
+  default_language_code: "en"
+  time_zone: "America/Toronto"
+  supported_language_codes:
+    - "en"
+    - "fr"
+    - "es"
+    - "de"
+  speech_to_text_settings:
+    enable_speech_adaptation: true
+  
+# Security Settings
+security:
+  streaming_recognition:
+    allow_agent_streaming: true
+  data_retention:
+    retention_window_days: 365
+    purge_data_types:
+      - DIALOGFLOW_HISTORY
+  advanced_settings:
+    logging_settings:
+      enable_stackdriver_logging: true
+      enable_interaction_logging: true
+
+# NLU Configuration
+nlu_settings:
+  model_type: "advanced"  # "standard" or "advanced"
+  classification_threshold: 0.3
+  model_training_mode: "automatic"
+  
+# Human Agent Assistant Settings
+human_agent_assistant_config:
+  enable_human_agent_handoff: true
+  notification_message: "I'll connect you with a human stylist who can help you further."
+  suggestion_feature_config:
+    enable_article_suggestions: true
+    enable_faq_suggestions: true
+    suggestion_confidence_threshold: 0.6
+
+# Speech Synthesis Settings
+speech_synthesis_settings:
+  voice:
+    name: "en-US-Wavenet-F"
+    gender: "FEMALE"
+  speaking_rate: 1.0
+  pitch: 0.0
+  volume_gain_db: 0.0
+  effects_profile_id: ["small-bluetooth-speaker-class-device"]
+
+# Visual Settings for Dialogflow CX Console
+visual_settings:
+  color_scheme: "blue"
+  agent_avatar: "https://storage.googleapis.com/eyewearml-conversational-ai-assets/agent-avatar.png"
+
+# Webhook Default Configuration
+webhook_config:
+  webhook_url: "https://us-central1-${PROJECT_ID}.cloudfunctions.net/dialogflow-fulfillment"
+  available_features:
+    - DIALOGFLOW_CONSOLE_FULFILLMENT
+  generic_web_service:
+    uri: "https://us-central1-${PROJECT_ID}.cloudfunctions.net/dialogflow-fulfillment"
+    username: "dialogflow-client"
+    request_headers:
+      x-api-source: "dialogflow-cx"
+    timeout_seconds: 5
+  service_directory_config:
+    service: "dialogflow-fulfillment"
+    generic_web_service:
+      uri: "https://us-central1-${PROJECT_ID}.cloudfunctions.net/dialogflow-fulfillment"
+
+# Advanced Features
+advanced_features:
+  enable_spelling_correction: true
+  enable_sentiment_analysis: true
+  enable_entity_extraction: true
+  entity_extraction_confidence: 0.5
+  enable_article_suggestions: true
+  enable_knowledge_connectors: true
+
+# Generative AI Configuration
+generative_ai:
+  enabled: true
+  model: "gemini-pro"
+  features:
+    enable_enhanced_responses: true
+    enable_intent_generation: true
+    enable_conversation_summary: true
+  safety_settings:
+    harrassment_threshold: "block_medium_and_above"
+    hate_speech_threshold: "block_medium_and_above"
+    sexually_explicit_threshold: "block_medium_and_above"
+    dangerous_content_threshold: "block_medium_and_above"
+
+# Text Message Auto-Responses
+default_responses:
+  welcome_message: "Hello! I'm Varai, your personal eyewear style assistant. I can help you find the perfect frames for your face shape, style preferences, and vision needs. How can I help you today?"
+  fallback_message: "I'm sorry, I didn't quite understand that. Could you rephrase your question about eyewear styles, fitting, or preferences?"
+  default_agent_response: "I'm here to help you find the perfect eyewear. Can you tell me what you're looking for today?"

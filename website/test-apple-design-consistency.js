@@ -8,16 +8,16 @@ const path = require('path');
 
 // List of all HTML files that should have Apple design improvements
 const htmlFiles = [
-    'website/index.html',
-    'website/pricing.html',
-    'website/products.html',
-    'website/solutions.html',
-    'website/company.html',
-    'website/api-docs.html',
-    'website/api-keys.html',
-    'website/store-locator.html',
-    'website/demo-login.html',
-    'website/signup/index.html'
+    'index.html',
+    'pricing.html',
+    'products.html',
+    'solutions.html',
+    'company.html',
+    'api-docs.html',
+    'api-keys.html',
+    'store-locator.html',
+    'demo-login.html',
+    'signup/index.html'
 ];
 
 // Required CSS and JS files for Apple design

@@ -1,0 +1,24 @@
+Commerce Studio Duplicate Cleanup Summary
+Generated: Thu Jun 26 22:01:33 EDT 2025
+
+Directories removed:
+- apps/bigcommerce/admin/components 2/
+- apps/html-store/cypress 2/
+- apps/html-store/deploy/css 2/
+- apps/html-store/deploy/images 2/
+- apps/html-store/deploy/js 2/
+- apps/html-store/images 2/
+- Additional empty directories with '2' suffix
+
+Files removed:
+- website/js/theme-manager-backup.js
+
+Remaining for manual review:
+- API router files:       20 files with '2' suffix,       20 files with '3' suffix
+- Documentation duplicates
+
+Next steps:
+1. Review API router usage patterns
+2. Compare duplicate file contents
+3. Remove verified duplicates
+4. Test application functionality

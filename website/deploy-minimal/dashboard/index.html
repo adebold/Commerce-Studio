@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - VARAi Commerce Studio</title>
+    <link rel="stylesheet" href="/css/varai-design-system.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <script src="/js/theme-manager.js" defer></script>
+    <script src="/js/main.js" defer></script>
+    <script src="/js/dashboard.js" defer></script>
+</head>
+<body>
+    <header class="varai-navbar">
+        <div class="varai-container">
+            <nav class="varai-flex varai-items-center varai-justify-between">
+                <a href="/index.html" class="varai-navbar-brand">VARAi Commerce Studio</a>
+                <button class="varai-mobile-menu-toggle" aria-label="Toggle navigation menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="varai-navbar-nav varai-d-none varai-d-md-flex varai-items-center" style="gap: 2rem;">
+                    <a href="/index.html" class="varai-nav-link">Home</a>
+                    <a href="/products.html" class="varai-nav-link">Products</a>
+                    <a href="/solutions.html" class="varai-nav-link">Solutions</a>
+                    <a href="/pricing.html" class="varai-nav-link">Pricing</a>
+                    <a href="/company.html" class="varai-nav-link">Company</a>
+                    <a href="https://visioncraft-store-353252826752.us-central1.run.app" class="varai-nav-link" target="_blank">Demo Store</a>
+                </div>
+                <div class="varai-d-none varai-d-md-flex">
+                    <a href="/signup/index.html" class="varai-btn varai-btn-primary">Get Started</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Dashboard Header -->
+        <section class="varai-section" style="padding-top: 2rem; padding-bottom: 1rem;">
+            <div class="varai-container">
+                <div class="varai-flex varai-items-center varai-justify-between varai-mb-6">
+                    <div>
+                        <h1 class="varai-text-3xl varai-mb-2">Dashboard</h1>
+                        <p class="varai-text-muted">Welcome back, Sarah Johnson</p>
+                    </div>
+                    <div class="varai-flex varai-items-center" style="gap: 1rem;">
+                        <button class="varai-btn varai-btn-outline">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M18 8C18 6.4087 17.3679 4.88258 16.2426 3.75736C15.1174 2.63214 13.5913 2 12 2C10.4087 2 8.88258 2.63214 7.75736 3.75736C6.63214 4.88258 6 6.4087 6 8C6 15 3 17 3 17H21C21 17 18 15 18 8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M13.73 21C13.5542 21.3031 13.3019 21.5547 12.9982 21.7295C12.6946 21.9044 12.3504 21.9965 12 21.9965C11.6496 21.9965 11.3054 21.9044 11.0018 21.7295C10.6982 21.5547 10.4458 21.3031 10.27 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            Notifications
+                        </button>
+                        <div id="platform-demo-buttons">
+                            <!-- Platform-specific demo store buttons will be inserted here -->
+                            <a href="https://visioncraft-store-353252826752.us-central1.run.app" class="varai-btn varai-btn-primary" target="_blank">View Demo Store</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Metrics -->
+        <section class="varai-section varai-bg-light" style="padding-top: 1rem; padding-bottom: 2rem;">
+            <div class="varai-container">
+                <div class="varai-grid varai-grid-cols-4" style="gap: 1.5rem;">
+                    <div class="animate-on-scroll">
+                        <div class="varai-card">
+                            <div class="varai-card-body varai-p-6">
+                                <div class="varai-flex varai-items-center varai-justify-between varai-mb-4">
+                                    <div class="varai-feature-icon" style="width: 48px; height: 48px; background: var(--varai-success); color: white;">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="varai-text-sm varai-text-success">+12%</span>
+                                </div>
+                                <h3 class="varai-text-2xl varai-font-bold varai-mb-1">2,847</h3>
+                                <p class="varai-text-muted">Total Orders</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="animate-on-scroll">
+                        <div class="varai-card">
+                            <div class="varai-card-body varai-p-6">
+                                <div class="varai-flex varai-items-center varai-justify-between varai-mb-4">
+                                    <div class="varai-feature-icon" style="width: 48px; height: 48px; background: var(--varai-primary); color: white;">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="varai-text-sm varai-text-success">+8%</span>
+                                </div>
+                                <h3 class="varai-text-2xl varai-font-bold varai-mb-1">1,234</h3>
+                                <p class="varai-text-muted">Active Customers</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="animate-on-scroll">
+                        <div class="varai-card">
+                            <div class="varai-card-body varai-p-6">
+                                <div class="varai-flex varai-items-center varai-justify-between varai-mb-4">
+                                    <div class="varai-feature-icon" style="width: 48px; height: 48px; background: var(--varai-secondary); color: white;">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="varai-text-sm varai-text-success">+15%</span>
+                                </div>
+                                <h3 class="varai-text-2xl varai-font-bold varai-mb-1">$89,247</h3>
+                                <p class="varai-text-muted">Revenue</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="animate-on-scroll">
+                        <div class="varai-card">
+                            <div class="varai-card-body varai-p-6">
+                                <div class="varai-flex varai-items-center varai-justify-between varai-mb-4">
+                                    <div class="varai-feature-icon" style="width: 48px; height: 48px; background: var(--varai-accent); color: white;">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="varai-text-sm varai-text-success">+23%</span>
+                                </div>
+                                <h3 class="varai-text-2xl varai-font-bold varai-mb-1">67%</h3>
+                                <p class="varai-text-muted">Conversion Rate</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+<!-- Store Connections -->
+        <section class="varai-section">
+            <div class="varai-container">
+                <div class="varai-mb-6">
+                    <h2 class="varai-text-2xl varai-font-bold varai-mb-4">Store Connections</h2>
+                    <p class="varai-text-muted">Connect and manage your e-commerce platforms with VARAi Commerce Studio</p>
+                </div>
+                
+                <div class="varai-grid varai-grid-cols-3" style="gap: 1.5rem;">
+                    <!-- VisionCraft Connection -->
+                    <div class="animate-on-scroll">
+                        <div class="varai-card" style="border: 2px solid var(--varai-success);">
+                            <div class="varai-card-body varai-p-6">
+                                <div class="varai-flex varai-items-center varai-justify-between varai-mb-4">
+                                    <div class="varai-flex varai-items-center" style="gap: 1rem;">
+                                        <div class="varai-feature-icon" style="width: 48px; height: 48px; background: var(--varai-success); color: white;">
+                                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h3 class="varai-text-lg varai-font-bold">VisionCraft</h3>
+                                            <span class="varai-badge varai-badge-success">Connected</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="varai-text-sm varai-text-muted varai-mb-4">AI-powered eyewear platform with virtual try-on, BOPIS, and smart recommendations.</p>
+                                <div class="varai-flex varai-flex-col" style="gap: 0.5rem;">
+                                    <a href="https://visioncraft-store-353252826752.us-central1.run.app" class="varai-btn varai-btn-success varai-btn-sm" target="_blank">View Store</a>
+                                    <button class="varai-btn varai-btn-outline varai-btn-sm">Manage Settings</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Shopify Connection -->
+                    <div class="animate-on-scroll">
+                        <div class="varai-card" style="border: 2px solid #95BF47;">
+                            <div class="varai-card-body varai-p-6">
+                                <div class="varai-flex varai-items-center varai-justify-between varai-mb-4">
+                                    <div class="varai-flex varai-items-center" style="gap: 1rem;">
+                                        <div class="varai-feature-icon" style="width: 48px; height: 48px; background: #95BF47; color: white;">
+                                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                                <path d="M15.337 2.367c-.332-.066-.664-.066-.996 0-1.328.266-2.656.798-3.652 1.794-.996.996-1.528 2.324-1.794 3.652-.066.332-.066.664 0 .996.266 1.328.798 2.656 1.794 3.652.996.996 2.324 1.528 3.652 1.794.332.066.664.066.996 0 1.328-.266 2.656-.798 3.652-1.794.996-.996 1.528-2.324 1.794-3.652.066-.332.066-.664 0-.996-.266-1.328-.798-2.656-1.794-3.652-.996-.996-2.324-1.528-3.652-1.794z"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h3 class="varai-text-lg varai-font-bold">Shopify</h3>
+                                            <span class="varai-badge varai-badge-warning">Ready to Connect</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="varai-text-sm varai-text-muted varai-mb-4">Connect your Shopify store to enable AI recommendations, inventory sync, and advanced analytics.</p>
+                                <div class="varai-flex varai-flex-col" style="gap: 0.5rem;">
+                                    <button class="varai-btn varai-btn-primary varai-btn-sm" onclick="connectShopify()">Connect Store</button>
+                                    <a href="../demo-login.html?platform=shopify" class="varai-btn varai-btn-outline varai-btn-sm">Try Demo</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Magento Connection -->
+                    <div class="animate-on-scroll">
+                        <div class="varai-card" style="border: 2px solid #EE672F;">
+                            <div class="varai-card-body varai-p-6">
+                                <div class="varai-flex varai-items-center varai-justify-between varai-mb-4">
+                                    <div class="varai-flex varai-items-center" style="gap: 1rem;">
+                                        <div class="varai-feature-icon" style="width: 48px; height: 48px; background: #EE672F; color: white;">
+                                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                                <path d="M12 2L2 7v10c0 5.55 3.84 9.74 9 11 5.16-1.26 9-5.45 9-11V7l-10-5z"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h3 class="varai-text-lg varai-font-bold">Magento</h3>
+                                            <span class="varai-badge varai-badge-warning">Ready to Connect</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="varai-text-sm varai-text-muted varai-mb-4">Integrate your Magento store with enterprise-grade AI features and multi-store management.</p>
+                                <div class="varai-flex varai-flex-col" style="gap: 0.5rem;">
+                                    <button class="varai-btn varai-btn-primary varai-btn-sm" onclick="connectMagento()">Connect Store</button>
+                                    <a href="../demo-login.html?platform=magento" class="varai-btn varai-btn-outline varai-btn-sm">Try Demo</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Platforms -->
+                <div class="varai-mt-6">
+                    <h3 class="varai-text-lg varai-font-bold varai-mb-4">Additional Platforms</h3>
+                    <div class="varai-grid varai-grid-cols-2" style="gap: 1rem;">
+                        <!-- BigCommerce -->
+                        <div class="varai-card">
+                            <div class="varai-card-body varai-p-4">
+                                <div class="varai-flex varai-items-center varai-justify-between">
+                                    <div class="varai-flex varai-items-center" style="gap: 1rem;">
+                                        <div class="varai-feature-icon" style="width: 32px; height: 32px; background: var(--varai-primary); color: white;">
+                                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h4 class="varai-text-md varai-font-bold">BigCommerce</h4>
+                                            <span class="varai-badge varai-badge-secondary">Coming Soon</span>
+                                        </div>
+                                    </div>
+                                    <button class="varai-btn varai-btn-outline varai-btn-sm" disabled>Connect</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- WooCommerce -->
+                        <div class="varai-card">
+                            <div class="varai-card-body varai-p-4">
+                                <div class="varai-flex varai-items-center varai-justify-between">
+                                    <div class="varai-flex varai-items-center" style="gap: 1rem;">
+                                        <div class="varai-feature-icon" style="width: 32px; height: 32px; background: var(--varai-primary); color: white;">
+                                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                                <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8h16v10z"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h4 class="varai-text-md varai-font-bold">WooCommerce</h4>
+                                            <span class="varai-badge varai-badge-secondary">Coming Soon</span>
+                                        </div>
+                                    </div>
+                                    <button class="varai-btn varai-btn-outline varai-btn-sm" disabled>Connect</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Dashboard Content -->
+        <section class="varai-section">
+            <div class="varai-container">
+                <div class="varai-grid varai-grid-cols-3" style="gap: 2rem;">
+                    <!-- Recent Orders -->
+                    <div class="varai-grid-span-2 animate-on-scroll">
+                        <div class="varai-card">
+                            <div class="varai-card-header varai-p-6 varai-border-bottom">
+                                <h3 class="varai-text-xl varai-font-bold">Recent Orders</h3>
+                            </div>
+                            <div class="varai-card-body varai-p-0">
+                                <div class="varai-table-responsive">
+                                    <table class="varai-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Order ID</th>
+                                                <th>Customer</th>
+                                                <th>Product</th>
+                                                <th>Amount</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>#ORD-001</td>
+                                                <td>John Smith</td>
+                                                <td>Ray-Ban Aviator</td>
+                                                <td>$189.99</td>
+                                                <td><span class="varai-badge varai-badge-success">Completed</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>#ORD-002</td>
+                                                <td>Emily Johnson</td>
+                                                <td>Oakley Holbrook</td>
+                                                <td>$156.00</td>
+                                                <td><span class="varai-badge varai-badge-warning">Processing</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>#ORD-003</td>
+                                                <td>Michael Chen</td>
+                                                <td>Persol PO3019S</td>
+                                                <td>$298.50</td>
+                                                <td><span class="varai-badge varai-badge-primary">Shipped</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>#ORD-004</td>
+                                                <td>Sarah Wilson</td>
+                                                <td>Tom Ford TF5401</td>
+                                                <td>$425.00</td>
+                                                <td><span class="varai-badge varai-badge-success">Completed</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="varai-card-footer varai-p-6 varai-text-center">
+                                <a href="#" class="varai-btn varai-btn-outline">View All Orders</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="animate-on-scroll">
+                        <div class="varai-card varai-h-100">
+                            <div class="varai-card-header varai-p-6 varai-border-bottom">
+                                <h3 class="varai-text-xl varai-font-bold">Quick Actions</h3>
+                            </div>
+                            <div class="varai-card-body varai-p-6">
+                                <div class="varai-flex varai-flex-col" style="gap: 1rem;">
+                                    <a href="#" class="varai-btn varai-btn-outline varai-w-100">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 0.5rem;">
+                                            <path d="M16 4H8C7.44772 4 7 4.44772 7 5V21C7 21.5523 7.44772 22 8 22H16C16.5523 22 17 21.5523 17 21V5C17 4.44772 16.5523 4 16 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M12 18H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        Add Product
+                                    </a>
+                                    <a href="#" class="varai-btn varai-btn-outline varai-w-100">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 0.5rem;">
+                                            <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21M23 21V19C22.9993 18.1137 22.7044 17.2528 22.1614 16.5523C21.6184 15.8519 20.8581 15.3516 20 15.13M16 3.13C16.8604 3.3503 17.623 3.8507 18.1676 4.55231C18.7122 5.25392 19.0078 6.11683 19.0078 7.005C19.0078 7.89317 18.7122 8.75608 18.1676 9.45769C17.623 10.1593 16.8604 10.6597 16 10.88M13 7C13 9.20914 11.2091 11 9 11C6.79086 11 5 9.20914 5 7C5 4.79086 6.79086 3 9 3C11.2091 3 13 4.79086 13 7Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        View Customers
+                                    </a>
+                                    <a href="#" class="varai-btn varai-btn-outline varai-w-100">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 0.5rem;">
+                                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                                        </svg>
+                                        Analytics
+                                    </a>
+                                    <a href="#" class="varai-btn varai-btn-outline varai-w-100">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 0.5rem;">
+                                            <path d="M16 16L19 19L22 16M2 16L5 19L8 16M5 19V5C5 4.46957 5.21071 3.96086 5.58579 3.58579C5.96086 3.21071 6.46957 3 7 3H17C17.5304 3 18.0391 3.21071 18.4142 3.58579C18.7893 3.96086 19 4.46957 19 5V19M12 3V15M12 15L9 12M12 15L15 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        Integrations
+                                    </a>
+                                    <a href="https://visioncraft-store-353252826752.us-central1.run.app" class="varai-btn varai-btn-primary varai-w-100" target="_blank">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 0.5rem;">
+                                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                                        </svg>
+                                        Demo Store
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Insights -->
+        <section class="varai-section varai-bg-light">
+            <div class="varai-container">
+                <div class="varai-grid varai-grid-cols-2" style="gap: 2rem;">
+                    <div class="animate-on-scroll">
+                        <div class="varai-card">
+                            <div class="varai-card-header varai-p-6 varai-border-bottom">
+                                <h3 class="varai-text-xl varai-font-bold">AI Recommendations</h3>
+                            </div>
+                            <div class="varai-card-body varai-p-6">
+                                <div class="varai-flex varai-flex-col" style="gap: 1rem;">
+                                    <div class="varai-flex varai-items-start" style="gap: 1rem;">
+                                        <div class="varai-feature-icon" style="width: 32px; height: 32px; background: var(--varai-primary); color: white; flex-shrink: 0;">
+                                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h4 class="varai-font-bold varai-mb-1">Trending Frames</h4>
+                                            <p class="varai-text-muted varai-text-sm">Round frames are trending 34% higher this month. Consider featuring them prominently.</p>
+                                        </div>
+                                    </div>
+                                    <div class="varai-flex varai-items-start" style="gap: 1rem;">
+                                        <div class="varai-feature-icon" style="width: 32px; height: 32px; background: var(--varai-secondary); color: white; flex-shrink: 0;">
+                                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h4 class="varai-font-bold varai-mb-1">Customer Segment</h4>
+                                            <p class="varai-text-muted varai-text-sm">Young professionals (25-35) show high engagement with premium brands.</p>
+                                        </div>
+                                    </div>
+                                    <div class="varai-flex varai-items-start" style="gap: 1rem;">
+                                        <div class="varai-feature-icon" style="width: 32px; height: 32px; background: var(--varai-accent); color: white; flex-shrink: 0;">
+                                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h4 class="varai-font-bold varai-mb-1">Inventory Alert</h4>
+                                            <p class="varai-text-muted varai-text-sm">Ray-Ban Aviator stock is running low. Reorder recommended.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="animate-on-scroll">
+                        <div class="varai-card">
+                            <div class="varai-card-header varai-p-6 varai-border-bottom">
+                                <h3 class="varai-text-xl varai-font-bold">Performance Overview</h3>
+                            </div>
+                            <div class="varai-card-body varai-p-6">
+                                <div class="varai-card varai-shadow-lg" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); height: 200px; display: flex; align-items: center; justify-content: center; color: #6c757d; font-size: 1.1rem; margin-bottom: 1rem;">
+                                    Sales Analytics Chart
+                                </div>
+                                <div class="varai-flex varai-justify-between varai-text-sm">
+                                    <span class="varai-text-muted">This Month</span>
+                                    <span class="varai-text-success varai-font-bold">+15.3%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="varai-hero varai-text-center">
+            <div class="varai-container">
+                <div class="varai-container-sm animate-on-scroll">
+                    <h2 class="varai-mb-6">Ready to Optimize Your Store?</h2>
+                    <p class="varai-text-xl varai-mb-8" style="opacity: 0.95;">Explore our AI-powered features and see how they can transform your eyewear business.</p>
+                    <div class="varai-flex varai-flex-wrap varai-justify-center" style="gap: 1rem;">
+                        <a href="https://visioncraft-store-353252826752.us-central1.run.app" class="varai-btn varai-btn-secondary varai-btn-lg" target="_blank">Experience Demo Store</a>
+                        <a href="../solutions.html" class="varai-btn varai-btn-outline varai-btn-lg">Explore Solutions</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="varai-footer">
+        <div class="varai-container">
+            <div class="varai-grid varai-grid-cols-4" style="gap: 2rem;">
+                <div class="varai-mb-6">
+                    <h4>VARAi Commerce Studio</h4>
+                    <p>AI-powered solutions for the modern eyewear retailer.</p>
+                    <div class="varai-social-links varai-mt-6">
+                        <a href="#" aria-label="Facebook">
+                            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                        </a>
+                        <a href="#" aria-label="Twitter">
+                            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                            </svg>
+                        </a>
+                        <a href="#" aria-label="LinkedIn">
+                            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2

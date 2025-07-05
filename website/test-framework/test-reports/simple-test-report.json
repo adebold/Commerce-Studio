@@ -1,0 +1,143 @@
+{
+  "timestamp": "2025-06-22T14:37:44.696Z",
+  "summary": {
+    "totalTests": 11,
+    "totalPassed": 11,
+    "totalFailed": 0,
+    "passRate": 100
+  },
+  "categories": {
+    "navigation": {
+      "passed": 7,
+      "failed": 0
+    },
+    "visioncraft": {
+      "passed": 1,
+      "failed": 0
+    },
+    "connectivity": {
+      "passed": 3,
+      "failed": 0
+    }
+  },
+  "results": {
+    "navigation": {
+      "passed": [
+        {
+          "page": "Home",
+          "url": "https://commerce-studio-website-353252826752.us-central1.run.app/",
+          "statusCode": 200,
+          "responseTime": 415,
+          "contentLength": 22197,
+          "hasVaraiTitle": true,
+          "hasNavigation": true,
+          "hasContent": true
+        },
+        {
+          "page": "Products",
+          "url": "https://commerce-studio-website-353252826752.us-central1.run.app/products.html",
+          "statusCode": 200,
+          "responseTime": 56,
+          "contentLength": 18551,
+          "hasVaraiTitle": true,
+          "hasNavigation": true,
+          "hasContent": true
+        },
+        {
+          "page": "Solutions",
+          "url": "https://commerce-studio-website-353252826752.us-central1.run.app/solutions.html",
+          "statusCode": 200,
+          "responseTime": 62,
+          "contentLength": 25589,
+          "hasVaraiTitle": true,
+          "hasNavigation": true,
+          "hasContent": true
+        },
+        {
+          "page": "Pricing",
+          "url": "https://commerce-studio-website-353252826752.us-central1.run.app/pricing.html",
+          "statusCode": 200,
+          "responseTime": 62,
+          "contentLength": 24498,
+          "hasVaraiTitle": true,
+          "hasNavigation": true,
+          "hasContent": true
+        },
+        {
+          "page": "Company",
+          "url": "https://commerce-studio-website-353252826752.us-central1.run.app/company.html",
+          "statusCode": 200,
+          "responseTime": 57,
+          "contentLength": 25724,
+          "hasVaraiTitle": true,
+          "hasNavigation": true,
+          "hasContent": true
+        },
+        {
+          "page": "Dashboard",
+          "url": "https://commerce-studio-website-353252826752.us-central1.run.app/dashboard/index.html",
+          "statusCode": 200,
+          "responseTime": 67,
+          "contentLength": 25471,
+          "hasVaraiTitle": true,
+          "hasNavigation": true,
+          "hasContent": true
+        },
+        {
+          "page": "Signup",
+          "url": "https://commerce-studio-website-353252826752.us-central1.run.app/signup/index.html",
+          "statusCode": 200,
+          "responseTime": 58,
+          "contentLength": 28383,
+          "hasVaraiTitle": true,
+          "hasNavigation": true,
+          "hasContent": true
+        }
+      ],
+      "failed": []
+    },
+    "visioncraft": {
+      "passed": [
+        {
+          "test": "VisionCraft Demo Connectivity",
+          "url": "https://visioncraft-store-353252826752.us-central1.run.app",
+          "statusCode": 200,
+          "responseTime": 530,
+          "contentLength": 12260,
+          "hasVisionCraftTitle": true,
+          "hasProductElements": true,
+          "hasEcommerceElements": true
+        }
+      ],
+      "failed": []
+    },
+    "connectivity": {
+      "passed": [
+        {
+          "service": "Main Website",
+          "url": "https://commerce-studio-website-353252826752.us-central1.run.app",
+          "statusCode": 200,
+          "responseTime": 60
+        },
+        {
+          "service": "VisionCraft Demo",
+          "url": "https://visioncraft-store-353252826752.us-central1.run.app",
+          "statusCode": 200,
+          "responseTime": 58
+        },
+        {
+          "service": "Auth Service",
+          "url": "https://commerce-studio-auth-353252826752.us-central1.run.app",
+          "statusCode": 404,
+          "responseTime": 1224
+        }
+      ],
+      "failed": []
+    }
+  },
+  "environment": {
+    "baseUrl": "https://commerce-studio-website-353252826752.us-central1.run.app",
+    "visioncraftUrl": "https://visioncraft-store-353252826752.us-central1.run.app",
+    "authServiceUrl": "https://commerce-studio-auth-353252826752.us-central1.run.app"
+  }
+}

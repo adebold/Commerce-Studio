@@ -1,0 +1,147 @@
+body {
+    font-family: "SF Pro Text", sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #FFFFFF;
+    color: #333333;
+}
+
+header {
+    background-color: #0A2463;
+    color: #FFFFFF;
+    padding: 20px;
+    text-align: center;
+}
+
+h1 {
+    font-family: "SF Pro Display", sans-serif;
+    font-weight: bold;
+    font-size: 36px;
+    margin: 0;
+}
+
+main {
+    padding: 20px;
+}
+
+footer {
+    background-color: #F8F9FA;
+    padding: 20px;
+    text-align: center;
+    color: #666666;
+}
+
+nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 10px;
+}
+
+nav a {
+    color: #0A2463;
+    text-decoration: none;
+    margin-bottom: 5px;
+}
+
+.product-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.product-card {
+    width: 300px;
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #CCCCCC;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.product-image {
+    width: 100%;
+    height: auto;
+    border-radius: 3px;
+    margin-bottom: 10px;
+}
+
+.solution-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.solution-card {
+    width: 300px;
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #CCCCCC;
+}
+
+.pricing-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.pricing-table th, .pricing-table td {
+    border: 1px solid #CCCCCC;
+    padding: 10px;
+    text-align: left;
+}
+
+.pricing-table th {
+    background-color: #F8F9FA;
+}
+
+.resource-list {
+    list-style: none;
+    padding: 0;
+}
+
+.resource-list li {
+    margin-bottom: 10px;
+}
+
+.company-links {
+    list-style: none;
+    padding: 0;
+}
+
+.company-links li {
+    margin-bottom: 10px;
+}
+
+.signup-form {
+    width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #CCCCCC;
+}
+
+.signup-form label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.signup-form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #CCCCCC;
+}
+
+.signup-form button {
+    background-color: #0A2463;
+    color: #FFFFFF;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}

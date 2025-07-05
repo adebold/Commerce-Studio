@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Dashboard - VARAi Customer Portal</title>
+    <link rel="stylesheet" href="../css/varai-design-system.css">
+    <link rel="stylesheet" href="../css/enterprise-enhancements.css">
+    <link rel="stylesheet" href="../css/apple-hero-sections.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .dashboard-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--varai-background) 0%, var(--varai-gray-50) 100%);
+        }
+        
+        .dashboard-navbar {
+            background: var(--varai-background);
+            border-bottom: 1px solid var(--varai-border);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        
+        .dashboard-nav-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .dashboard-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--varai-primary);
+            text-decoration: none;
+            background: linear-gradient(135deg, var(--varai-primary) 0%, var(--varai-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .dashboard-nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .dashboard-nav-link {
+            color: var(--varai-gray-600);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--varai-transition);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+        }
+        
+        .dashboard-nav-link:hover,
+        .dashboard-nav-link.active {
+            color: var(--varai-accent);
+            background: rgba(30, 150, 252, 0.1);
+        }
+        
+        .dashboard-user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .dashboard-user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, var(--varai-gray-50) 0%, var(--varai-gray-100) 100%);
+            border-radius: 8px;
+            border: 1px solid var(--varai-border);
+        }
+        
+        .dashboard-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--varai-primary) 0%, var(--varai-accent) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .dashboard-user-name {
+            font-weight: 600;
+            color: var(--varai-foreground);
+            font-size: 0.9rem;
+        }
+        
+        .dashboard-main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .dashboard-header {
+            margin-bottom: 2rem;
+        }
+        
+        .dashboard-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--varai-foreground);
+            margin-bottom: 0.5rem;
+        }
+        
+        .dashboard-subtitle {
+            color: var(--varai-gray-600);
+            font-size: 1rem;
+        }
+        
+        .dashboard-filters {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-select {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--varai-border);
+            border-radius: 6px;
+            background: var(--varai-background);
+            color: var(--varai-foreground);
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--varai-accent);
+            box-shadow: 0 0 0 3px rgba(30, 150, 252, 0.1);
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .metric-card {
+            background: var(--varai-background);
+            border: 1px solid var(--varai-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(135deg, var(--varai-primary) 0%, var(--varai-accent) 100%);
+        }
+        
+        .metric-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .metric-title {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--varai-gray-600);
+        }
+        
+        .metric-icon {
+            width: 24px;
+            height: 24px;
+            color: var(--varai-accent);
+        }
+        
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--varai-foreground);
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-change {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .metric-change.positive {
+            color: var(--varai-success);
+        }
+        
+        .metric-change.negative {
+            color: var(--varai-error);
+        }
+        
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .chart-card {
+            background: var(--varai-background);
+            border: 1px solid var(--varai-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+        
+        .chart-header {
+            display: flex;
+            align-items: center;
+            justify-content: between;
+            margin-bottom: 1.5rem;
+        }
+        
+        .chart-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--varai-foreground);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+        
+        .activity-feed {
+            background: var(--varai-background);
+            border: 1px solid var(--varai-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+        
+        .activity-header {
+            display: flex;
+            align-items: center;
+            justify-content: between;
+            margin-bottom: 1.5rem;
+        }
+        
+        .activity-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--varai-foreground);
+        }
+        
+        .activity-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--varai-border-light);
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--varai-gray-100) 0%, var(--varai-gray-200) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .activity-icon.success {
+            background: linear-gradient(135deg, var(--varai-success) 0%, #4ade80 100%);
+            color: white;
+        }
+        
+        .activity-icon.warning {
+            background: linear-gradient(135deg, var(--varai-warning) 0%, #fbbf24 100%);
+            color: white;
+        }
+        
+        .activity-icon.info {
+            background: linear-gradient(135deg, var(--varai-info) 0%, #60a5fa 100%);
+            color: white;
+        }
+        
+        .activity-content {
+            flex: 1;
+        }
+        
+        .activity-text {
+            font-size: 0.9rem;
+            color: var(--varai-foreground);
+            margin-bottom: 0.25rem;
+        }
+        
+        .activity-time {
+            font-size: 0.8rem;
+            color: var(--varai-gray-500);
+        }
+        
+        .integration-status {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .integration-card {
+            background: var(--varai-background);
+            border: 1px solid var(--varai-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+        
+        .integration-header {
+            display: flex;
+            align-items: center;
+            justify-content: between;
+            margin-bottom: 1rem;
+        }
+        
+        .integration-name {
+            font-weight: 600;
+            color: var(--varai-foreground);
+        }
+        
+        .integration-status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .integration-status-badge.connected {
+            background: rgba(48, 209, 88, 0.1);
+            color: var(--varai-success);
+        }
+        
+        .integration-status-badge.disconnected {
+            background: rgba(255, 59, 48, 0.1);
+            color: var(--varai-error);
+        }
+        
+        .integration-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .integration-metric {
+            text-align: center;
+        }
+        
+        .integration-metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--varai-accent);
+        }
+        
+        .integration-metric-label {
+            font-size: 0.8rem;
+            color: var(--varai-gray-600);
+        }
+        
+        @media (max-width: 1024px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-nav-content {
+                padding: 0 1rem;
+            }
+            
+            .dashboard-nav-links {
+                display: none;
+            }
+            
+            .dashboard-main {
+                padding: 1rem;
+            }
+            
+            .dashboard-title {
+                font-size: 1.5rem;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Dashboard Navigation -->
+        <nav class="dashboard-navbar">
+            <div class="dashboard-nav-content">
+                <a href="index.html" class="dashboard-logo">VARAi Customer Portal</a>
+                
+                <div class="dashboard-nav-links">
+                    <a href="index.html" class="dashboard-nav-link">Overview</a>
+                    <a href="dashboard.html" class="dashboard-nav-link active">Dashboard</a>
+                    <a href="settings.html" class="dashboard-nav-link">Settings</a>
+                </div>
+                
+                <div class="dashboard-user-menu">
+                    <div class="dashboard-user-info">
+                        <div class="dashboard-avatar" id="dashboardAvatar">V</div>
+                        <span class="dashboard-user-name" id="dashboardUserName">Loading...</span>
+                    </div>
+                    <button class="logout-button" onclick="logout()" style="background: none; border: 1px solid var(--varai-border); color: var(--varai-gray-600); padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; transition: var(--varai-transition); font-size: 0.9rem;">Sign Out</button>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Main Dashboard Content -->
+        <main class="dashboard-main">
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Analytics Dashboard</h1>
+                <p class="dashboard-subtitle">Monitor your eyewear business performance and customer insights</p>
+            </div>
+            
+            <!-- Dashboard Filters -->
+            <div class="dashboard-filters">
+                <select class="filter-select" id="timeRangeFilter" onchange="updateDashboard()">
+                    <option value="7d">Last 7 days</option>
+                    <option value="30d" selected>Last 30 days</option>
+                    <option value="90d">Last 90 days</option>
+                    <option value="1y">Last year</option>
+                </select>
+                
+                <select class="filter-select" id="storeFilter" onchange="updateDashboard()">
+                    <option value="all">All Stores</option>
+                    <option value="main">Main Store</option>
+                    <option value="online">Online Store</option>
+                </select>
+            </div>
+            
+            <!-- Key Metrics -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-title">Total Revenue</span>
+                        <svg class="metric-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2V22M17 5H9.5A3.5 3.5 0 0 0 9.5 12H14.5A3.5 3.5 0 0 1 14.5 19H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="metric-value" id="totalRevenue">$0</div>
+                    <div class="metric-change positive" id="revenueChange">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7 14L12 9L17 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        +0% from last period
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-title">Orders</span>
+                        <svg class="metric-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16 11V7A4 4 0 0 0 8 7V11M5 9H19L20 21H4L5 9Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="metric-value" id="totalOrders">0</div>
+                    <div class="metric-change positive" id="ordersChange">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7 14L12 9L17 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        +0% from last period
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-title">Conversion Rate</span>
+                        <svg class="metric-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M22 12H18L15 21L9 3L6 12H2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="metric-value" id="conversionRate">0%</div>
+                    <div class="metric-change positive" id="conversionChange">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7 14L12 9L17 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        +0% from last period
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-title">Average Order Value</span>
+                        <svg class="metric-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M18 20V10M12 20V4M6 20V14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="metric-value" id="averageOrderValue">$0</div>
+                    <div class="metric-change positive" id="aovChange">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7 14L12 9L17 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        +0% from last period
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Charts Section -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Revenue Trend</h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="activity-feed">
+                    <div class="activity-header">
+                        <h3 class="activity-title">Recent Activity</h3>
+                    </div>
+                    <ul class="activity-list" id="activityList">
+                        <!-- Activity items will be populated by JavaScript -->
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Integration Status -->
+            <div class="integration-status">
+                <div class="integration-card">
+                    <div class="integration-header">
+                        <span class="integration-name">Shopify Store</span>
+                        <span class="integration-status-badge connected">Connected</span>
+                    </div>
+                    <div class="integration-metrics">
+                        <div class="integration-metric">
+                            <div class="integration-metric-value" id="shopifyOrders">0</div>
+                            <div class="integration-metric-label">Orders</div>
+                        </div>
+                        <div class="integration-metric">
+                            <div class="integration-metric-value" id="shopifyRevenue">$0</div>
+                            <div class="integration-metric-label">Revenue</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="integration-card">
+                    <div class="integration-header">
+                        <span class="integration-name">Magento Store</span>
+                        <span class="integration-status-badge connected">Connected</span>
+                    </div>
+                    <div class="integration-metrics">
+                        <div class="integration-metric">
+                            <div class="integration-metric-value" id="magentoOrders">0</div>
+                            <div class="integration-metric-label">Orders</div>
+                        </div>
+                        <div class="integration-metric">
+                            <div class="integration-metric-value" id="magentoRevenue">$0</div>
+                            <div class="integration-metric-label">Revenue</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Dashboard functionality
+        class CustomerDashboard {
+            constructor() {
+                this.initializeDashboard();
+                this.loadCustomerData();
+                this.loadDashboardData();
+                this.initializeCharts();
+            }
+            
+            initializeDashboard() {
+                // Check authentication
+                const authToken = localStorage.getItem('varai_customer_token');
+                if (!authToken || !this.isValidToken(authToken)) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+            }
+            
+            loadCustomerData() {
+                const customerData = localStorage.getItem('varai_customer_data');
+                if (customerData) {
+                    try {
+                        const data = JSON.parse(customerData);
+                        this.updateUserInterface(data);
+                    } catch (error) {
+                        console.error('Error parsing customer data:', error);
+                        this.setDefaultUserData();
+                    }
+                } else {
+                    this.setDefaultUserData();
+                }
+            }
+            
+            updateUserInterface(data) {
+                const nameElement = document.getElementById('dashboardUserName');
+                const avatarElement = document.getElementById('dashboardAvatar');
+                
+                if (nameElement) {
+                    nameElement.textContent = data.name || 'Customer';
+                }
+                
+                if (avatarElement) {
+                    const initial = (data.name || 'C').charAt(0).toUpperCase();
+                    avatarElement.textContent = initial;
+                }
+            }
+            
+            setDefaultUserData() {
+                const nameElement = document.getElementById('dashboardUserName');
+                const avatarElement = document.getElementById('dashboardAvatar');
+                
+                if (nameElement) {
+                    nameElement.textContent = 'Customer';
+                }
+                
+                if (avatarElement) {
+                    avatarElement.textContent = 'C';
+                }
+            }
+            
+            loadDashboardData() {
+                // Generate demo data based on customer type
+                const customerData = localStorage.getItem('varai_customer_data');
+                let customerType = 'retail';
+                
+                if (customerData) {
+                    try {
+                        const data = JSON.parse(customerData);
+                        customerType = data.type || 'retail';
+                    } catch (error) {
+                        console.error('Error parsing customer data:', error);
+                    }
+                }
+                
+                const demoData = this.generateDemoData(customerType);
+                this.updateMetrics(demoData);
+                this.updateActivity(demoData.activities);
+                this.updateIntegrationMetrics(demoData);
+            }
+            
+            generateDemoData(type) {
+                const baseData = {
+                    retail: {
+                        revenue: 125000,
+                        orders: 450,
+                        conversionRate: 3.2,
+                        aov: 278,
+                        revenueChange: 12.5,
+                        ordersChange: 8.3,
+                        conversionChange: 15.2,
+                        aovChange: 5.7
+                    },
+                    boutique: {
+                        revenue: 85000,
+                        orders: 180,
+                        conversionRate: 4.8,
+                        aov: 472,
+                        revenueChange: 18.2,
+                        ordersChange: 12.1,
+                        conversionChange: 22.3,
+                        aovChange: 8.9
+                    },
+                    enterprise: {
+                        revenue: 450000,
+                        orders: 1250,
+                        conversionRate: 2.9,
+                        aov: 360,
+                        revenueChange: 25.8,
+                        ordersChange: 19.4,
+                        conversionChange: 31.2,
+                        aovChange: 12.3
+                    }
+                };
+                
+                const data = baseData[type] || baseData.retail;
+                
+                return {
+                    ...data,
+                    shopifyOrders: Math.floor(data.orders * 0.6),
+                    shopifyRevenue: Math.floor(data.revenue * 0.6),
+                    magentoOrders: Math.floor(data.orders * 0.4),
+                    magentoRevenue: Math.floor(data.revenue * 0.4),
+                    activities: this.generateActivities(type)
+                };
+            }
+            
+            generateActivities(type) {
+                const activities = [
+                    {
+                        icon: 'success',
+                        text: 'New order received from premium customer',
+                        time: '2 minutes ago'
+                    },
+                    {
+                        icon: 'info',
+                        text: 'AI recommendation engine updated product suggestions',
+                        time: '15 minutes ago'
+                    },
+                    {
+                        icon: 'success',
+                        text: 'Customer completed virtual try-on session',
+                        time: '32 minutes ago'
+                    },
+                    {
+                        icon: 'warning',
+                        text: 'Low inventory alert for Ray-Ban Aviators',
+                        time: '1 hour ago'
+                    },
+                    {
+                        icon: 'info',
+                        text: 'Weekly analytics report generated',
+                        time: '2 hours ago'
+                    },
+                    {
+                        icon: 'success',
+                        text: 'Customer review submitted (5 stars)',
+                        time: '3 hours ago'
+                    }
+                ];
+                
+                return activities;
+            }
+            
+            updateMetrics(data) {
+                document.getElementById('totalRevenue').textContent = `$${data.revenue.toLocaleString()}`;
+                document.getElementById('totalOrders').textContent = data.orders.toLocaleString();
+                document.getElementById('conversionRate').textContent = `${data.conversionRate}%`;
+                document.getElementById('averageOrderValue').textContent = `$${data.aov}`;
+                
+                document.getElementById('revenueChange').innerHTML = `
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7 14L12 9L17 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    +${data.revenueChange}% from last period
+                `;
+                
+                document.getElementById('ordersChange').innerHTML = `
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7 14L12 9L17 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    +${data.ordersChange}% from last period
+                `;
+                
+                document.getElementById('conversionChange').innerHTML = `
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7 14L12 9L17 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    +${data.conversionChange}% from last period
+                `;
+                
+                document.getElementById('aovChange').innerHTML = `
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7 14L12 9L17 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    +${data.aovChange}% from last period
+                `;
+            }
+            
+            updateActivity(activities) {
+                const activityList = document.getElementById('activityList');
+                activityList.innerHTML = '';
+                
+                activities.forEach(activity => {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'activity-item';
+                    listItem.innerHTML = `
+                        <div class="activity-icon ${activity.icon}">
+                            ${this.getActivityIcon(activity.icon)}
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-text">${activity.text}</div>
+                            <div class="activity-time">${activity.time}</div>
+                        </div>
+                    `;
+                    activityList.appendChild(listItem);
+                });
+            }
+            
+            updateIntegrationMetrics(data) {
+                document.getElementById('shopifyOrders').textContent = data.shopifyOrders.toLocaleString();
+                document.getElementById('shopifyRevenue').textContent = `$${data.shopifyRevenue.toLocaleString()}`;
+                document.getElementById('magentoOrders').textContent = data.magentoOrders.toLocaleString();
+                document.getElementById('magentoRevenue').textContent = `$${data.magentoRevenue.toLocaleString()}`;
+            }
+            
+            getActivityIcon(type) {
+                const icons = {
+                    success: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+                    warning: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 9V13M12 17H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+                    info: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 16V12M12 8H12.01M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+                };
+                return icons[type] || icons.info;
+            }
+            
+            initializeCharts() {
+                this.createRevenueChart();
+            }
+            
+            createRevenueChart() {
+                const ctx = document.getElementById('revenueChart').getContext('2d');
+                
+                // Generate sample data for the last 30 days
+                const labels = [];
+                const data = [];
+                const today = new Date();
+                
+                for (let i = 29; i >= 0; i--) {
+                    const date = new Date(today);
+                    date.setDate(date.getDate() - i);
+                    labels.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+                    
+                    // Generate realistic revenue data with some variation
+                    const baseRevenue = 3000 + Math.random() * 2000;
+                    const weekendMultiplier = date.getDay() === 0 || date.getDay() === 6 ? 0.7 : 1;
+                    data.push(Math.floor(baseRevenue * weekendMultiplier));
+                }
+                
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Daily Revenue',
+                            data: data,
+                            borderColor: 'rgb(30, 150, 252)',
+                            backgroundColor: 'rgba(30, 150, 252, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return '$' + value.toLocaleString();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            isValidToken(token) {
+                return token && token.startsWith('varai_') && token.length > 20;
+            }
+        }
+        
+        // Update dashboard function
+        function updateDashboard() {
+            // This would typically fetch new data based on filters
+            console.log('Dashboard updated with new filters');
+        }
+        
+        // Logout functionality
+        function logout() {
+            if (confirm('Are you sure you want to sign out?')) {
+                localStorage.removeItem('varai_customer_token');
+                localStorage.removeItem('varai_customer_data');
+                window.location.href = 'login.html';
+            }
+        }
+        
+        // Initialize dashboard when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new CustomerDashboard();
+        });
+    </script>
+</body>
+</html>

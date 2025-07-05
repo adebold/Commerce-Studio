@@ -1,0 +1,60 @@
+{
+  "timestamp": "2025-06-24T14:09:57.019Z",
+  "testSuite": "LS5_003_MUI_Card_Migration",
+  "results": {
+    "criticalErrors": {
+      "description": "TypeScript variant prop error fixes",
+      "status": "failed",
+      "details": [
+        "0 TypeScript errors"
+      ]
+    },
+    "accessibility": {
+      "description": "Accessibility compliance testing",
+      "status": "failed",
+      "score": 65,
+      "violations": 1
+    },
+    "migration": {
+      "description": "Component migration validation",
+      "status": "failed",
+      "components": [
+        "SettingsPage",
+        "DashboardPage",
+        "AccountSettingsPage"
+      ]
+    },
+    "bundleSize": {
+      "description": "Bundle size optimization",
+      "status": "passed",
+      "impact": 0.08
+    },
+    "themeIntegration": {
+      "description": "Theme integration consistency",
+      "status": "pending",
+      "score": null
+    }
+  },
+  "coverage": {
+    "lines": 75,
+    "branches": 70,
+    "functions": 80,
+    "statements": 76
+  },
+  "recommendations": [
+    {
+      "priority": "HIGH",
+      "category": "Accessibility",
+      "issue": "Accessibility score 65 below target 70",
+      "solution": "Add ARIA labels, improve keyboard navigation, ensure proper heading hierarchy",
+      "impact": "Poor user experience for assistive technology users"
+    },
+    {
+      "priority": "MEDIUM",
+      "category": "Test Coverage",
+      "issue": "Line coverage 75% below threshold 90%",
+      "solution": "Add tests for uncovered code paths, especially error handling and edge cases",
+      "impact": "Reduced confidence in code quality and regression detection"
+    }
+  ]
+}
