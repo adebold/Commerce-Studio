@@ -1,5 +1,6 @@
 import { VertexAIConnector } from '../../connectors/vertex-ai-connector.js';
 import { logger } from '../../utils/logger.js';
+import UnifiedPersonalizationService from '../../../../data/unified-personalization-service.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -29,12 +30,14 @@ export default async function handler(req, res) {
     const vertexAI = new VertexAIConnector(shopDomain);
 
     // Generate AI-powered recommendations
-    const recommendations = await generatePersonalizedRecommendations(
-      vertexAI, 
-      faceAnalysis, 
-      conversationContext, 
-      filters, 
-      maxRecommendations
+    const recommendations = await UnifiedPersonalizationService.getPersonalizedRecommendations(
+        req.body.userId,
+        {
+            faceAnalysis,
+            conversationContext,
+            filters,
+            maxRecommendations
+        }
     );
 
     // Track recommendation generation

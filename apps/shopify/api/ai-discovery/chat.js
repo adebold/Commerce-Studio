@@ -1,3 +1,4 @@
+import { UnifiedDialogflowService } from '../../../../services/google/unified-dialogflow-service.js';
 import { VertexAIConnector } from '../../connectors/vertex-ai-connector.js';
 import { logger } from '../../utils/logger.js';
 
@@ -7,47 +8,111 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { 
-      message, 
-      sessionId, 
-      shopDomain, 
-      conversationContext = [], 
-      faceAnalysisResult 
+    const {
+      message,
+      sessionId,
+      shopDomain,
+      conversationContext = [],
+      faceAnalysisResult
     } = req.body;
 
     // Validate required parameters
     if (!message) {
-      return res.status(400).json({ error: 'Message parameter is required' });
+      return res.status(400).json({
+        success: false,
+        error: 'Message parameter is required'
+      });
     }
 
     if (!sessionId) {
-      return res.status(400).json({ error: 'Session ID is required' });
+      return res.status(400).json({
+        success: false,
+        error: 'Session ID is required'
+      });
     }
 
-    if (!shopDomain) {
-      return res.status(400).json({ error: 'Shop domain is required' });
+    // Initialize unified conversation service (Google Cloud primary, Vertex AI fallback)
+    let conversationService;
+    let provider = 'google';
+    
+    try {
+      conversationService = new UnifiedDialogflowService();
+      await conversationService.initialize();
+    } catch (error) {
+      logger.warn('Google Dialogflow unavailable, falling back to Vertex AI', error);
+      conversationService = new VertexAIConnector(shopDomain);
+      provider = 'vertex-ai';
     }
 
-    // Initialize Vertex AI connector
-    const vertexAI = new VertexAIConnector(shopDomain);
+    // Process message through unified conversation service
+    const result = await conversationService.processMessage
+      ? await conversationService.processMessage(message, sessionId, {
+          shopDomain,
+          conversationContext,
+          faceAnalysisResult
+        })
+      : await conversationService.processConversation(message, sessionId, {
+          shopDomain,
+          conversationContext,
+          faceAnalysisResult
+        });
 
-    // Analyze intent from the message
-    const intent = await analyzeIntent(message, conversationContext, faceAnalysisResult);
+    // Standardized response format matching demo server
+    return res.json({
+      success: true,
+      response: result.response || result.text || result,
+      sessionId: sessionId,
+      provider: provider,
+      timestamp: new Date().toISOString(),
+      shopDomain: shopDomain,
+      intent: result.intent,
+      confidence: result.confidence
+    });
 
-    // Generate appropriate response based on intent
-    let response;
-    switch (intent.type) {
-      case 'product_recommendation_request':
-        response = await handleProductRecommendationRequest(vertexAI, intent, faceAnalysisResult);
-        break;
-      case 'style_preference_query':
-        response = await handleStylePreferenceQuery(vertexAI, intent, conversationContext);
-        break;
-      case 'product_information_request':
-        response = await handleProductInformationRequest(vertexAI, intent);
-        break;
-      case 'virtual_try_on_request':
-        response = await handleVirtualTryOnRequest(intent);
+  } catch (error) {
+    logger.error('Shopify chat processing error:', error);
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+      provider: 'error',
+      timestamp: new Date().toISOString()
+    });
+  }
+}
+
+// Legacy intent analysis for backward compatibility
+async function analyzeIntent(message, conversationContext, faceAnalysisResult) {
+  // Simplified intent analysis - the unified service handles this internally
+  return {
+    type: 'general_inquiry',
+    confidence: 0.8,
+    entities: [],
+    context: { conversationContext, faceAnalysisResult }
+  };
+}
+
+// Legacy handlers for backward compatibility
+async function handleProductRecommendationRequest(service, intent, faceAnalysisResult) {
+  return await service.processMessage('I need product recommendations', 'shopify-session', {
+    intent: intent,
+    faceAnalysis: faceAnalysisResult
+  });
+}
+
+async function handleStylePreferenceQuery(service, intent, conversationContext) {
+  return await service.processMessage('What styles would work for me?', 'shopify-session', {
+    intent: intent,
+    context: conversationContext
+  });
+}
+
+async function handleProductInformationRequest(service, intent) {
+  return await service.processMessage('Tell me about this product', 'shopify-session', {
+    intent: intent
+  });
+}
+
+async function handleVirtualTryOnRequest(intent) {
         break;
       case 'face_analysis_question':
         response = await handleFaceAnalysisQuestion(intent, faceAnalysisResult);

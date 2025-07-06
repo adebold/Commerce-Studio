@@ -1,0 +1,20 @@
+FROM nginx:alpine
+
+# Copy website files to nginx html directory
+COPY . /usr/share/nginx/html/
+
+# Copy custom nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Set proper permissions for nginx user (already exists in nginx:alpine)
+RUN chown -R nginx:nginx /usr/share/nginx/html && \
+    chown -R nginx:nginx /var/cache/nginx && \
+    chown -R nginx:nginx /var/log/nginx && \
+    chown -R nginx:nginx /etc/nginx/conf.d && \
+    chmod -R 755 /usr/share/nginx/html
+
+# Expose port 8080 for Cloud Run
+EXPOSE 8080
+
+# Start nginx as root (required for binding to port 8080)
+CMD ["nginx", "-g", "daemon off;"]

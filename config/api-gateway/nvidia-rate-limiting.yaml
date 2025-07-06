@@ -1,0 +1,37 @@
+apiVersion: "config.istio.io/v1alpha2"
+kind: memquota
+metadata:
+  name: nvidia-service-ratelimit
+  namespace: istio-system
+spec:
+  quotas:
+  - name: nvidia-requests.memquota.istio-system
+    maxAmount: 100 # Max tokens in the bucket
+    validDuration: 1s
+    rateLimit:
+      algorithm: TOKEN_BUCKET
+      tokenBucket:
+        fillInterval: 1s
+        tokensPerFill: 10
+---
+apiVersion: "config.istio.io/v1alpha2"
+kind: quota
+metadata:
+  name: nvidia-request-count
+  namespace: istio-system
+spec:
+  dimensions:
+    source: request.headers["x-forwarded-for"] | "unknown"
+    destination: destination.service.host | "unknown"
+---
+apiVersion: "config.istio.io/v1alpha2"
+kind: rule
+metadata:
+  name: nvidia-rate-limit-rule
+  namespace: istio-system
+spec:
+  match: destination.service.host == "nvidia-proxy-service.default.svc.cluster.local"
+  actions:
+  - handler: nvidia-service-ratelimit.memquota
+    instances:
+    - nvidia-request-count.quota

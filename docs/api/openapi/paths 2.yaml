@@ -1,0 +1,671 @@
+# Path definitions for the VARAi API
+
+# Authentication endpoints
+/auth/api-keys:
+  get:
+    summary: List API keys
+    description: Retrieve a list of API keys for the authenticated user or organization.
+    tags:
+      - Authentication
+    security:
+      - BearerAuth: []
+    responses:
+      '200':
+        description: A list of API keys
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                  example: true
+                data:
+                  type: array
+                  items:
+                    $ref: './schemas.yaml#/ApiKey'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: './schemas.yaml#/Error'
+  post:
+    summary: Create API key
+    description: Create a new API key for the authenticated user or organization.
+    tags:
+      - Authentication
+    security:
+      - BearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Name for the API key
+                example: Production API Key
+              scopes:
+                type: array
+                items:
+                  type: string
+                description: Scopes to grant to the API key
+                example: ["frames:read", "recommendations:read"]
+            required:
+              - name
+              - scopes
+    responses:
+      '201':
+        description: API key created
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                  example: true
+                data:
+                  type: object
+                  properties:
+                    api_key:
+                      type: string
+                      description: The full API key (only shown once)
+                      example: var_1234abcdefghijklmnopqrstuvwxyz
+                    key_details:
+                      $ref: './schemas.yaml#/ApiKey'
+      '400':
+        description: Bad request
+        content:
+          application/json:
+            schema:
+              $ref: './schemas.yaml#/Error'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: './schemas.yaml#/Error'
+
+/auth/api-keys/{key_id}:
+  delete:
+    summary: Delete API key
+    description: Delete an API key.
+    tags:
+      - Authentication
+    security:
+      - BearerAuth: []
+    parameters:
+      - name: key_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The ID of the API key to delete
+    responses:
+      '200':
+        description: API key deleted
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                  example: true
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: './schemas.yaml#/Error'
+      '404':
+        description: API key not found
+        content:
+          application/json:
+            schema:
+              $ref: './schemas.yaml#/Error'
+
+# Analysis endpoints
+/analyze:
+  post:
+    summary: Analyze face image
+    description: |
+      Analyze a face image to determine face shape, measurements, and style recommendations.
+      
+      This endpoint uses computer vision and machine learning to analyze facial features and provide
+      detailed measurements and style recommendations based on the analysis.
+    tags:
+      - Recommendations
+    security:
+      - ApiKeyAuth: []
+      - BearerAuth: []
+    requestBody:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              image:
+                type: string
+                format: binary
+                description: Face image to analyze
+            required:
+              - image
+    responses:
+      '200':
+        description: Analysis results
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                  example: true
+                data:
+                  $ref: './schemas.yaml#/AnalysisResult'
+      '400':
+        description: Invalid input
+        content:
+          application/json:
+            schema:
+              $ref: './schemas.yaml#/Error'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: './schemas.yaml#/Error'
+      '429':
+        description: Rate limit exceeded
+        content:
+          application/json:
+            schema:
+              $ref: './schemas.yaml#/Error'
+      '503':
+        description: Service unavailable
+        content:
+          application/json:
+            schema:
+              $ref: './schemas.yaml#/Error'
+
+# Frames endpoints
+/frames:
+  get:
+    summary: List frames
+    description: |
+      Retrieve a list of eyewear frames with optional filtering.
+      
+      This endpoint supports pagination and filtering by various attributes such as brand,
+      style, material, color, and price range.
+    tags:
+      - Frames
+    security:
+      - ApiKeyAuth: []
+      - BearerAuth: []
+    parameters:
+      - name: brand
+        in: query
+        schema:
+          type: string
+        description: Filter frames by brand name
+      - name: style
+        in: query
+        schema:
+          type: string
+        description: Filter frames by style (e.g., 'round', 'rectangle')
+      - name: material
+        in: query
+        schema:
+          type: string
+        description: Filter frames by material (e.g., 'acetate', 'metal')
+      - name: color
+        in: query
+        schema:
+          type: string
+        description: Filter frames by color
+      - name: min_price
+        in: query
+        schema:
+          type: number
+        description: Minimum price in USD
+      - name: max_price
+        in: query
+        schema:
+          type: number
+        description: Maximum price in USD
+      - name: face_shape
+        in: query
+        schema:
+          type: string
+          enum: [oval, round, square, heart, oblong, diamond]
+        description: Filter frames by suitable face shape
+      - name: page
+        in: query
+        schema:
+          type: integer
+          default: 1
+        description: Page number for pagination
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          default: 20
+          maximum: 100
+        description: Number of results per page
+    responses:
+      '200':
+        description: A list of frames
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                  example: true
+                data:
+                  type: object
+                  properties:
+                    frames:
+                      type: array
+                      items:
+                        $ref: './schemas.yaml#/Frame'
+                    pagination:
+                      type: object
+                      properties:
+                        total:
+                          type: integer
+                          description: Total number of frames matching the filters
+                          example: 256
+                        page:
+                          type: integer
+                          description: Current page number
+                          example: 1
+                        limit:
+                          type: integer
+                          description: Number of results per page
+                          example: 20
+                        pages:
+                          type: integer
+                          description: Total number of pages
+                          example: 13
+      '400':
+        description: Invalid input
+        content:
+          application/json:
+            schema:
+              $ref: './schemas.yaml#/Error'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: './schemas.yaml#/Error'
+
+/frames/{frame_id}:
+  get:
+    summary: Get frame
+    description: |
+      Retrieve detailed information about a specific frame.
+      
+      This endpoint returns comprehensive details about a frame, including dimensions,
+      available colors, features, and suitable face shapes.
+    tags:
+      - Frames
+    security:
+      - ApiKeyAuth: []
+      - BearerAuth: []
+    parameters:
+      - name: frame_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The ID of the frame to retrieve
+    responses:
+      '200':
+        description: Frame details
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                  example: true
+                data:
+                  $ref: './schemas.yaml#/Frame'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: './schemas.yaml#/Error'
+      '404':
+        description: Frame not found
+        content:
+          application/json:
+            schema:
+              $ref: './schemas.yaml#/Error'
+
+# Recommendations endpoints
+/recommendations:
+  post:
+    summary: Generate recommendations
+    description: |
+      Generate personalized frame recommendations based on user data and preferences.
+      
+      This endpoint uses machine learning to recommend frames that match the user's
+      face shape, style preferences, and other factors.
+    tags:
+      - Recommendations
+    security:
+      - ApiKeyAuth: []
+      - BearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              user_id:
+                type: string
+                description: User identifier for personalized recommendations
+              face_shape:
+                type: string
+                enum: [oval, round, square, heart, oblong, diamond]
+                description: User's face shape
+              preferences:
+                type: object
+                properties:
+                  styles:
+                    type: array
+                    items:
+                      type: string
+                    description: Preferred frame styles
+                  materials:
+                    type: array
+                    items:
+                      type: string
+                    description: Preferred frame materials
+                  colors:
+                    type: array
+                    items:
+                      type: string
+                    description: Preferred frame colors
+                  price_range:
+                    type: object
+                    properties:
+                      min:
+                        type: number
+                        description: Minimum price in USD
+                      max:
+                        type: number
+                        description: Maximum price in USD
+              limit:
+                type: integer
+                default: 10
+                maximum: 50
+                description: Maximum number of recommendations to return
+            example:
+              user_id: u78901
+              face_shape: oval
+              preferences:
+                styles: ["round", "cat-eye"]
+                materials: ["acetate"]
+                colors: ["black", "tortoise"]
+                price_range:
+                  min: 80
+                  max: 200
+              limit: 10
+    responses:
+      '200':
+        description: Recommendations generated
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                  example: true
+                data:
+                  type: object
+                  properties:
+                    recommendations:
+                      type: array
+                      items:
+                        $ref: './schemas.yaml#/Recommendation'
+                    recommendation_id:
+                      type: string
+                      description: Unique identifier for this set of recommendations
+                      example: rec_789012
+                    created_at:
+                      type: string
+                      format: date-time
+                      description: Time when the recommendations were generated
+                      example: 2025-04-29T12:34:56Z
+      '400':
+        description: Invalid input
+        content:
+          application/json:
+            schema:
+              $ref: './schemas.yaml#/Error'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: './schemas.yaml#/Error'
+
+# Users endpoints
+/users/{user_id}:
+  get:
+    summary: Get user
+    description: Retrieve a user's profile information.
+    tags:
+      - Users
+    security:
+      - ApiKeyAuth: []
+      - BearerAuth: []
+    parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The ID of the user to retrieve
+    responses:
+      '200':
+        description: User details
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                  example: true
+                data:
+                  $ref: './schemas.yaml#/User'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: './schemas.yaml#/Error'
+      '404':
+        description: User not found
+        content:
+          application/json:
+            schema:
+              $ref: './schemas.yaml#/Error'
+
+/users/{user_id}/preferences:
+  put:
+    summary: Update user preferences
+    description: Update a user's preferences.
+    tags:
+      - Users
+    security:
+      - ApiKeyAuth: []
+      - BearerAuth: []
+    parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The ID of the user to update
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              preferences:
+                type: object
+                properties:
+                  styles:
+                    type: array
+                    items:
+                      type: string
+                    description: Preferred frame styles
+                  materials:
+                    type: array
+                    items:
+                      type: string
+                    description: Preferred frame materials
+                  colors:
+                    type: array
+                    items:
+                      type: string
+                    description: Preferred frame colors
+                  price_range:
+                    type: object
+                    properties:
+                      min:
+                        type: number
+                        description: Minimum price in USD
+                      max:
+                        type: number
+                        description: Maximum price in USD
+            required:
+              - preferences
+            example:
+              preferences:
+                styles: ["round", "cat-eye", "rectangle"]
+                materials: ["acetate", "metal"]
+                colors: ["black", "tortoise", "gold"]
+                price_range:
+                  min: 100
+                  max: 300
+    responses:
+      '200':
+        description: User preferences updated
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                  example: true
+                data:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: User ID
+                      example: u78901
+                    preferences:
+                      type: object
+                      properties:
+                        styles:
+                          type: array
+                          items:
+                            type: string
+                          example: ["round", "cat-eye", "rectangle"]
+                        materials:
+                          type: array
+                          items:
+                            type: string
+                          example: ["acetate", "metal"]
+                        colors:
+                          type: array
+                          items:
+                            type: string
+                          example: ["black", "tortoise", "gold"]
+                        price_range:
+                          type: object
+                          properties:
+                            min:
+                              type: number
+                              example: 100
+                            max:
+                              type: number
+                              example: 300
+                    updated_at:
+                      type: string
+                      format: date-time
+                      example: 2025-04-29T12:34:56Z
+      '400':
+        description: Invalid input
+        content:
+          application/json:
+            schema:
+              $ref: './schemas.yaml#/Error'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: './schemas.yaml#/Error'
+      '404':
+        description: User not found
+        content:
+          application/json:
+            schema:
+              $ref: './schemas.yaml#/Error'
+
+# System endpoints
+/system/health:
+  get:
+    summary: Get system health
+    description: |
+      Check the health status of the VARAi API and its dependencies.
+      
+      This endpoint returns the current status of the API, machine learning system,
+      and various services like database, cache, and storage.
+    tags:
+      - Admin
+    security:
+      - ApiKeyAuth: []
+      - BearerAuth: []
+    responses:
+      '200':
+        description: System health information
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                  example: true
+                data:
+                  $ref: './schemas.yaml#/SystemHealth'
+      '401':
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: './schemas.yaml#/Error'

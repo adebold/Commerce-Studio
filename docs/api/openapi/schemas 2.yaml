@@ -1,0 +1,520 @@
+# Schema definitions for the VARAi API
+
+Error:
+  type: object
+  properties:
+    success:
+      type: boolean
+      example: false
+    error:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code
+          example: invalid_request
+        message:
+          type: string
+          description: Human-readable error message
+          example: The request was invalid
+        details:
+          type: object
+          description: Additional error details
+        request_id:
+          type: string
+          format: uuid
+          description: Unique identifier for the request
+          example: 550e8400-e29b-41d4-a716-446655440000
+        timestamp:
+          type: string
+          format: date-time
+          description: Time when the error occurred
+          example: 2025-04-29T12:34:56Z
+  required:
+    - success
+    - error
+
+AnalysisResult:
+  type: object
+  properties:
+    analysis_id:
+      type: string
+      format: uuid
+      description: Unique identifier for the analysis
+      example: 550e8400-e29b-41d4-a716-446655440000
+    face_shape:
+      type: string
+      enum: [oval, round, square, heart, oblong, diamond]
+      description: Detected face shape
+      example: oval
+    features:
+      type: object
+      properties:
+        face_width:
+          type: number
+          description: Width of the face in millimeters
+          example: 135.5
+        face_height:
+          type: number
+          description: Height of the face in millimeters
+          example: 180.2
+        nose_bridge_width:
+          type: number
+          description: Width of the nose bridge in millimeters
+          example: 20.3
+        eye_distance:
+          type: number
+          description: Distance between the eyes in millimeters
+          example: 65.8
+        pupillary_distance:
+          type: number
+          description: Distance between the pupils in millimeters
+          example: 62.5
+    style_attributes:
+      type: object
+      properties:
+        shape_preference:
+          type: string
+          description: Preferred frame shape based on analysis
+          example: round
+        material_preference:
+          type: string
+          description: Suggested material based on analysis
+          example: acetate
+        color_preference:
+          type: string
+          description: Suggested color based on analysis
+          example: tortoise
+        style_tags:
+          type: array
+          items:
+            type: string
+          description: Style tags based on analysis
+          example: ["classic", "sophisticated", "versatile"]
+    created_at:
+      type: string
+      format: date-time
+      description: Time when the analysis was created
+      example: 2025-04-29T12:34:56Z
+  required:
+    - analysis_id
+    - face_shape
+    - features
+    - style_attributes
+
+StyleQuery:
+  type: object
+  properties:
+    text_query:
+      type: string
+      description: Natural language description of desired style
+      example: "Modern, lightweight frames with a blue tint"
+    reference_image_url:
+      type: string
+      format: uri
+      description: URL of reference image for style matching
+      example: "https://example.com/reference-image.jpg"
+    style_tags:
+      type: array
+      items:
+        type: string
+      description: Specific style tags to match
+      example: ["modern", "lightweight", "blue"]
+    face_shape:
+      type: string
+      enum: [oval, round, square, heart, oblong, diamond]
+      description: Face shape to match frames for
+      example: oval
+  anyOf:
+    - required: [text_query]
+    - required: [reference_image_url]
+    - required: [style_tags]
+
+Frame:
+  type: object
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the frame
+      example: f12345
+    name:
+      type: string
+      description: Name of the frame
+      example: "Classic Wayframe"
+    brand:
+      type: string
+      description: Brand of the frame
+      example: "RayBender"
+    style:
+      type: string
+      description: Style of the frame
+      example: "rectangle"
+    material:
+      type: string
+      description: Material of the frame
+      example: "acetate"
+    color:
+      type: string
+      description: Primary color of the frame
+      example: "tortoise"
+    price:
+      type: number
+      description: Price of the frame in USD
+      example: 129.99
+    description:
+      type: string
+      description: Detailed description of the frame
+      example: "A timeless design that never goes out of style."
+    dimensions:
+      type: object
+      properties:
+        bridge:
+          type: number
+          description: Bridge width in millimeters
+          example: 20
+        temple:
+          type: number
+          description: Temple length in millimeters
+          example: 145
+        lens_width:
+          type: number
+          description: Lens width in millimeters
+          example: 52
+        lens_height:
+          type: number
+          description: Lens height in millimeters
+          example: 35
+        total_width:
+          type: number
+          description: Total width of the frame in millimeters
+          example: 140
+    image_url:
+      type: string
+      format: uri
+      description: URL of the primary image of the frame
+      example: "https://assets.varai.ai/frames/f12345/front.jpg"
+    images:
+      type: array
+      items:
+        type: object
+        properties:
+          url:
+            type: string
+            format: uri
+            description: URL of the image
+            example: "https://assets.varai.ai/frames/f12345/side.jpg"
+          type:
+            type: string
+            description: Type of the image
+            example: "side"
+      description: Additional images of the frame
+    colors:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+            description: Color identifier
+            example: "tortoise"
+          name:
+            type: string
+            description: Display name of the color
+            example: "Tortoise"
+          hex:
+            type: string
+            description: Hex color code
+            example: "#8B4513"
+          image_url:
+            type: string
+            format: uri
+            description: URL of the image showing the frame in this color
+            example: "https://assets.varai.ai/frames/f12345/colors/tortoise.jpg"
+      description: Available colors for the frame
+    features:
+      type: array
+      items:
+        type: string
+      description: Special features of the frame
+      example: ["Spring hinges", "Adjustable nose pads"]
+    fit:
+      type: string
+      enum: [narrow, medium, wide]
+      description: Fit category of the frame
+      example: "medium"
+    face_shapes:
+      type: array
+      items:
+        type: string
+        enum: [oval, round, square, heart, oblong, diamond]
+      description: Face shapes this frame is suitable for
+      example: ["oval", "square", "heart"]
+    created_at:
+      type: string
+      format: date-time
+      description: Time when the frame was added to the catalog
+      example: 2025-01-15T12:00:00Z
+    updated_at:
+      type: string
+      format: date-time
+      description: Time when the frame was last updated
+      example: 2025-03-20T09:30:00Z
+  required:
+    - id
+    - name
+    - brand
+    - style
+    - material
+    - color
+    - price
+    - image_url
+
+Recommendation:
+  type: object
+  properties:
+    frame:
+      $ref: '#/components/schemas/Frame'
+    score:
+      type: number
+      format: float
+      minimum: 0
+      maximum: 1
+      description: Match score between 0 and 1
+      example: 0.92
+    reasoning:
+      type: string
+      description: Explanation of why this frame was recommended
+      example: "This frame complements your oval face shape and matches your style preferences."
+    style_match:
+      type: object
+      properties:
+        shape_score:
+          type: number
+          description: Match score for shape
+          example: 0.95
+        material_score:
+          type: number
+          description: Match score for material
+          example: 0.88
+        color_score:
+          type: number
+          description: Match score for color
+          example: 0.90
+      description: Detailed match scores for different aspects
+  required:
+    - frame
+    - score
+
+User:
+  type: object
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the user
+      example: u78901
+    email:
+      type: string
+      format: email
+      description: User's email address
+      example: user@example.com
+    first_name:
+      type: string
+      description: User's first name
+      example: Jane
+    last_name:
+      type: string
+      description: User's last name
+      example: Smith
+    face_shape:
+      type: string
+      enum: [oval, round, square, heart, oblong, diamond]
+      description: User's face shape
+      example: oval
+    preferences:
+      type: object
+      properties:
+        styles:
+          type: array
+          items:
+            type: string
+          description: Preferred frame styles
+          example: ["round", "cat-eye"]
+        materials:
+          type: array
+          items:
+            type: string
+          description: Preferred frame materials
+          example: ["acetate"]
+        colors:
+          type: array
+          items:
+            type: string
+          description: Preferred frame colors
+          example: ["black", "tortoise"]
+        price_range:
+          type: object
+          properties:
+            min:
+              type: number
+              description: Minimum price in USD
+              example: 80
+            max:
+              type: number
+              description: Maximum price in USD
+              example: 200
+          description: Preferred price range
+      description: User's style preferences
+    measurements:
+      type: object
+      properties:
+        pupillary_distance:
+          type: number
+          description: Distance between pupils in millimeters
+          example: 62
+        face_width:
+          type: number
+          description: Width of face in millimeters
+          example: 135
+      description: User's facial measurements
+    created_at:
+      type: string
+      format: date-time
+      description: Time when the user was created
+      example: 2024-11-15T08:30:00Z
+    updated_at:
+      type: string
+      format: date-time
+      description: Time when the user was last updated
+      example: 2025-03-10T14:45:00Z
+  required:
+    - id
+    - email
+
+SystemHealth:
+  type: object
+  properties:
+    status:
+      type: string
+      enum: [healthy, degraded, error]
+      description: Overall system status
+      example: healthy
+    api_status:
+      type: string
+      enum: [healthy, degraded, error]
+      description: API status
+      example: healthy
+    ml_status:
+      type: string
+      enum: [operational, training, error]
+      description: Machine learning system status
+      example: operational
+    services:
+      type: object
+      properties:
+        database:
+          type: string
+          enum: [healthy, degraded, error]
+          description: Database status
+          example: healthy
+        cache:
+          type: string
+          enum: [healthy, degraded, error]
+          description: Cache status
+          example: healthy
+        storage:
+          type: string
+          enum: [healthy, degraded, error]
+          description: Storage status
+          example: healthy
+      description: Status of individual services
+    timestamp:
+      type: string
+      format: date-time
+      description: Time when the health check was performed
+      example: 2025-04-29T12:34:56Z
+  required:
+    - status
+    - api_status
+    - ml_status
+    - services
+    - timestamp
+
+ApiKey:
+  type: object
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the API key
+      example: key_12345
+    name:
+      type: string
+      description: Name of the API key
+      example: Production API Key
+    prefix:
+      type: string
+      description: First few characters of the API key
+      example: var_1234
+    scopes:
+      type: array
+      items:
+        type: string
+      description: Scopes granted to this API key
+      example: ["frames:read", "recommendations:read"]
+    created_at:
+      type: string
+      format: date-time
+      description: Time when the API key was created
+      example: 2025-03-15T10:30:00Z
+    last_used_at:
+      type: string
+      format: date-time
+      description: Time when the API key was last used
+      example: 2025-04-28T09:15:00Z
+  required:
+    - id
+    - name
+    - prefix
+    - scopes
+    - created_at
+
+Webhook:
+  type: object
+  properties:
+    id:
+      type: string
+      description: Unique identifier for the webhook
+      example: wh12345
+    url:
+      type: string
+      format: uri
+      description: URL where webhook events will be sent
+      example: https://example.com/webhooks/varai
+    events:
+      type: array
+      items:
+        type: string
+      description: Events that trigger this webhook
+      example: ["recommendation.created", "user.updated"]
+    active:
+      type: boolean
+      description: Whether the webhook is active
+      example: true
+    secret:
+      type: string
+      description: Secret used to sign webhook payloads
+      example: whsec_abcdefghijklmnopqrstuvwxyz
+    created_at:
+      type: string
+      format: date-time
+      description: Time when the webhook was created
+      example: 2025-03-15T10:30:00Z
+    updated_at:
+      type: string
+      format: date-time
+      description: Time when the webhook was last updated
+      example: 2025-04-20T14:45:00Z
+  required:
+    - id
+    - url
+    - events
+    - active

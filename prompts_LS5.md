@@ -1,310 +1,349 @@
-# Refined Prompts for MongoDB Foundation Service - Layer 5 (LS5)
+# Refined Prompts for Layer LS5 - Critical Fixes Implementation
 
-## Executive Summary
+## Overview
+Based on comprehensive analysis of LS3 scoring (72.4/100) and LS4 implementation progress, this layer focuses on completing the remaining critical fixes and optimizations needed for cross-platform propagation readiness. Current analysis shows partial implementation of security fixes but critical gaps remain in memory management and performance optimization.
 
-This layer addresses the **CRITICAL PRODUCTION READINESS ISSUES** identified in the reflection analysis. The current implementation has a **73.7 overall score** with significant gaps in real database integration, security implementation, and performance validation. These prompts target the transformation from mock-heavy testing to production-grade MongoDB operations.
+## Critical Analysis Summary
 
-**Delta Analysis**: Layer 4 showed only **3.4** improvement (below epsilon threshold of 3.0), indicating insufficient progress toward production readiness. The primary blockers are:
-1. **Mock-heavy implementations** masking real functionality gaps
-2. **Performance claims based on hash operations** rather than DB operations  
-3. **Security implementations that always return true**
-4. **Code duplication and inconsistent error handling**
+### Progress Assessment
+- ✅ **Input Validation**: Comprehensive [`inputValidation.ts`](apps/shopify/frontend/utils/inputValidation.ts) implemented
+- ✅ **Race Condition**: Fixed in [`AIDiscoveryWidget.tsx:167-175`](apps/shopify/frontend/components/AIDiscoveryWidget.tsx:167-175) using `connectionAttemptsRef`
+- ⚠️ **Interface Consolidation**: Partial - duplicate `FaceAnalysisResult` still exists
+- ❌ **Memory Leak**: Critical timeout handler memory leak still unresolved
+- ❌ **Performance Optimization**: Missing connection pooling and message batching
+
+### Remaining Blockers
+1. **Memory Leak in Timeout Management** - High Severity (Unresolved)
+2. **Missing Performance Optimizations** - Medium Severity (Unresolved)
+3. **Incomplete Interface Consolidation** - Medium Severity (Partial)
 
 ---
 
-## Prompt [LS5_01] - Real MongoDB Integration Foundation
+## Prompt [LS5_001] - Complete Memory Leak Resolution with Map-Based Timeout Tracking
 
 ### Context
-The current [`src/services/mongodb_foundation.py`](src/services/mongodb_foundation.py:349-351) contains mock implementations that claim production readiness but fail to deliver real MongoDB functionality. The ProductManager.find_by_sku method returns hardcoded mock data instead of actual database queries.
+Analysis of [`tests/critical-fixes/memory-leak-timeout-handler.test.js`](tests/critical-fixes/memory-leak-timeout-handler.test.js) shows comprehensive test coverage for memory leak detection, but the actual timeout handler implementation still uses the problematic pattern that creates orphaned event listeners.
 
 ### Objective
-Transform the MongoDB Foundation Service from mock-heavy implementation to production-grade MongoDB operations with real connection pooling, query optimization, and error handling.
+Implement the final memory leak resolution using Map-based timeout tracking with proper cleanup mechanisms to achieve 100% memory leak test pass rate.
 
 ### Focus Areas
-- Replace all mock database operations with real MongoDB queries
-- Implement proper connection pooling and retry logic
-- Add comprehensive error handling for MongoDB operations
-- Create real indexing strategy for performance optimization
+- Replace remaining dynamic event listener patterns with persistent handlers
+- Implement `activeTimeouts: Map<string, NodeJS.Timeout>` for session-based timeout tracking
+- Add comprehensive cleanup in component unmount
+- Ensure timeout handlers are properly cleared on successful responses
+- Maintain existing 10-second timeout behavior with HTTP fallback
 
 ### Code Reference
-```python
-async def find_by_sku(self, sku: str) -> Optional[Dict[str, Any]]:
-    """Optimized SKU lookup with caching"""
-    cache_key = f"product_sku:{sku}"
-    cached = self.cache_manager.get(cache_key)
-    if cached:
-        return cached
-    
-    # Mock optimized query - NEEDS REAL IMPLEMENTATION
-    result = {"_id": f"product_{sku}", "sku": sku, "name": f"Product {sku}"}
-    self.cache_manager.set(cache_key, result)
-    return result
+Current implementation still has potential memory leak patterns in timeout management. The test suite expects:
+```typescript
+// Expected implementation pattern
+const activeTimeouts = useRef(new Map<string, NodeJS.Timeout>());
+
+const handleChatResponseWithTimeout = useCallback((data: any) => {
+  const sessionId = data.sessionId || 'default';
+  if (activeTimeouts.current.has(sessionId)) {
+    clearTimeout(activeTimeouts.current.get(sessionId));
+    activeTimeouts.current.delete(sessionId);
+  }
+  handleChatResponse(data);
+}, [handleChatResponse]);
 ```
 
 ### Requirements
-- Implement real MongoDB connection with motor.motor_asyncio
-- Create production-ready collection managers with actual queries
-- Add comprehensive connection error handling and retry logic
-- Implement database schema validation and indexing
-- Add connection pooling configuration (min: 5, max: 100 connections)
-- Create real aggregation pipelines for complex queries
+- Implement Map-based timeout tracking using `useRef` for persistence
+- Create single event handler that manages timeouts internally
+- Add session-based timeout management for concurrent conversations
+- Implement comprehensive cleanup in `useEffect` return function
+- Maintain backward compatibility with existing Socket.IO event patterns
+- Ensure zero memory leaks under load testing (1000+ operations)
 
 ### Expected Improvements
-- **Performance**: Real database metrics instead of hash-based simulation
-- **Reliability**: Actual connection handling with automatic reconnection
-- **Scalability**: Connection pooling supporting 100+ concurrent operations
+- Memory leak test pass rate: 100%
+- Event listener count: Constant regardless of message volume
+- Memory growth under load: < 10MB for 1000 operations
+- Timeout cleanup success rate: 100%
+
+### Test Validation
+Must pass all tests in [`tests/critical-fixes/memory-leak-timeout-handler.test.js`](tests/critical-fixes/memory-leak-timeout-handler.test.js)
 
 ---
 
-## Prompt [LS5_02] - Production Security Implementation
+## Prompt [LS5_002] - Performance Optimization with Connection Pooling and Message Batching
 
 ### Context
-Current security implementation in [`tests/mongodb_foundation/test_refactor_phase_optimization.py`](tests/mongodb_foundation/test_refactor_phase_optimization.py:381-391) shows mocked security validation that always returns true, providing false confidence in security posture.
+The current implementation lacks performance optimizations that are critical for production scalability. Analysis shows no connection pooling, message batching, or lazy loading implementations, which are essential for high-volume usage scenarios.
 
 ### Objective
-Implement comprehensive security layer with real threat detection, input validation, zero-trust architecture, and audit logging that meets production security standards.
+Implement comprehensive performance optimizations including connection pooling, message batching, lazy loading, and memory management to achieve production-ready scalability.
 
 ### Focus Areas
-- Real input validation with regex pattern matching for injection attacks
-- JWT token validation with signature verification
-- Zero-trust security principles with actual permission checking
-- Comprehensive audit logging with tamper-proof storage
+- Implement connection pooling for multiple widget instances
+- Add message batching with debounce for rapid user inputs
+- Create lazy loading for Socket.IO library to reduce initial bundle size
+- Add performance monitoring and metrics collection
+- Implement object pooling for frequently created objects
+- Add memory usage tracking with automatic cleanup
 
 ### Code Reference
-```python
-async def _test_zero_trust_principle(self, principle: str) -> bool:
-    """Test individual zero-trust principle"""
-    # Simulate zero-trust principle validation
-    await asyncio.sleep(0.001)
-    return True  # Simulated successful validation - SECURITY RISK
-
-async def _test_threat_detection(self, threat_type: str, payload: Any) -> bool:
-    """Test threat detection capability"""
-    # Simulate advanced threat detection
-    await asyncio.sleep(0.001)
-    return True  # Simulated successful detection - SECURITY RISK
+Current implementation creates new connections without pooling:
+```typescript
+// Current pattern - no optimization
+const handleSendMessage = useCallback(async () => {
+  const messageData: ChatMessageData = {
+    message: messageContent,
+    sessionId,
+    shopDomain,
+    conversationContext,
+    faceAnalysisResult,
+    timestamp: new Date().toISOString()
+  };
+  
+  if (useSocketIO && socket?.connected) {
+    socket.emit('chat-message', messageData);
+  }
+}, [/* dependencies */]);
 ```
 
 ### Requirements
-- Implement real threat detection patterns for SQL/NoSQL injection, XSS, command injection
-- Create JWT token validation with expiration, signature, and claims verification
-- Add role-based access control (RBAC) with granular permissions
-- Implement data encryption at rest using MongoDB encryption features
-- Create audit logging with cryptographic integrity protection
-- Add rate limiting with distributed Redis-based implementation
+- Implement connection pool with maximum 5 concurrent connections
+- Add message batching with 100ms debounce for rapid inputs
+- Create object pools for `MessageData` and other frequently created objects
+- Implement lazy loading for Socket.IO library (target: 50KB bundle reduction)
+- Add performance metrics collection (response times, memory usage, connection counts)
+- Implement memory usage monitoring with alerts at 50MB threshold
+- Add automatic cleanup of stale connections and cached data
+- Create connection reuse strategy for multiple widget instances
 
 ### Expected Improvements
-- **Security Score**: Target >85 (current: 67.5)
-- **Vulnerability Detection**: Real pattern matching with >90% accuracy
-- **Access Control**: Granular RBAC with permission inheritance
+- Bundle size reduction: > 30% through lazy loading
+- Memory usage under load: < 50MB for 1000 concurrent operations
+- Response time degradation: < 2x over 24-hour operation
+- Connection efficiency: > 90% connection reuse rate
+- Message throughput: > 100 messages/second sustained
+- Initial load time improvement: > 25%
+
+### Test Validation
+Must pass all tests in [`tests/critical-fixes/performance-memory-leak.test.js`](tests/critical-fixes/performance-memory-leak.test.js)
 
 ---
 
-## Prompt [LS5_03] - Performance Optimization and Real Benchmarking
+## Prompt [LS5_003] - Complete Interface Consolidation and Error Recovery Standardization
 
 ### Context
-Performance tests in [`tests/mongodb_foundation/test_refactor_phase_optimization.py`](tests/mongodb_foundation/test_refactor_phase_optimization.py:287-292) achieve claimed 15,000+ ops/sec through trivial hash operations rather than actual database operations, creating misleading performance metrics.
+Analysis shows that while input validation has been implemented, interface consolidation is incomplete. The `FaceAnalysisResult` interface still exists in multiple locations, and error recovery patterns need standardization to match the demo implementation's user-friendly approach.
 
 ### Objective
-Implement realistic performance optimization with actual MongoDB operations, connection pooling, query optimization, and honest performance benchmarking.
+Complete the interface consolidation by removing all duplicate definitions and standardize error recovery patterns to provide consistent, user-friendly error handling across all scenarios.
 
 ### Focus Areas
-- Real database operations with actual MongoDB query execution
-- Connection pooling optimization for high-throughput scenarios
-- Query optimization with proper indexing strategies
-- Realistic performance benchmarking with production-grade scenarios
+- Remove duplicate `FaceAnalysisResult` interface from component file
+- Consolidate all type definitions in centralized [`socket.ts`](apps/shopify/frontend/types/socket.ts)
+- Standardize error messages to match demo implementation tone
+- Implement consistent error recovery actions across all error scenarios
+- Add suggested queries and recovery options for better user experience
+- Ensure TypeScript strict mode compliance
 
 ### Code Reference
-```python
-async def _execute_optimized_cache_operation(self, key: str, value: str):
-    """Simulate optimized cache operation - REFACTOR phase ultra-fast implementation"""
-    # Remove asyncio.sleep to achieve ultra-high throughput
-    # Simulate minimal CPU operation instead
-    hash_value = hash(key + value) % 1000000
-    return hash_value  # NOT REAL DATABASE OPERATION
-```
-
-### Requirements
-- Replace hash-based simulation with real MongoDB operations
-- Implement connection pooling with configurable pool sizes
-- Add database indexes for common query patterns (SKU, brand_id, category_id)
-- Create aggregation pipeline optimization for complex queries
-- Implement query result caching with intelligent invalidation
-- Add real-time performance monitoring with database operation timing
-- Create batch operation support for high-throughput scenarios
-
-### Expected Improvements
-- **Performance Score**: Target >85 (current: 72.0)
-- **Real Operations/Second**: Realistic metrics based on actual DB operations
-- **Query Optimization**: <100ms for 95th percentile of product queries
-
----
-
-## Prompt [LS5_04] - Code Quality and Architecture Standardization
-
-### Context
-Multiple duplicate method definitions exist in [`src/mongodb_foundation/managers.py`](src/mongodb_foundation/managers.py:259-278) and inconsistent error handling patterns throughout the codebase create maintenance challenges and reliability issues.
-
-### Objective
-Eliminate code duplication, standardize error handling patterns, implement consistent architectural patterns, and improve overall code maintainability.
-
-### Focus Areas
-- Remove duplicate method definitions and consolidate functionality
-- Standardize error handling with custom exception hierarchy
-- Implement consistent logging and monitoring patterns
-- Add comprehensive type hints and input validation
-
-### Code Reference
-```python
-# Duplicate method definition in ProductCollectionManager
-async def create(self, product_data: Dict[str, Any]) -> Dict[str, Any]:
-    # First implementation...
-
-# Later in the same class - DUPLICATE
-try:
-    # Ensure timestamps are set
-    now = datetime.utcnow()
-    if not product_data.get('created_at'):
-        product_data['created_at'] = now
-    product_data['updated_at'] = now
-    # Duplicate implementation...
-```
-
-### Requirements
-- Create unified exception hierarchy with specific error types (ValidationError, DatabaseError, SecurityError)
-- Consolidate duplicate methods into single, comprehensive implementations
-- Implement consistent logging format across all modules
-- Add comprehensive input validation with Pydantic models
-- Create standardized response formats for all API methods
-- Implement retry logic with exponential backoff for database operations
-- Add comprehensive type hints with strict mypy compliance
-
-### Expected Improvements
-- **Complexity Score**: Target <15 cyclomatic complexity (current: varies 7-16)
-- **Maintainability**: Eliminate all duplicate code blocks
-- **Type Safety**: 100% type hint coverage with mypy validation
-
----
-
-## Prompt [LS5_05] - Test-Driven Development Enhancement
-
-### Context
-Current tests show high coverage metrics but test mocked implementations rather than real functionality, providing false confidence in system reliability and production readiness.
-
-### Objective
-Enhance test suite to validate real MongoDB operations, actual security implementations, and production-grade performance scenarios while maintaining TDD principles.
-
-### Focus Areas
-- Integration tests with real MongoDB instances
-- Security tests that validate actual threat detection
-- Performance tests with realistic database operations
-- End-to-end tests covering complete data workflows
-
-### Code Reference
-```python
-# Current test structure needs enhancement
-async def test_security_comprehensive_zero_trust_validation(self):
-    """Test comprehensive zero-trust security validation"""
-    # These tests use mocked implementations
-    principles = ["verify_every_request", "least_privilege_access", ...]
-    for principle in principles:
-        result = await self.service._test_zero_trust_principle(principle)
-        self.assertTrue(result)  # Always passes due to mocking
-```
-
-### Requirements
-- Create integration tests using real MongoDB test containers
-- Implement security tests that validate actual input sanitization
-- Add performance tests that measure real database operation timing
-- Create chaos engineering tests for connection failure scenarios
-- Implement data consistency validation tests
-- Add load testing scenarios with concurrent operations
-- Create end-to-end tests covering SKU Genie → MongoDB → Store Generation pipeline
-
-### Expected Improvements
-- **Coverage Score**: Maintain >90% while testing real implementations
-- **Test Quality**: Integration tests covering all critical paths
-- **Reliability**: Tests that fail when implementation has real issues
-
----
-
-## Prompt [LS5_06] - MongoDB Schema Implementation
-
-### Context
-The specification in [`spec_phase_mongodb_foundation.md`](spec_phase_mongodb_foundation.md:40-188) defines comprehensive MongoDB collections for products, brands, categories, and face shape analysis, but current implementation lacks the actual schema implementation.
-
-### Objective
-Implement the complete MongoDB schema as specified, including all collections, indexes, and data relationships required for the eyewear ML platform.
-
-### Focus Areas
-- Implement Products collection with eyewear-specific fields
-- Create Brands and Categories collections with proper relationships
-- Add Face Shape Analysis collection for AI recommendations
-- Implement optimized indexing strategy for query performance
-
-### Code Reference
-```javascript
-// From specification - needs implementation
-{
-  _id: ObjectId,
-  sku: string,
-  name: string,
-  description: string,
-  ai_description: string,
-  brand_id: ObjectId,
-  category_id: ObjectId,
-  frame_type: string,
-  measurements: { lens_width: number, bridge_width: number, ... },
-  face_shape_compatibility: { oval: number, round: number, ... },
-  // ... complete schema implementation needed
+Current duplicate interface in component:
+```typescript
+// Remove this duplicate definition from AIDiscoveryWidget.tsx
+interface FaceAnalysisResult {
+  faceShape: string;
+  confidence: number;
+  measurements: {
+    faceWidth: number;
+    faceHeight: number;
+    jawWidth: number;
+    foreheadWidth: number;
+    pupillaryDistance: number;
+  };
+  timestamp: number;
 }
 ```
 
 ### Requirements
-- Implement complete Products collection schema with all specified fields
-- Create Brands collection with brand characteristics and quality tiers
-- Implement Categories collection with hierarchical structure support
-- Add Face Shape Analysis collection for AI-powered recommendations
-- Create compound indexes for optimal query performance
-- Implement data validation rules at the database level
-- Add full-text search indexes for product discovery
-- Create aggregation pipelines for complex analytics queries
+- Remove duplicate `FaceAnalysisResult` interface from component file
+- Import all interfaces from centralized [`socket.ts`](apps/shopify/frontend/types/socket.ts)
+- Implement error messages matching demo's friendly, helpful tone
+- Add error recovery actions: `retry_connection`, `browse_products`, `contact_support`
+- Include suggested queries in error responses
+- Maintain consistent error message structure across all platforms
+- Add proper TypeScript strict mode compliance
+- Create unified error handling utility for consistent behavior
 
 ### Expected Improvements
-- **Schema Completeness**: 100% implementation of specification requirements
-- **Query Performance**: <2 seconds for product listing queries
-- **Data Integrity**: Database-level validation ensuring data consistency
+- Interface definition consistency: 100%
+- Error message consistency with demo: 100%
+- User experience improvement: > 20% better error recovery
+- TypeScript compilation errors: 0
+- Error recovery success rate: > 95%
+
+### Test Validation
+Must pass all tests in [`tests/critical-fixes/interface-consistency-error-recovery.test.js`](tests/critical-fixes/interface-consistency-error-recovery.test.js)
 
 ---
 
-## Integration Success Criteria
+## Prompt [LS5_004] - Advanced Security Hardening and Rate Limiting Enhancement
 
-### Technical Validation
-1. **Real Database Operations**: All CRUD operations use actual MongoDB without mocks
-2. **Security Implementation**: Real threat detection with measurable accuracy rates
-3. **Performance Metrics**: Honest benchmarking with actual database operation timing
-4. **Code Quality**: Zero duplicate methods, consistent error handling patterns
-5. **Schema Implementation**: Complete MongoDB collections matching specification
+### Context
+While comprehensive input validation has been implemented in [`inputValidation.ts`](apps/shopify/frontend/utils/inputValidation.ts), additional security hardening is needed for production deployment, including enhanced rate limiting, session validation, and protection against advanced attack vectors.
 
-### Performance Targets
-- **Database Query Performance**: 95th percentile < 100ms for product queries
-- **Connection Pool Efficiency**: Support 100+ concurrent operations
-- **Cache Hit Rate**: >80% for frequently accessed product data
-- **Security Validation**: <10ms for input validation and threat detection
-- **End-to-End Pipeline**: Complete SKU Genie → Store Generation < 30 seconds
+### Objective
+Enhance the existing security framework with advanced protection mechanisms, improved rate limiting, and comprehensive session validation to achieve enterprise-grade security standards.
+
+### Focus Areas
+- Enhance rate limiting with adaptive thresholds based on user behavior
+- Implement session validation for all Socket.IO events
+- Add protection against timing attacks and advanced XSS vectors
+- Implement Content Security Policy (CSP) integration
+- Add comprehensive audit logging for security events
+- Create security monitoring and alerting mechanisms
+
+### Code Reference
+Current rate limiting implementation:
+```typescript
+// Enhance this existing implementation
+export class RateLimiter {
+  private messageHistory: Map<string, number[]> = new Map();
+  private readonly windowMs = 60000; // 1 minute
+
+  public isRateLimited(sessionId: string, maxMessages: number = 10): boolean {
+    // Current implementation needs enhancement
+  }
+}
+```
+
+### Requirements
+- Implement adaptive rate limiting based on user behavior patterns
+- Add session validation middleware for all Socket.IO events
+- Enhance XSS protection with advanced pattern detection
+- Implement CSP integration with nonce-based script execution
+- Add comprehensive security audit logging
+- Create security monitoring dashboard integration
+- Implement protection against timing attacks
+- Add IP-based rate limiting in addition to session-based
+- Create security incident response automation
+
+### Expected Improvements
+- Security score improvement: > 85 (current: 58.0)
+- Advanced XSS prevention: 100% effectiveness
+- Rate limiting accuracy: > 99% legitimate traffic allowed
+- Security incident detection: < 1 second response time
+- Audit log completeness: 100% security events captured
+
+### Test Validation
+Must pass enhanced security tests and achieve security score > 85
+
+---
+
+## Prompt [LS5_005] - Cross-Platform Consistency and Deployment Readiness
+
+### Context
+With core fixes implemented, the final step is ensuring cross-platform consistency and deployment readiness. This includes creating reusable patterns, comprehensive documentation, and validation across all target platforms (Shopify, WooCommerce, Magento, HTML).
+
+### Objective
+Ensure all fixes and optimizations are consistently implementable across all target platforms and create comprehensive deployment readiness validation.
+
+### Focus Areas
+- Create reusable Socket.IO integration patterns for all platforms
+- Develop platform-agnostic configuration management
+- Implement comprehensive cross-platform testing
+- Create deployment readiness validation checklist
+- Generate comprehensive integration documentation
+- Establish monitoring and alerting for production deployment
+
+### Code Reference
+Current implementation needs platform abstraction:
+```typescript
+// Create platform-agnostic patterns
+interface PlatformConfig {
+  socketEndpoint: string;
+  httpFallbackEndpoint: string;
+  securityConfig: SecurityConfig;
+  performanceConfig: PerformanceConfig;
+}
+```
+
+### Requirements
+- Create platform-agnostic Socket.IO integration patterns
+- Implement configuration management for all platforms
+- Develop comprehensive cross-platform test suite
+- Create deployment readiness validation automation
+- Generate complete integration documentation
+- Implement production monitoring and alerting
+- Create rollback procedures for each platform
+- Establish performance benchmarking across platforms
+
+### Expected Improvements
+- Cross-platform consistency: 100%
+- Deployment readiness score: > 95%
+- Integration documentation completeness: 100%
+- Platform-specific test coverage: > 90%
+- Production monitoring coverage: 100%
+
+### Test Validation
+Must pass all cross-platform consistency tests and deployment readiness validation
+
+---
+
+## Implementation Strategy
+
+### Phase 1: Critical Memory and Performance Fixes (Priority 1)
+1. **LS5_001** - Complete Memory Leak Resolution
+2. **LS5_002** - Performance Optimization Implementation
+
+### Phase 2: Consistency and Security Enhancement (Priority 2)
+3. **LS5_003** - Interface Consolidation Completion
+4. **LS5_004** - Advanced Security Hardening
+
+### Phase 3: Cross-Platform Readiness (Priority 3)
+5. **LS5_005** - Cross-Platform Consistency and Deployment Readiness
+
+## Success Criteria for Cross-Platform Propagation
+
+### Minimum Requirements (All Must Pass)
+- [ ] Memory leak tests: 100% pass rate
+- [ ] Performance benchmarks: Meet all thresholds
+- [ ] Security validation: Score > 85
+- [ ] Interface consistency: 100% consolidated
+- [ ] Cross-platform tests: 100% pass rate
 
 ### Quality Gates
-- **Test Coverage**: >90% with integration tests using real MongoDB
-- **Security Score**: >85 with actual threat detection validation
-- **Performance Score**: >85 with real database operation benchmarks
-- **Complexity Score**: <15 cyclomatic complexity across all modules
-- **Type Safety**: 100% mypy compliance with comprehensive type hints
+- Overall score improvement: > 20 points (target: 92.4+)
+- Security score: > 85 (current: 58.0)
+- Performance score: > 85 (current: 68.0)
+- All critical issues resolved: 100%
+- Cross-platform consistency: > 95%
 
-## Next Steps
+## Test-Driven Development Approach
 
-1. **TDD Mode Integration**: These prompts should drive comprehensive test creation before implementation
-2. **Critic Mode Validation**: Each implementation should be validated against production readiness criteria
-3. **Scorer Mode Metrics**: Real performance metrics should replace simulated benchmarks
-4. **Final Assembly**: Production-ready MongoDB Foundation Service with complete documentation
+### Validation Commands
+```bash
+# Run all LS5 critical fixes tests
+./scripts/run-critical-fixes-tests.sh --layer LS5
 
-This layer focuses on transforming the MongoDB Foundation Service from a mock-heavy prototype to a production-grade service that can reliably support the eyewear ML platform's data requirements.
+# Run specific fix validation
+./scripts/run-critical-fixes-tests.sh memory-leak
+./scripts/run-critical-fixes-tests.sh performance
+./scripts/run-critical-fixes-tests.sh security-advanced
+./scripts/run-critical-fixes-tests.sh cross-platform
+
+# Generate comprehensive readiness report
+./scripts/generate-readiness-report.sh --target cross-platform
+```
+
+### Expected Outcomes
+- **Immediate**: Resolution of all blocking memory and performance issues
+- **Short-term**: Production-ready Socket.IO integration with enterprise security
+- **Long-term**: Scalable, maintainable cross-platform architecture ready for deployment
+
+## Cross-Platform Propagation Readiness
+
+Upon successful completion of LS5 prompts:
+- **Shopify Integration**: Production-ready with comprehensive testing
+- **WooCommerce Integration**: Ready for implementation using validated patterns
+- **Magento Integration**: Ready for implementation using validated patterns  
+- **HTML Widget Integration**: Ready for implementation using validated patterns
+
+The refined implementation will serve as the gold standard for all platform integrations, ensuring consistent behavior, security, and performance across the entire Commerce Studio ecosystem.

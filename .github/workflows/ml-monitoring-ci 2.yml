@@ -1,0 +1,168 @@
+name: ML Monitoring CI
+
+on:
+  push:
+    paths:
+      - 'src/ml/monitoring/**'
+      - 'src/tests/**'
+      - '.github/workflows/ml-monitoring-ci.yml'
+      - 'requirements*.txt'
+      - 'pyproject.toml'
+  pull_request:
+    paths:
+      - 'src/ml/monitoring/**'
+      - 'src/tests/**'
+      - '.github/workflows/ml-monitoring-ci.yml'
+      - 'requirements*.txt'
+      - 'pyproject.toml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8, 3.9, '3.10']
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: 'pip'
+        cache-dependency-path: |
+          requirements.txt
+          requirements-dev.txt
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest pytest-cov
+        if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install -e .
+
+    - name: Lint with flake8
+      run: |
+        # Install flake8 if it's not in requirements-dev.txt
+        pip install flake8
+        # Stop the build if there are Python syntax errors or undefined names
+        flake8 src/ml/monitoring --count --select=E9,F63,F7,F82 --show-source --statistics
+        # Exit-zero treats all errors as warnings
+        flake8 src/ml/monitoring --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+    - name: Run unit tests
+      run: |
+        pytest src/tests/unit -v --cov=src/ml/monitoring
+
+    - name: Run integration tests
+      run: |
+        pytest src/tests/integration -v --cov=src/ml/monitoring --cov-append
+
+    - name: Generate coverage report
+      run: |
+        pytest --cov=src/ml/monitoring --cov-report=xml
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        fail_ci_if_error: false
+        verbose: true
+
+  type-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+        cache: 'pip'
+        cache-dependency-path: |
+          requirements.txt
+          requirements-dev.txt
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install mypy types-all
+        if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install -e .
+
+    - name: Run type checking
+      run: |
+        mypy src/ml/monitoring || true  # Continue on error for now, until type annotations are complete
+
+  build-docs:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install sphinx sphinx_rtd_theme
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install -e .
+
+    - name: Build documentation
+      run: |
+        mkdir -p docs/api
+        sphinx-apidoc -o docs/api src/ml/monitoring
+        cd docs && make html
+
+    - name: Archive documentation
+      uses: actions/upload-artifact@v3
+      with:
+        name: documentation
+        path: docs/_build/html/
+        retention-days: 14
+
+  package:
+    needs: [test, type-check]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build wheel twine
+
+    - name: Build package
+      run: |
+        python -m build
+
+    - name: Check package
+      run: |
+        twine check dist/*
+
+    - name: Archive packages
+      uses: actions/upload-artifact@v3
+      with:
+        name: python-package
+        path: |
+          dist/*.whl
+          dist/*.tar.gz
+        retention-days: 14

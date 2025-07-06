@@ -1,0 +1,267 @@
+groups:
+  - name: ai_discovery_alerts
+    rules:
+      # High Error Rate Alert
+      - alert: HighErrorRate
+        expr: ai_discovery:error_rate_5m > 0.05
+        for: 5m
+        labels:
+          severity: critical
+          service: ai-discovery
+        annotations:
+          summary: "High error rate detected in AI Discovery service"
+          description: "Error rate is {{ $value | humanizePercentage }} for the last 5 minutes"
+
+      # High Response Time Alert
+      - alert: HighResponseTime
+        expr: ai_discovery:response_time_p95_5m > 5
+        for: 5m
+        labels:
+          severity: warning
+          service: ai-discovery
+        annotations:
+          summary: "High response time in AI Discovery service"
+          description: "95th percentile response time is {{ $value }}s for the last 5 minutes"
+
+      # Service Down Alert
+      - alert: ServiceDown
+        expr: up{job="ai-discovery-service"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: ai-discovery
+        annotations:
+          summary: "AI Discovery service is down"
+          description: "AI Discovery service has been down for more than 1 minute"
+
+  - name: face_analysis_alerts
+    rules:
+      # Face Analysis Processing Time Alert
+      - alert: SlowFaceAnalysis
+        expr: face_analysis:processing_time_p95_5m > 10
+        for: 5m
+        labels:
+          severity: warning
+          service: face-analysis
+        annotations:
+          summary: "Slow face analysis processing"
+          description: "95th percentile face analysis time is {{ $value }}s"
+
+      # Low Face Analysis Success Rate
+      - alert: LowFaceAnalysisSuccessRate
+        expr: face_analysis:success_rate_5m < 0.95
+        for: 5m
+        labels:
+          severity: critical
+          service: face-analysis
+        annotations:
+          summary: "Low face analysis success rate"
+          description: "Face analysis success rate is {{ $value | humanizePercentage }}"
+
+      # Face Analysis Service Down
+      - alert: FaceAnalysisServiceDown
+        expr: up{job="face-analysis-service"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: face-analysis
+        annotations:
+          summary: "Face Analysis service is down"
+          description: "Face Analysis service has been down for more than 1 minute"
+
+  - name: recommendation_alerts
+    rules:
+      # Slow Recommendation Generation
+      - alert: SlowRecommendationGeneration
+        expr: recommendation:generation_time_p95_5m > 3
+        for: 5m
+        labels:
+          severity: warning
+          service: recommendation
+        annotations:
+          summary: "Slow recommendation generation"
+          description: "95th percentile recommendation generation time is {{ $value }}s"
+
+      # Low Recommendation Relevance
+      - alert: LowRecommendationRelevance
+        expr: recommendation:relevance_score_avg_5m < 0.7
+        for: 10m
+        labels:
+          severity: warning
+          service: recommendation
+        annotations:
+          summary: "Low recommendation relevance score"
+          description: "Average recommendation relevance score is {{ $value }}"
+
+      # Recommendation Service Down
+      - alert: RecommendationServiceDown
+        expr: up{job="recommendation-service"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: recommendation
+        annotations:
+          summary: "Recommendation service is down"
+          description: "Recommendation service has been down for more than 1 minute"
+
+  - name: widget_alerts
+    rules:
+      # Slow Widget Load Time
+      - alert: SlowWidgetLoadTime
+        expr: widget:load_time_p95_5m > 3
+        for: 5m
+        labels:
+          severity: warning
+          service: widget
+        annotations:
+          summary: "Slow widget load time"
+          description: "95th percentile widget load time is {{ $value }}s"
+
+      # Low Widget Interaction Rate
+      - alert: LowWidgetInteractionRate
+        expr: widget:interaction_rate_5m < 0.1
+        for: 15m
+        labels:
+          severity: warning
+          service: widget
+        annotations:
+          summary: "Low widget interaction rate"
+          description: "Widget interaction rate is {{ $value }} interactions/second"
+
+      # Low Widget Conversion Rate
+      - alert: LowWidgetConversionRate
+        expr: widget:conversion_rate_1h < 0.02
+        for: 30m
+        labels:
+          severity: warning
+          service: widget
+        annotations:
+          summary: "Low widget conversion rate"
+          description: "Widget conversion rate is {{ $value | humanizePercentage }}"
+
+  - name: infrastructure_alerts
+    rules:
+      # High CPU Usage
+      - alert: HighCPUUsage
+        expr: rate(container_cpu_usage_seconds_total[5m]) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: infrastructure
+        annotations:
+          summary: "High CPU usage detected"
+          description: "CPU usage is {{ $value }}% for container {{ $labels.container }}"
+
+      # High Memory Usage
+      - alert: HighMemoryUsage
+        expr: (container_memory_usage_bytes / container_spec_memory_limit_bytes) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+          service: infrastructure
+        annotations:
+          summary: "High memory usage detected"
+          description: "Memory usage is {{ $value }}% for container {{ $labels.container }}"
+
+      # Database Connection Issues
+      - alert: DatabaseConnectionIssues
+        expr: rate(database_connection_errors_total[5m]) > 0.1
+        for: 2m
+        labels:
+          severity: critical
+          service: database
+        annotations:
+          summary: "Database connection issues"
+          description: "Database connection error rate is {{ $value }} errors/second"
+
+      # Redis Connection Issues
+      - alert: RedisConnectionIssues
+        expr: redis_connected_clients < 1
+        for: 2m
+        labels:
+          severity: critical
+          service: redis
+        annotations:
+          summary: "Redis connection issues"
+          description: "Redis has {{ $value }} connected clients"
+
+  - name: business_metrics_alerts
+    rules:
+      # Low Overall System Availability
+      - alert: LowSystemAvailability
+        expr: (sum(up{job=~".*-service"}) / count(up{job=~".*-service"})) < 0.99
+        for: 5m
+        labels:
+          severity: critical
+          service: system
+        annotations:
+          summary: "Low system availability"
+          description: "System availability is {{ $value | humanizePercentage }}"
+
+      # High API Gateway Error Rate
+      - alert: HighAPIGatewayErrorRate
+        expr: rate(http_requests_total{job="api-gateway",status=~"5.."}[5m]) / rate(http_requests_total{job="api-gateway"}[5m]) > 0.01
+        for: 3m
+        labels:
+          severity: critical
+          service: api-gateway
+        annotations:
+          summary: "High API Gateway error rate"
+          description: "API Gateway error rate is {{ $value | humanizePercentage }}"
+
+      # CDN Performance Issues
+      - alert: CDNPerformanceIssues
+        expr: probe_duration_seconds{job="cdn-monitoring"} > 2
+        for: 5m
+        labels:
+          severity: warning
+          service: cdn
+        annotations:
+          summary: "CDN performance issues"
+          description: "CDN response time is {{ $value }}s"
+
+      # Low Discovery Completion Rate
+      - alert: LowDiscoveryCompletionRate
+        expr: rate(discovery_completed_total[1h]) / rate(discovery_started_total[1h]) < 0.85
+        for: 30m
+        labels:
+          severity: warning
+          service: business-metrics
+        annotations:
+          summary: "Low discovery completion rate"
+          description: "Discovery completion rate is {{ $value | humanizePercentage }}"
+
+  - name: security_alerts
+    rules:
+      # Unusual Request Pattern
+      - alert: UnusualRequestPattern
+        expr: rate(http_requests_total[5m]) > 100
+        for: 2m
+        labels:
+          severity: warning
+          service: security
+        annotations:
+          summary: "Unusual request pattern detected"
+          description: "Request rate is {{ $value }} requests/second"
+
+      # Authentication Failures
+      - alert: HighAuthenticationFailures
+        expr: rate(authentication_failures_total[5m]) > 5
+        for: 2m
+        labels:
+          severity: warning
+          service: security
+        annotations:
+          summary: "High authentication failure rate"
+          description: "Authentication failure rate is {{ $value }} failures/second"
+
+      # Suspicious IP Activity
+      - alert: SuspiciousIPActivity
+        expr: count by (source_ip) (rate(http_requests_total[5m])) > 50
+        for: 5m
+        labels:
+          severity: warning
+          service: security
+        annotations:
+          summary: "Suspicious IP activity detected"
+          description: "IP {{ $labels.source_ip }} is making {{ $value }} requests/second"

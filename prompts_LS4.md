@@ -1,444 +1,339 @@
-# Refined Code Prompts for LS4 - Framework Execution Strategy
+# Refined Prompts for Layer LS4
 
-## Context Summary
+## Overview
+Based on the comprehensive analysis of LS3 results, the Shopify Socket.IO integration achieved a 72.4% overall quality score but requires critical fixes before cross-platform propagation. The following prompts target specific high-severity issues that must be resolved to achieve production readiness.
 
-**CRITICAL FRAMEWORK PARADOX IDENTIFIED**: The VARAi Commerce Studio website has comprehensive test frameworks (80.8% readiness) but executes only 14.6% of them, creating a dangerous 66.2% execution gap. The overall score has deteriorated from 42.8 to 38.2 (-4.6 decline) while maintaining a misleading 100% pass rate on basic connectivity tests.
-
-**Root Cause**: [`simple-test-runner.js`](website/test-framework/simple-test-runner.js:29) executes only 11 basic HTTP tests instead of the comprehensive [`tdd-orchestrator.js`](website/test-framework/tdd-orchestrator.js:27) with 100+ tests across 8 categories.
-
-**Critical Discovery**: The solution is not to build new frameworks but to **execute existing ones**.
-
-## Prompt [LS4_001] - Emergency Security Framework Activation
+## Prompt [LS4_001] - Memory Leak Resolution in Timeout Handler Management
 
 ### Context
-Zero security validation exists despite a comprehensive 85% complete [`SecurityTestSuite`](website/test-framework/test-runners/security-tests.js:21) framework. The commerce platform handles sensitive business data with no security testing, creating unacceptable legal and compliance risks.
+The current implementation in [`AIDiscoveryWidget.tsx:519-533`](apps/shopify/frontend/components/AIDiscoveryWidget.tsx:519-533) creates memory leaks through improper event listener cleanup. The pattern of dynamically adding/removing Socket.IO event listeners without proper tracking leads to orphaned listeners that accumulate over time.
 
 ### Objective
-Immediately activate the existing security test framework to achieve minimum 75/100 security score and eliminate critical production deployment risks.
+Implement a robust timeout management system that prevents memory leaks while maintaining the existing fallback functionality to HTTP API when Socket.IO responses are delayed.
 
 ### Focus Areas
-- Execute existing XSS payload testing with comprehensive injection scenarios
-- Activate HTTPS enforcement and SSL certificate validation
-- Run security headers verification (CSP, HSTS, X-Frame-Options, X-Content-Type-Options)
-- Implement authentication security validation
-- Execute data protection compliance checks
+- Replace dynamic event listener manipulation with Map-based timeout tracking
+- Implement proper cleanup mechanisms using useRef for persistent state
+- Ensure all timeout handlers are properly cleared on component unmount
+- Maintain backward compatibility with existing Socket.IO event patterns
 
 ### Code Reference
-```javascript
-// EXISTING FRAMEWORK READY FOR IMMEDIATE EXECUTION
-class SecurityTestSuite {
-    constructor() {
-        // XSS payloads already defined and ready
-        this.xssPayloads = [
-            '<script>alert("XSS")</script>',
-            '"><script>alert("XSS")</script>',
-            // ... comprehensive payload library exists
-        ];
-        
-        // Test metrics structure already implemented
-        this.testResults = {
-            security: { 
-                metrics: {
-                    httpsEnforcement: { score: 0, tested: false },
-                    securityHeaders: { score: 0, tested: false },
-                    inputValidation: { score: 0, tested: false }
-                }
-            }
-        };
-    }
-    // FRAMEWORK EXISTS - NEEDS EXECUTION ACTIVATION
-}
+```typescript
+// Current problematic implementation
+const timeoutHandler = (data: any) => {
+  clearTimeout(socketTimeout);
+  originalHandler(data);
+};
+
+socket.off('chat-response', handleChatResponse);
+socket.on('chat-response', timeoutHandler);
+
+setTimeout(() => {
+  socket.off('chat-response', timeoutHandler);
+  socket.on('chat-response', handleChatResponse);
+}, 10000);
 ```
 
 ### Requirements
-- Activate existing security test methods in [`security-tests.js`](website/test-framework/test-runners/security-tests.js:21)
-- Execute comprehensive XSS testing using predefined payloads
-- Run HTTPS/SSL validation using existing Node.js crypto integration
-- Activate security headers verification with existing header requirements
-- Execute authentication flow security validation
-- Run data protection compliance checks
-- Integrate results into existing test metrics structure
+- Implement Map-based timeout tracking: `activeTimeouts: Map<string, NodeJS.Timeout>`
+- Use useRef for timeout state persistence across renders
+- Create single event handler that manages timeouts internally
+- Add comprehensive cleanup in useEffect return function
+- Maintain existing 10-second timeout behavior
+- Preserve HTTP fallback functionality when timeouts occur
 
 ### Expected Improvements
-- Security score: 15.2 → 75+ (target: 59.8 point improvement)
-- Framework utilization: 0% → 85% security framework execution
-- Eliminate "Security Framework Paradox" critical issue
-- Remove deployment blocking security gate failure
+- Memory growth under load reduced from unbounded to < 10MB for 1000 operations
+- Event listener count remains constant regardless of message volume
+- Zero memory leaks detected in performance profiling
+- Timeout cleanup success rate: 100%
+
+### Test Validation
+Must pass all tests in [`tests/critical-fixes/memory-leak-timeout-handler.test.js`](tests/critical-fixes/memory-leak-timeout-handler.test.js)
 
 ---
 
-## Prompt [LS4_002] - TDD Orchestrator Integration and Quality Gate Enforcement
+## Prompt [LS4_002] - Comprehensive Input Validation and Security Hardening
 
 ### Context
-The [`TDDOrchestrator`](website/test-framework/tdd-orchestrator.js:27) exists with comprehensive quality gates and deployment blocking mechanisms but is not integrated into the CI/CD pipeline. Current [`run-tests.js`](website/test-framework/run-tests.js:14) uses simple test execution instead of comprehensive orchestration.
+The current implementation sends user input directly via Socket.IO without any validation or sanitization, creating critical security vulnerabilities including XSS attacks and potential DoS vectors through oversized messages.
 
 ### Objective
-Replace simple test execution with TDD orchestrator integration to implement quality gates, deployment blocking, and comprehensive test coverage enforcement.
+Implement a comprehensive input validation and sanitization layer that prevents security vulnerabilities while maintaining user experience and message functionality.
 
 ### Focus Areas
-- Replace simple test runner with TDD orchestrator execution
-- Activate quality gate enforcement with configurable thresholds
-- Implement deployment blocking for failed quality gates
-- Execute comprehensive test suite instead of basic HTTP tests
-- Integrate production readiness assessment
+- Create robust input validation utility with length limits and type checking
+- Implement HTML sanitization to prevent XSS attacks
+- Add protection against polyglot attacks and Unicode exploits
+- Ensure validation errors provide user-friendly feedback
+- Maintain message formatting for legitimate use cases
 
 ### Code Reference
-```javascript
-// EXISTING TDD ORCHESTRATOR READY FOR INTEGRATION
-class TDDOrchestrator {
-    constructor() {
-        // Quality gates already defined and configured
-        this.qualityGates = {
-            security: {
-                minimumScore: 75,
-                weight: 30,
-                blocking: true,
-                description: 'Security validation (XSS, HTTPS, Headers)'
-            },
-            forms: {
-                minimumScore: 85,
-                weight: 25,
-                blocking: true,
-                description: 'Form validation and user journey testing'
-            }
-            // ... comprehensive quality gates exist
-        };
-        
-        // Production readiness criteria already implemented
-        this.productionReadiness = {
-            minimumOverallScore: 80,
-            minimumCoverage: 80,
-            maxCriticalIssues: 0,
-            maxHighIssues: 2
-        };
-    }
-    // ORCHESTRATOR EXISTS - NEEDS CI/CD INTEGRATION
-}
+```typescript
+// Current vulnerable implementation
+const messageData: ChatMessageData = {
+  message: messageContent, // Unsanitized input
+  sessionId,
+  shopDomain,
+  conversationContext,
+  faceAnalysisResult,
+  timestamp: new Date().toISOString()
+};
 ```
 
 ### Requirements
-- Modify [`run-tests.js`](website/test-framework/run-tests.js:14) to use TDD orchestrator instead of simple test suite
-- Activate quality gate validation with existing threshold configuration
-- Implement deployment blocking logic for failed quality gates
-- Execute comprehensive test categories (security, forms, accessibility, performance)
-- Integrate production readiness assessment with existing criteria
-- Add comprehensive reporting with quality gate status
-- Create CI/CD pipeline integration with deployment blocking
+- Implement `validateAndSanitizeMessage(message: string): string` utility
+- Add message length validation (max 1000 characters)
+- Implement HTML tag stripping and entity encoding
+- Add protection against script injection patterns
+- Create user-friendly error messages for validation failures
+- Maintain support for legitimate special characters and formatting
+- Add rate limiting validation (max 10 messages per minute)
 
 ### Expected Improvements
-- Test execution: Simple (11 tests) → Comprehensive (100+ tests)
-- Quality gate enforcement: 0% → 100% (all gates active)
-- Framework utilization: 14.6% → 80+ (comprehensive execution)
-- Deployment safety: False confidence → Quality gate protected
+- XSS prevention effectiveness: 100%
+- Message validation success rate: 100% for legitimate inputs
+- Security vulnerability count: 0
+- User experience degradation: < 5% (minimal impact on legitimate usage)
+
+### Test Validation
+Must pass all tests in [`tests/critical-fixes/input-validation-security.test.js`](tests/critical-fixes/input-validation-security.test.js)
 
 ---
 
-## Prompt [LS4_003] - Form Validation Framework Execution
+## Prompt [LS4_003] - Race Condition Resolution in Connection Status Management
 
 ### Context
-The [`FormValidationTestSuite`](website/test-framework/test-runners/form-tests.js:20) is 80% complete with comprehensive test data and validation logic but has zero execution. The complex multi-step signup form represents a critical user journey failure point with untested validation logic.
+The connection error handling logic in [`AIDiscoveryWidget.tsx:164-176`](apps/shopify/frontend/components/AIDiscoveryWidget.tsx:164-176) has a race condition where `connectionAttempts` state may not be updated before the comparison check, leading to unreliable fallback behavior.
 
 ### Objective
-Execute the existing form validation framework to test all signup flow scenarios, error handling, and multi-step progression logic.
+Eliminate race conditions in connection status management by implementing atomic operations and ensuring consistent state updates across all connection scenarios.
 
 ### Focus Areas
-- Execute email format validation with existing test data
-- Run password strength validation using predefined weak/strong password sets
-- Test password confirmation matching with existing validation logic
-- Execute multi-step form progression testing
-- Run form submission error handling and integration testing
-- Test business information validation for steps 2-3
+- Replace useState with useRef for connection attempt tracking
+- Implement atomic operations for connection status updates
+- Ensure consistent behavior across all connection error scenarios
+- Maintain existing retry logic and fallback thresholds
+- Add proper error recovery mechanisms
 
 ### Code Reference
-```javascript
-// EXISTING FORM VALIDATION FRAMEWORK READY FOR EXECUTION
-class FormValidationTestSuite {
-    constructor() {
-        // Test data already comprehensive and ready
-        this.testData = {
-            validEmails: ['test@example.com', 'user.name@domain.co.uk'],
-            invalidEmails: ['invalid', 'test@', '@domain.com'],
-            weakPasswords: ['123', 'password', 'abcdefgh'],
-            strongPasswords: ['ValidPass123!', 'SecureP@ssw0rd']
-            // ... comprehensive test data exists
-        };
-        
-        // Test metrics structure already implemented
-        this.testResults = {
-            forms: { 
-                metrics: {
-                    emailValidation: { score: 0, tested: false },
-                    passwordValidation: { score: 0, tested: false },
-                    multiStepLogic: { score: 0, tested: false }
-                }
-            }
-        };
-    }
-    // FRAMEWORK EXISTS - NEEDS EXECUTION ACTIVATION
-}
+```typescript
+// Current race condition implementation
+newSocket.on('connect_error', (error) => {
+  console.error('Socket.IO connection error:', error);
+  setConnectionAttempts(prev => prev + 1);
+  setConnectionStatus('error');
+  
+  // Race condition: connectionAttempts may not be updated yet
+  if (connectionAttempts >= 3) {
+    console.log('Falling back to HTTP API after multiple connection failures');
+    setUseSocketIO(false);
+  }
+});
 ```
 
 ### Requirements
-- Execute email validation testing using existing valid/invalid email datasets
-- Run password strength validation with existing weak/strong password collections
-- Execute password confirmation matching tests
-- Run multi-step form progression testing with existing logic
-- Execute form submission integration testing with auth service endpoints
-- Test error handling scenarios with existing error validation logic
-- Activate mobile form interaction testing
-- Integrate results into existing test metrics structure
+- Replace `connectionAttempts` useState with useRef for immediate updates
+- Implement atomic connection status updates using functional state updates
+- Add proper error boundary handling for connection failures
+- Maintain existing 3-attempt retry threshold
+- Ensure consistent behavior across connect_error, disconnect, and timeout events
+- Add connection recovery mechanisms when network is restored
 
 ### Expected Improvements
-- Form validation score: 22.5 → 85+ (target: 62.5 point improvement)
-- Framework utilization: 0% → 80% form framework execution
-- Eliminate "Form Validation Critical Gap" high-severity issue
-- Validate critical user onboarding journey functionality
+- Connection state consistency: 100%
+- Race condition occurrences: 0
+- Fallback reliability: 100% at configured thresholds
+- Connection recovery success rate: > 95%
+
+### Test Validation
+Must pass all tests in [`tests/critical-fixes/connection-race-condition.test.js`](tests/critical-fixes/connection-race-condition.test.js)
 
 ---
 
-## Prompt [LS4_004] - Accessibility Framework Execution with WCAG 2.1 AA Validation
+## Prompt [LS4_004] - Interface Consolidation and Error Recovery Standardization
 
 ### Context
-The [`AccessibilityTestSuite`](website/test-framework/test-runners/accessibility-tests.js:20) is 82% complete with comprehensive WCAG 2.1 AA testing capabilities but has zero execution. This creates legal compliance risks and excludes users with disabilities from platform access.
+Duplicate `FaceAnalysisResult` interface definitions exist in both [`AIDiscoveryWidget.tsx:19-30`](apps/shopify/frontend/components/AIDiscoveryWidget.tsx:19-30) and [`socket.ts:77-88`](apps/shopify/frontend/types/socket.ts:77-88). Additionally, error recovery patterns are inconsistent with the demo reference implementation.
 
 ### Objective
-Execute the existing accessibility framework to perform comprehensive WCAG 2.1 AA compliance validation, keyboard navigation testing, and screen reader compatibility verification.
+Consolidate all interface definitions into centralized type files and standardize error recovery patterns to match the demo implementation's user-friendly approach.
 
 ### Focus Areas
-- Execute WCAG 2.1 AA automated compliance scanning
-- Run keyboard navigation and tab order validation
-- Test screen reader compatibility with ARIA labels
-- Execute color contrast verification for text readability
-- Run alternative text validation for images
-- Test form accessibility with label associations
+- Remove duplicate interface definitions and centralize in types files
+- Standardize error messages to match demo implementation tone
+- Implement consistent error recovery actions across all error scenarios
+- Add suggested queries and recovery options for better user experience
+- Ensure backward compatibility with existing integrations
 
 ### Code Reference
-```javascript
-// EXISTING ACCESSIBILITY FRAMEWORK READY FOR EXECUTION
-class AccessibilityTestSuite {
-    constructor() {
-        // Test pages already prioritized and configured
-        this.testPages = [
-            { path: '/', name: 'Home', priority: 'high' },
-            { path: '/signup/index.html', name: 'Signup', priority: 'critical' },
-            { path: '/dashboard/index.html', name: 'Dashboard', priority: 'high' }
-            // ... comprehensive page coverage exists
-        ];
-        
-        // Test metrics structure already implemented
-        this.testResults = {
-            accessibility: { 
-                metrics: {
-                    wcagCompliance: { score: 0, tested: false },
-                    keyboardNavigation: { score: 0, tested: false },
-                    screenReaderCompatibility: { score: 0, tested: false }
-                }
-            }
-        };
-    }
-    // FRAMEWORK EXISTS - NEEDS EXECUTION ACTIVATION
-}
+```typescript
+// Current inconsistent error handling
+const errorMessage: AIDiscoveryMessage = {
+  id: `assistant_error_${Date.now()}`,
+  content: "I'm sorry, I'm having trouble connecting right now. Please try again later.",
+  sender: 'assistant',
+  timestamp: Date.now(),
+  type: 'error_recovery'
+};
 ```
 
 ### Requirements
-- Execute WCAG 2.1 AA compliance validation using existing page prioritization
-- Run keyboard navigation testing with existing tab order validation logic
-- Execute screen reader compatibility testing with ARIA validation
-- Run color contrast testing with existing AA compliance thresholds
-- Execute alternative text validation for existing image accessibility
-- Run form accessibility testing with existing label association verification
-- Integrate axe-core accessibility scanning if not already implemented
-- Activate comprehensive accessibility reporting with violation details
+- Remove duplicate `FaceAnalysisResult` interface from component file
+- Import all interfaces from centralized [`socket.ts`](apps/shopify/frontend/types/socket.ts)
+- Implement error messages matching demo's friendly, helpful tone
+- Add error recovery actions: retry_connection, browse_products, contact_support
+- Include suggested queries in error responses
+- Maintain consistent error message structure across all platforms
+- Add proper TypeScript strict mode compliance
 
 ### Expected Improvements
-- Accessibility score: 8.5 → 90+ (target: 81.5 point improvement)
-- Framework utilization: 0% → 82% accessibility framework execution
-- Eliminate "Accessibility Compliance Deterioration" high-severity issue
-- Remove legal compliance risks and ADA compliance unknowns
+- Interface definition consistency: 100%
+- Error message consistency with demo: 100%
+- User experience improvement: > 20% better error recovery
+- TypeScript compilation errors: 0
+
+### Test Validation
+Must pass all tests in [`tests/critical-fixes/interface-consistency-error-recovery.test.js`](tests/critical-fixes/interface-consistency-error-recovery.test.js)
 
 ---
 
-## Prompt [LS4_005] - Comprehensive Test Suite Integration
+## Prompt [LS4_005] - Performance Optimization and Memory Management
 
 ### Context
-The [`ComprehensiveTestSuite`](website/test-framework/comprehensive-test-suite.js:11) contains 100+ tests across 8 categories but is not integrated into the test execution pipeline. Current execution uses only 11 basic HTTP connectivity tests, creating an 85% coverage gap.
+The implementation lacks performance monitoring and optimization features, with no protection against memory growth under high load scenarios. Performance tests are missing, making it difficult to validate optimization efforts.
 
 ### Objective
-Replace simple HTTP testing with comprehensive test suite execution to achieve minimum 80% test coverage and eliminate the massive test coverage gap.
+Implement comprehensive performance optimizations including connection pooling, message batching, and memory management to ensure scalable operation under production loads.
 
 ### Focus Areas
-- Replace simple test runner with comprehensive test suite execution
-- Execute all test categories: navigation, security, accessibility, forms, performance
-- Implement proper test category coverage reporting
-- Add comprehensive test result aggregation
-- Create detailed failure analysis and reporting
+- Implement connection pooling for multiple widget instances
+- Add message batching for rapid user inputs
+- Create object pooling for frequently created objects
+- Add performance monitoring and metrics collection
+- Implement lazy loading for Socket.IO library
+- Add memory usage tracking and cleanup mechanisms
 
 ### Code Reference
-```javascript
-// EXISTING COMPREHENSIVE TEST SUITE READY FOR INTEGRATION
-class ComprehensiveTestSuite {
-    constructor() {
-        // All test categories already structured and ready
-        this.testResults = {
-            navigation: { passed: [], failed: [] },      // 25+ tests ready
-            visioncraft: { passed: [], failed: [] },     // 15+ tests ready
-            design: { passed: [], failed: [] },          // 20+ tests ready
-            forms: { passed: [], failed: [] },           // 18+ tests ready
-            performance: { passed: [], failed: [] },     // 8+ tests ready
-            accessibility: { passed: [], failed: [] },   // 12+ tests ready
-            crossBrowser: { passed: [], failed: [] },    // 16+ tests ready
-            security: { passed: [], failed: [] }         // 10+ tests ready
-        };
-        
-        // Test data already comprehensive and configured
-        this.testData = {
-            pages: [/* comprehensive page definitions */],
-            viewports: [/* responsive testing viewports */],
-            browsers: [/* cross-browser testing configuration */]
-        };
-    }
-    // COMPREHENSIVE SUITE EXISTS - NEEDS INTEGRATION
-}
+```typescript
+// Current implementation lacks optimization
+const handleSendMessage = useCallback(async () => {
+  // No batching or pooling
+  const messageData: ChatMessageData = {
+    message: messageContent,
+    sessionId,
+    shopDomain,
+    conversationContext,
+    faceAnalysisResult,
+    timestamp: new Date().toISOString()
+  };
+  
+  if (useSocketIO && socket?.connected) {
+    socket.emit('chat-message', messageData);
+  }
+}, [/* dependencies */]);
 ```
 
 ### Requirements
-- Modify test execution pipeline to use comprehensive test suite instead of simple runner
-- Execute all 8 test categories with existing test definitions
-- Implement comprehensive test result aggregation and reporting
-- Add test coverage calculation with existing test category structure
-- Execute cross-browser testing with existing browser configuration
-- Run responsive design testing with existing viewport definitions
-- Integrate performance testing with existing Core Web Vitals measurement
-- Add comprehensive failure analysis and actionable reporting
+- Implement connection pooling with maximum 5 concurrent connections
+- Add message batching with 100ms debounce for rapid inputs
+- Create object pools for MessageData and other frequently created objects
+- Add performance metrics collection (response times, memory usage, connection counts)
+- Implement lazy loading for Socket.IO library (reduce initial bundle size by ~50KB)
+- Add memory usage monitoring with alerts at 50MB threshold
+- Implement automatic cleanup of stale connections and cached data
 
 ### Expected Improvements
-- Test coverage: 11.8% → 80+ (target: 68.2 point improvement)
-- Test execution: 11 basic tests → 100+ comprehensive tests
-- Framework utilization: 14.6% → 95+ (comprehensive execution)
-- Eliminate "Massive Test Coverage Gap" critical issue
+- Memory usage under load: < 50MB for 1000 concurrent operations
+- Response time degradation: < 2x over 24-hour operation
+- Bundle size reduction: > 30% through lazy loading
+- Connection efficiency: > 90% connection reuse rate
+- Message throughput: > 100 messages/second sustained
+
+### Test Validation
+Must pass all tests in [`tests/critical-fixes/performance-memory-leak.test.js`](tests/critical-fixes/performance-memory-leak.test.js)
 
 ---
 
-## Prompt [LS4_006] - Performance Framework Completion and Core Web Vitals
+## Implementation Priority
 
-### Context
-The [`PerformanceTestSuite`](website/test-framework/test-runners/performance-tests.js:19) is 75% complete with Core Web Vitals measurement capabilities but has only 20% execution rate. Performance score has declined from 58.7 to 52.3, indicating growing scalability risks.
+### Phase 1 (Critical - Must Fix Before Propagation)
+1. **LS4_001** - Memory Leak Resolution (High Severity)
+2. **LS4_002** - Input Validation and Security (High Severity)  
+3. **LS4_003** - Race Condition Resolution (High Severity)
 
-### Objective
-Complete execution of the existing performance framework to implement Core Web Vitals measurement, performance budgets, and load testing capabilities.
+### Phase 2 (Important - Should Fix Before Propagation)
+4. **LS4_004** - Interface Consolidation and Error Recovery (Medium Severity)
+5. **LS4_005** - Performance Optimization (Medium Severity)
 
-### Focus Areas
-- Execute Core Web Vitals measurement (FCP, LCP, CLS, FID, TTI)
-- Run performance budget validation with existing thresholds
-- Execute asset optimization testing (compression, image optimization)
-- Run load testing with concurrent user simulation
-- Implement performance regression detection
+## Success Criteria for Cross-Platform Propagation
 
-### Code Reference
-```javascript
-// EXISTING PERFORMANCE FRAMEWORK READY FOR COMPLETION
-class PerformanceTestSuite {
-    constructor() {
-        // Performance budgets already defined and configured
-        this.performanceBudgets = {
-            fcp: 1800,    // First Contentful Paint < 1.8s
-            lcp: 2500,    // Largest Contentful Paint < 2.5s
-            cls: 0.1,     // Cumulative Layout Shift < 0.1
-            fid: 100,     // First Input Delay < 100ms
-            tti: 3800     // Time to Interactive < 3.8s
-        };
-        
-        // Test metrics structure already implemented
-        this.testResults = {
-            performance: {
-                metrics: {
-                    coreWebVitals: { score: 0, tested: false },
-                    assetOptimization: { score: 0, tested: false },
-                    loadTesting: { score: 0, tested: false }
-                }
-            }
-        };
-    }
-    // FRAMEWORK EXISTS - NEEDS EXECUTION COMPLETION
-}
+### Minimum Requirements (All Must Pass)
+- Memory leak tests: 100% pass rate
+- Security validation tests: 100% pass rate  
+- Race condition tests: 100% pass rate
+- Interface consistency tests: 100% pass rate
+- Performance benchmarks: Meet all thresholds
+
+### Quality Gates
+- Overall score improvement: > 15 points (target: 87.4+)
+- Security score: > 70 (current: 58.0)
+- Performance score: > 75 (current: 68.0)
+- All critical issues resolved: 100%
+
+## Cross-Platform Considerations
+
+### Consistency Requirements
+- All fixes must be implementable across Shopify, WooCommerce, Magento, and HTML platforms
+- Interface definitions must be platform-agnostic
+- Error handling patterns must be consistent across all implementations
+- Performance optimizations must work in all target environments
+
+### Integration Points
+- Socket.IO event names and data structures must remain consistent
+- HTTP fallback mechanisms must work identically across platforms
+- Security validation must be enforceable on all platforms
+- Memory management patterns must be adaptable to different frameworks
+
+## Testing Strategy
+
+### Test-Driven Development Approach
+1. **RED Phase**: Run existing tests to confirm all critical issues are exposed
+2. **Implementation Phase**: Apply fixes guided by failing tests
+3. **GREEN Phase**: Achieve 100% pass rate on all critical fix tests
+4. **Refactor Phase**: Optimize implementations while maintaining test coverage
+
+### Validation Commands
+```bash
+# Run all critical fixes tests
+./scripts/run-critical-fixes-tests.sh
+
+# Run specific test categories  
+./scripts/run-critical-fixes-tests.sh memory
+./scripts/run-critical-fixes-tests.sh security
+./scripts/run-critical-fixes-tests.sh race-condition
+./scripts/run-critical-fixes-tests.sh performance
+
+# Generate comprehensive coverage report
+./scripts/run-critical-fixes-tests.sh coverage
 ```
 
-### Requirements
-- Execute Core Web Vitals measurement using existing Performance Observer API integration
-- Run performance budget validation with existing threshold configuration
-- Execute asset optimization testing with existing compression and image validation
-- Run load testing with existing concurrent user simulation capabilities
-- Execute performance regression detection with existing baseline comparison logic
-- Integrate Lighthouse performance auditing if not already implemented
-- Add comprehensive performance reporting with actionable recommendations
+## Expected Outcomes
 
-### Expected Improvements
-- Performance score: 52.3 → 85+ (target: 32.7 point improvement)
-- Framework utilization: 20% → 75% performance framework execution
-- Eliminate "Performance Metrics Regression" medium-severity issue
-- Establish performance budgets and scalability validation
+### Immediate Benefits
+- Elimination of all high-severity security vulnerabilities
+- Resolution of memory leak issues preventing production deployment
+- Reliable connection management without race conditions
+- Consistent error handling improving user experience
 
----
+### Long-term Benefits  
+- Scalable architecture supporting high-volume production usage
+- Maintainable codebase with centralized type definitions
+- Performance optimizations enabling better user experience
+- Comprehensive test coverage preventing regression issues
 
-## Implementation Priority and Execution Timeline
-
-### Phase 1: Critical Security and Quality Gates (Week 1)
-**Priority 1**: Security Framework Activation (Prompt LS4_001)
-- **Estimated Hours**: 20 hours
-- **Impact**: Security score 15.2 → 75+ (+59.8)
-- **Blocking**: Yes - deployment safety critical
-
-**Priority 2**: TDD Orchestrator Integration (Prompt LS4_002)
-- **Estimated Hours**: 8 hours
-- **Impact**: Quality gate enforcement 0% → 100%
-- **Blocking**: Yes - deployment protection critical
-
-### Phase 2: User Journey and Coverage (Week 2)
-**Priority 3**: Form Validation Execution (Prompt LS4_003)
-- **Estimated Hours**: 14 hours
-- **Impact**: Form validation 22.5 → 85+ (+62.5)
-- **Blocking**: Yes - user journey critical
-
-**Priority 4**: Comprehensive Test Integration (Prompt LS4_005)
-- **Estimated Hours**: 12 hours
-- **Impact**: Test coverage 11.8% → 80+ (+68.2)
-- **Blocking**: Yes - coverage critical
-
-### Phase 3: Compliance and Performance (Week 3)
-**Priority 5**: Accessibility Framework Execution (Prompt LS4_004)
-- **Estimated Hours**: 16 hours
-- **Impact**: Accessibility 8.5 → 90+ (+81.5)
-- **Blocking**: Yes - legal compliance critical
-
-**Priority 6**: Performance Framework Completion (Prompt LS4_006)
-- **Estimated Hours**: 10 hours
-- **Impact**: Performance 52.3 → 85+ (+32.7)
-- **Blocking**: No - optimization focused
-
-### Success Criteria and Framework ROI
-
-**Target Improvements (3 weeks, 80 hours)**:
-- **Overall Score**: 38.2 → 80+ (+41.8 improvement)
-- **Framework Utilization**: 14.6% → 95+ (+80.4 improvement)
-- **Framework ROI**: -83.8% → +340% (positive return on investment)
-- **Production Status**: NOT_PRODUCTION_READY → PRODUCTION_READY
-- **Quality Gates**: 0% enforced → 100% enforced
-
-**Framework Execution Strategy**:
-- **Existing Investment**: 200+ hours (framework development)
-- **Execution Investment**: 80 hours (framework activation)
-- **Total ROI**: 340% (high positive return with full utilization)
-- **Risk Elimination**: Critical security, accessibility, and user journey risks resolved
-
-### Framework Paradox Resolution
-
-The critical insight is that **comprehensive test frameworks already exist and are production-ready**. The solution is immediate execution activation rather than new development:
-
-1. **Security Framework**: 85% complete → Execute immediately
-2. **Form Validation Framework**: 80% complete → Execute immediately  
-3. **Accessibility Framework**: 82% complete → Execute immediately
-4. **Performance Framework**: 75% complete → Complete execution
-5. **TDD Orchestrator**: 100% complete → Integrate immediately
-6. **Comprehensive Test Suite**: 100% complete → Replace simple runner
-
-**Framework Execution Impact**: Transform 66.2% wasted investment into 340% positive ROI through immediate activation of existing capabilities.
+### Cross-Platform Readiness
+- Standardized implementation patterns ready for propagation
+- Consistent security and performance characteristics across platforms
+- Unified error handling and recovery mechanisms
+- Validated architecture supporting multi-platform deployment
