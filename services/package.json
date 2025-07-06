@@ -1,0 +1,13 @@
+{
+  "type": "module",
+  "name": "@commerce-studio/services",
+  "version": "1.0.0",
+  "description": "Commerce Studio Services",
+  "main": "index.js",
+  "dependencies": {
+    "node-fetch": "^3.3.2",
+    "ws": "^8.14.2",
+    "@google-cloud/dialogflow-cx": "^4.0.0",
+    "uuid": "^9.0.0"
+  }
+}
