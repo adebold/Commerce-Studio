@@ -1,0 +1,28 @@
+# Dockerfile for VARAi Admin Panel - Staging Environment
+FROM nginx:alpine
+
+# Install basic auth tools
+RUN apk add --no-cache apache2-utils
+
+# Copy website files
+COPY website/ /usr/share/nginx/html/
+
+# Copy nginx configuration with basic auth
+COPY deploy/staging/nginx.staging.conf /etc/nginx/nginx.conf
+
+# Create htpasswd file directory
+RUN mkdir -p /etc/nginx/auth
+
+# Copy startup script
+COPY deploy/staging/start-admin.sh /start-admin.sh
+RUN chmod +x /start-admin.sh
+
+# Expose port 80
+EXPOSE 80
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost/ || exit 1
+
+# Use startup script as entrypoint
+ENTRYPOINT ["/start-admin.sh"]

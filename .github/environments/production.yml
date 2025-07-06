@@ -1,0 +1,10 @@
+name: production
+url: https://api.varai.ai
+protection_rules:
+  required_reviewers:
+    - deployment-team
+  wait_timer: 0
+  prevent_self_review: true
+deployment_branch_policy:
+  protected_branches: true
+  custom_branch_policies: false

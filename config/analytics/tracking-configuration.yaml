@@ -1,0 +1,66 @@
+# Configuration for analytics tracking, privacy settings, and data retention policies.
+# Version: 1.0.0
+
+# General tracking settings
+tracking:
+  enabled: true
+  default_platform: 'unknown'
+  # A/B testing configuration
+  ab_testing:
+    enabled: true
+    # Define different groups for testing features
+    groups:
+      - name: 'group_a'
+        weight: 50 # Percentage of users
+      - name: 'group_b'
+        weight: 50
+
+# Privacy settings to ensure compliance with regulations like GDPR, CCPA.
+privacy:
+  # When true, user identifiers are hashed or replaced with anonymous IDs.
+  anonymizeUserIds: true
+  # When true, strips potential Personally Identifiable Information (PII) from logs and analytics.
+  stripPII: true
+  # When true, detailed reports in BI service will not include sensitive data.
+  includeDetailedReports: false
+  # The level of logging for user interactions.
+  # Options: 'none', 'anonymous', 'full'
+  loggingLevel: 'anonymous'
+
+# Data retention policies for different types of analytics data.
+retention:
+  # Raw conversation logs from chat sessions.
+  conversation_logs:
+    # Duration to keep the data (e.g., '90d' for 90 days, '1y' for 1 year).
+    duration: '90d'
+    # Action to take after retention period expires ('delete' or 'archive').
+    action: 'archive'
+  
+  # Aggregated analytics data used for reporting.
+  aggregated_metrics:
+    duration: '2y'
+    action: 'delete'
+
+  # User profile data collected by the UserBehaviorTracker.
+  user_profiles:
+    duration: '1y'
+    action: 'delete' # Delete inactive user profiles after 1 year.
+
+  # Performance metrics from the AvatarPerformanceMonitor.
+  performance_data:
+    duration: '180d'
+    action: 'archive'
+
+# Configuration for real-time alerting.
+alerting:
+  enabled: true
+  # List of recipients for critical alerts.
+  recipients:
+    - 'alerts-team@example.com'
+    - 'slack:channel-name'
+  # Thresholds for triggering alerts.
+  thresholds:
+    low_conversion_rate: 0.05 # Below 5%
+    high_error_rate: 0.10      # Above 10%
+    low_satisfaction_score: 0.6 # Below 60%
+    high_response_time_ms: 2000 # Above 2000ms

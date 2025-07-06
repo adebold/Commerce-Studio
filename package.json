@@ -1,0 +1,50 @@
+{
+  "name": "commerce-studio",
+  "version": "1.0.0",
+  "description": "AI-powered commerce discovery platform",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test:critical-fixes": "jest --config=tests/critical-fixes/jest.config.critical-fixes.js",
+    "test:critical-fixes:verbose": "jest --config=tests/critical-fixes/jest.config.critical-fixes.js --verbose",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "keywords": [
+    "ai",
+    "commerce",
+    "discovery",
+    "shopify",
+    "woocommerce",
+    "magento"
+  ],
+  "author": "Commerce Studio Team",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "@jest/globals": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "@testing-library/jest-dom": "^6.1.4",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^14.5.1"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "socket.io-client": "^4.7.2"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "setupFilesAfterEnv": ["<rootDir>/tests/setup/critical-fixes-setup.js"],
+    "testMatch": [
+      "<rootDir>/tests/**/*.test.js",
+      "<rootDir>/apps/**/tests/**/*.test.js"
+    ],
+    "collectCoverageFrom": [
+      "apps/**/frontend/**/*.{js,jsx,ts,tsx}",
+      "apps/**/utils/**/*.{js,jsx,ts,tsx}",
+      "!**/node_modules/**",
+      "!**/coverage/**"
+    ]
+  }
+}

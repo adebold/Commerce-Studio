@@ -1,9 +1,11 @@
 /**
- * Face Analysis Service using MediaPipe
+ * @fileoverview Face Analysis Service using MediaPipe
  * 
  * This service provides client-side face analysis capabilities using MediaPipe
  * for privacy-compliant face shape detection and measurement extraction.
  */
+
+import DataSyncService from '../../../../services/data-sync-service.js';
 
 interface FaceLandmark {
   x: number;
@@ -35,6 +37,11 @@ export class FaceAnalysisService {
   private faceLandmarker: any = null;
   private isInitialized = false;
   private modelPath = '/models/face_landmarker.task';
+  private dataSyncService: typeof DataSyncService;
+
+  constructor() {
+    this.dataSyncService = DataSyncService;
+  }
 
   /**
    * Initialize the MediaPipe Face Landmarker
@@ -74,7 +81,7 @@ export class FaceAnalysisService {
   /**
    * Analyze face from video element
    */
-  async analyzeFromVideo(videoElement: HTMLVideoElement): Promise<FaceAnalysisResult | null> {
+  async analyzeFromVideo(videoElement: HTMLVideoElement, userId: string): Promise<FaceAnalysisResult | null> {
     if (!this.isInitialized) {
       throw new Error('Face Analysis Service not initialized');
     }
@@ -114,13 +121,21 @@ export class FaceAnalysisService {
       // Calculate confidence based on landmark quality
       const confidence = this.calculateConfidence(landmarks);
 
-      return {
+      const result = {
         faceShape,
         confidence,
         measurements,
         landmarks,
         timestamp: Date.now()
       };
+
+      if (userId) {
+        this.dataSyncService.syncFaceAnalysis(userId, result).catch(error => {
+            console.error('Failed to sync face analysis data:', error);
+        });
+      }
+
+      return result;
 
     } catch (error) {
       console.error('Error analyzing face from video:', error);
@@ -131,7 +146,7 @@ export class FaceAnalysisService {
   /**
    * Analyze face from image file
    */
-  async analyzeFromImage(imageFile: File): Promise<FaceAnalysisResult | null> {
+  async analyzeFromImage(imageFile: File, userId: string): Promise<FaceAnalysisResult | null> {
     if (!this.isInitialized) {
       throw new Error('Face Analysis Service not initialized');
     }
@@ -182,13 +197,21 @@ export class FaceAnalysisService {
       // Clean up
       URL.revokeObjectURL(img.src);
 
-      return {
+      const result = {
         faceShape,
         confidence,
         measurements,
         landmarks,
         timestamp: Date.now()
       };
+
+      if (userId) {
+        this.dataSyncService.syncFaceAnalysis(userId, result).catch(error => {
+            console.error('Failed to sync face analysis data:', error);
+        });
+      }
+
+      return result;
 
     } catch (error) {
       console.error('Error analyzing face from image:', error);
