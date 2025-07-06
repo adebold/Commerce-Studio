@@ -1,33 +1,14 @@
 {
-  "name": "eyewear-ml-store-tests",
+  "type": "module",
+  "name": "@commerce-studio/html-store-integration",
   "version": "1.0.0",
-  "description": "End-to-end tests for the EyewearML store",
+  "description": "Commerce Studio HTML Store Integration",
   "main": "index.js",
-  "scripts": {
-    "test": "cypress run",
-    "test:open": "cypress open",
-    "test:store": "cypress run --spec 'cypress/integration/store.spec.js'",
-    "test:recommendations": "cypress run --spec 'cypress/integration/recommendations.spec.js'",
-    "test:ab-testing": "cypress run --spec 'cypress/integration/ab-testing.spec.js'",
-    "test:virtual-try-on": "cypress run --spec 'cypress/integration/virtual-try-on.spec.js'",
-    "test:dashboard": "cypress run --spec 'cypress/integration/dashboard.spec.js'",
-    "serve": "http-server -p 8080",
-    "test:ci": "start-server-and-test serve 8080 test"
-  },
-  "keywords": [
-    "eyewear",
-    "ml",
-    "e2e",
-    "testing",
-    "cypress"
-  ],
-  "author": "SKU-Genie Team",
-  "license": "MIT",
-  "devDependencies": {
-    "cypress": "^9.5.0",
-    "finalhandler": "^1.2.0",
-    "http-server": "^14.1.0",
-    "serve-static": "^1.15.0",
-    "start-server-and-test": "^1.14.0"
+  "dependencies": {
+    "express": "^4.18.0",
+    "socket.io": "^4.7.0",
+    "cors": "^2.8.5",
+    "helmet": "^7.0.0",
+    "uuid": "^9.0.0"
   }
 }
