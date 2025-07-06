@@ -259,6 +259,19 @@ function showProductModal(product) {
                                         </div>
                                     `).join('')}
                                 </div>
+                                
+                                <h6 class="mt-4">AI Features</h6>
+                                <div class="ai-features-buttons d-grid gap-2">
+                                    <button type="button" class="btn btn-info" onclick="getFaceAnalysis()">
+                                        <i class="bi bi-person-check me-2"></i>Get Face Shape Analysis
+                                    </button>
+                                    <button type="button" class="btn btn-success" onclick="getRecommendations()">
+                                        <i class="bi bi-stars me-2"></i>Get AI Recommendations
+                                    </button>
+                                    <button type="button" class="btn btn-warning" onclick="startVirtualTryOn('${product.id}')">
+                                        <i class="bi bi-camera me-2"></i>Start Virtual Try-On
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>

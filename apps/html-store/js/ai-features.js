@@ -359,9 +359,55 @@ function showAIModal(title, content, type = 'info') {
     }
 }
 
+// Virtual Try-On function
+function startVirtualTryOn(productId) {
+    try {
+        // Show loading state
+        showAIModal('Virtual Try-On', 'Initializing virtual try-on experience...', 'loading');
+        
+        setTimeout(() => {
+            const content = `
+                <div class="text-center">
+                    <div class="mb-4">
+                        <i class="bi bi-camera-video text-primary" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5>Virtual Try-On Ready!</h5>
+                    <p class="mb-4">This feature would normally activate your camera to let you try on frames virtually. In this demo, we're showing you what the experience would look like.</p>
+                    
+                    <div class="virtual-tryOn-demo p-4 bg-light rounded">
+                        <h6><i class="bi bi-camera me-2"></i>Demo Features:</h6>
+                        <ul class="list-unstyled text-start">
+                            <li><i class="bi bi-check-circle text-success me-2"></i>Real-time face tracking</li>
+                            <li><i class="bi bi-check-circle text-success me-2"></i>3D frame overlay</li>
+                            <li><i class="bi bi-check-circle text-success me-2"></i>Multiple angle views</li>
+                            <li><i class="bi bi-check-circle text-success me-2"></i>Size and fit analysis</li>
+                            <li><i class="bi bi-check-circle text-success me-2"></i>Photo capture and sharing</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <button class="btn btn-primary me-2" onclick="document.getElementById('aiModal').querySelector('.btn-close').click()">
+                            <i class="bi bi-camera me-1"></i>Start Camera (Demo)
+                        </button>
+                        <button class="btn btn-outline-secondary" onclick="document.getElementById('aiModal').querySelector('.btn-close').click()">
+                            Maybe Later
+                        </button>
+                    </div>
+                </div>
+            `;
+            showAIModal('Virtual Try-On', content, 'success');
+        }, 1500);
+        
+    } catch (error) {
+        showAIModal('Error', 'An unexpected error occurred while starting virtual try-on.', 'error');
+        console.error('Virtual Try-On Error:', error);
+    }
+}
+
 // Make functions globally available
 window.getFaceAnalysis = getFaceAnalysis;
 window.getRecommendations = getRecommendations;
+window.startVirtualTryOn = startVirtualTryOn;
 window.faceAnalysisService = faceAnalysisService;
 window.recommendationEngine = recommendationEngine;
 
