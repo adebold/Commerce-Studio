@@ -1,0 +1,11 @@
+{
+  "type": "module",
+  "name": "@commerce-studio/core",
+  "version": "1.0.0",
+  "description": "Commerce Studio Core Services",
+  "main": "index.js",
+  "dependencies": {
+    "events": "^3.3.0",
+    "uuid": "^9.0.0"
+  }
+}
