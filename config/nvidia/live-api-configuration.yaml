@@ -21,41 +21,15 @@ nvidia_services:
     avatar_model: "digital_human_01"
     rendering_quality: "high"
 
-  # Riva Speech AI Configuration
-  # Provides real-time speech-to-text and text-to-speech.
-  riva_speech:
-    # Endpoint URL for the Riva Speech AI service.
-    # The value is sourced from the NVIDIA_RIVA_SPEECH_API_URL environment variable.
-    url: ${NVIDIA_RIVA_SPEECH_API_URL}
-    
-    # API key for authentication.
-    # The value is sourced from the NVIDIA_API_KEY environment variable.
-    api_key: ${NVIDIA_API_KEY}
-    
-    # Request timeout in milliseconds.
-    timeout: ${API_REQUEST_TIMEOUT}
-    
-    # Language and voice settings for speech synthesis.
-    language: "en-US"
-    voice: "female_voice_01"
-
-  # Merlin Conversational AI Configuration
-  # Provides intelligent, context-aware responses.
-  merlin_conversation:
-    # Endpoint URL for the Merlin Conversational AI service.
-    # The value is sourced from the NVIDIA_MERLIN_CONVERSATIONAL_API_URL environment variable.
-    url: ${NVIDIA_MERLIN_CONVERSATIONAL_API_URL}
-    
-    # API key for authentication.
-    # The value is sourced from the NVIDIA_API_KEY environment variable.
-    api_key: ${NVIDIA_API_KEY}
-    
-    # Request timeout in milliseconds.
-    timeout: ${API_REQUEST_TIMEOUT}
-    
-    # Conversational model and personality settings.
-    model: "intelligent_chat_model_01"
-    personality: "friendly_assistant"
+  # DEPRECATED: Riva Speech AI Configuration
+  # NOTE: Riva services have been deprecated due to licensing constraints.
+  # Speech functionality is now handled by Google Cloud Speech services.
+  # riva_speech: DEPRECATED - Use Google Cloud Speech instead
+  
+  # DEPRECATED: Merlin Conversational AI Configuration
+  # NOTE: Merlin services have been deprecated due to licensing constraints.
+  # Conversational AI is now handled by Google Dialogflow CX.
+  # merlin_conversation: DEPRECATED - Use Google Dialogflow CX instead
 
 # Security and Rate Limiting
 # Defines security policies for accessing NVIDIA APIs.

@@ -11,22 +11,28 @@
 import { EventEmitter } from 'events';
 import WebSocket from 'ws';
 import crypto from 'crypto';
-import fetch from 'node-fetch';
+import fetch, { Request, Response } from 'node-fetch';
+import { getLoggingService } from '../../core/logging-service.js';
 
 class OmniverseAvatarService extends EventEmitter {
   constructor(config = {}) {
     super();
     
     this.config = {
-      endpoint: config.endpoint || 'https://api.omniverse.nvidia.com/v1',
-      apiKey: config.apiKey || 'iulzg9oedq-60se7t722e-dpxw5krfwk',
+      endpoint: config.endpoint || process.env.NVIDIA_OMNIVERSE_AVATAR_URL || 'https://api.nvcf.nvidia.com/v2/nvcf/services/avatar',
+      // API Key Priority: 1. Config 2. GitHub Secrets (NVIDIA_API_KEY) 3. Specific env var 4. Fallback
+      apiKey: config.apiKey ||
+              process.env.NVIDIA_API_KEY ||
+              process.env.NVIDIA_OMNIVERSE_API_KEY,
       organizationId: config.organizationId || process.env.NVIDIA_ORG_ID,
       projectId: config.projectId || process.env.NVIDIA_PROJECT_ID,
       region: config.region || 'us-east-1',
-      timeout: config.timeout || 30000,
+      timeout: config.timeout || parseInt(process.env.API_REQUEST_TIMEOUT) || 30000,
       retryAttempts: config.retryAttempts || 3,
       ...config
     };
+    
+    this.logger = getLoggingService().child('OmniverseAvatar');
     
     this.isInitialized = false;
     this.activeAvatars = new Map();

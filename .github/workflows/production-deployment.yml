@@ -12,6 +12,11 @@ env:
   GCP_REGION: us-central1
   REGISTRY: gcr.io
   ARTIFACT_REGISTRY: us-central1-docker.pkg.dev
+  # NVIDIA API Configuration
+  NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+  NVIDIA_OMNIVERSE_API_KEY: ${{ secrets.NVIDIA_OMNIVERSE_API_KEY }}
+  # Google Cloud API Keys
+  GOOGLE_CLOUD_API_KEY: ${{ secrets.GOOGLE_CLOUD_API_KEY }}
 
 jobs:
   # Security and Quality Gate
