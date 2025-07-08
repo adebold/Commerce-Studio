@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VARAi Commerce Studio - The Future of Eyewear Retail</title>
+    <link rel="stylesheet" href="css/varai-design-system.css">
+    <link rel="stylesheet" href="css/enterprise-enhancements.css">
+    <link rel="stylesheet" href="css/apple-landing.css">
+    <script src="js/theme-manager.js" defer></script>
+    <script src="js/apple-landing.js" defer></script>
+</head>
+<body>
+    <!-- 1. Navigation -->
+    <header class="apple-navbar" id="navbar">
+        <div class="apple-container">
+            <nav class="apple-nav">
+                <a href="#" class="apple-logo">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <rect width="32" height="32" rx="8" fill="var(--varai-primary)"/>
+                        <text x="16" y="22" font-family="SF Pro Display, Inter" font-size="14" font-weight="600" fill="white" text-anchor="middle">V</text>
+                    </svg>
+                    <span>VARAi</span>
+                </a>
+                
+                <div class="apple-nav-links">
+                    <div class="apple-nav-dropdown">
+                        <a href="#" class="apple-nav-link">Products <span class="dropdown-arrow">▼</span></a>
+                        <div class="apple-dropdown-menu">
+                            <a href="products.html#virtual-try-on">Virtual Try-On</a>
+                            <a href="products.html#ai-recommendations">AI Recommendations</a>
+                            <a href="products.html#analytics">Analytics Dashboard</a>
+                            <a href="products.html#integrations">Integrations</a>
+                        </div>
+                    </div>
+                    
+                    <div class="apple-nav-dropdown">
+                        <a href="#" class="apple-nav-link">Solutions <span class="dropdown-arrow">▼</span></a>
+                        <div class="apple-dropdown-menu">
+                            <a href="solutions.html#retail-chains">Retail Chains</a>
+                            <a href="solutions.html#independent-stores">Independent Stores</a>
+                            <a href="solutions.html#e-commerce">E-commerce</a>
+                            <a href="solutions.html#omnichannel">Omnichannel</a>
+                        </div>
+                    </div>
+                    
+                    <a href="pricing.html" class="apple-nav-link">Pricing</a>
+                    
+                    <div class="apple-nav-dropdown">
+                        <a href="#" class="apple-nav-link">Resources <span class="dropdown-arrow">▼</span></a>
+                        <div class="apple-dropdown-menu">
+                            <a href="resources.html#documentation">Documentation</a>
+                            <a href="resources.html#api">API Reference</a>
+                            <a href="resources.html#guides">Guides</a>
+                            <a href="resources.html#webinars">Webinars</a>
+                            <a href="resources.html#case-studies">Case Studies</a>
+                        </div>
+                    </div>
+                    
+                    <a href="company.html" class="apple-nav-link">Contact</a>
+                </div>
+                
+                <div class="apple-nav-actions">
+                    <a href="dashboard/index.html" class="apple-btn apple-btn-text">Sign In</a>
+                    <a href="#signup" class="apple-btn apple-btn-primary">Get Started</a>
+                </div>
+                
+                <button class="apple-mobile-menu-toggle" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- 2. Hero Section -->
+        <section class="apple-hero" id="hero">
+            <div class="apple-container">
+                <div class="apple-hero-content">
+                    <div class="apple-hero-text">
+                        <h1 class="apple-hero-title">
+                            The Future of Eyewear Retail
+                        </h1>
+                        <p class="apple-hero-subtitle">
+                            AI-powered solutions for seamless omnichannel experiences that increase conversions by 47% and reduce returns by 62%
+                        </p>
+                        
+                        <div class="apple-hero-actions">
+                            <a href="#signup" class="apple-btn apple-btn-primary apple-btn-large">
+                                Get Started
+                            </a>
+                            <button class="apple-btn apple-btn-secondary apple-btn-large" onclick="playDemo()">
+                                Watch Demo
+                            </button>
+                        </div>
+                        
+                        <div class="apple-hero-trust">
+                            <p class="trust-text">Trusted by 500+ eyewear retailers worldwide</p>
+                            <div class="trust-logos">
+                                <div class="trust-logo">Brand A</div>
+                                <div class="trust-logo">Brand B</div>
+                                <div class="trust-logo">Brand C</div>
+                                <div class="trust-logo">Brand D</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="apple-hero-visual">
+                        <div class="hero-animation-container">
+                            <div class="floating-card card-1">
+                                <div class="card-content">
+                                    <div class="metric-number">+47%</div>
+                                    <div class="metric-label">Conversion Rate</div>
+                                </div>
+                            </div>
+                            <div class="floating-card card-2">
+                                <div class="card-content">
+                                    <div class="metric-number">-62%</div>
+                                    <div class="metric-label">Return Rate</div>
+                                </div>
+                            </div>
+                            <div class="floating-card card-3">
+                                <div class="card-content">
+                                    <div class="metric-number">+35%</div>
+                                    <div class="metric-label">Customer Satisfaction</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Key Features Section -->
+        <section class="apple-section apple-features" id="features">
+            <div class="apple-container">
+                <div class="apple-section-header">
+                    <h2>Intelligent Retail Solutions</h2>
+                    <p>Everything you need to transform your eyewear business</p>
+                </div>
+                
+                <div class="apple-features-grid">
+                    <div class="apple-feature-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 12l2 2 4-4"/>
+                                <path d="M21 12c-1 0-3-1-3-3s2-3 3-3 3 1 3 3-2 3-3 3"/>
+                                <path d="M3 12c1 0 3-1 3-3s-2-3-3-3-3 1-3 3 2 3 3 3"/>
+                                <path d="M12 3c0 1-1 3-3 3s-3-2-3-3 1-3 3-3 3 2 3 3"/>
+                                <path d="M12 21c0-1 1-3 3-3s3 2 3 3-1 3-3 3-3-2-3-3"/>
+                            </svg>
+                        </div>
+                        <h3>AI-Powered Product Enhancement</h3>
+                        <p>Advanced machine learning algorithms analyze customer preferences and behavior to optimize product recommendations and inventory management.</p>
+                        <a href="products.html#ai-enhancement" class="feature-link">
+                            Learn more <span class="arrow">→</span>
+                        </a>
+                    </div>
+                    
+                    <div class="apple-feature-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                        </div>
+                        <h3>Seamless Integration</h3>
+                        <p>Connect with your existing e-commerce platforms, POS systems, and inventory management tools through our comprehensive API ecosystem.</p>
+                        <a href="products.html#integrations" class="feature-link">
+                            Learn more <span class="arrow">→</span>
+                        </a>
+                    </div>
+                    
+                    <div class="apple-feature-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <path d="M9 9h6v6H9z"/>
+                                <path d="M9 1v6"/>
+                                <path d="M15 1v6"/>
+                                <path d="M9 17v6"/>
+                                <path d="M15 17v6"/>
+                                <path d="M1 9h6"/>
+                                <path d="M17 9h6"/>
+                                <path d="M1 15h6"/>
+                                <path d="M17 15h6"/>
+                            </svg>
+                        </div>
+                        <h3>Enterprise Security</h3>
+                        <p>Bank-level security with SOC 2 compliance, end-to-end encryption, and advanced threat protection to keep your data safe.</p>
+                        <a href="products.html#security" class="feature-link">
+                            Learn more <span class="arrow">→</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Integration Showcase -->
+        <section class="apple-section apple-integration" id="integration">
+            <div class="apple-container">
+                <div class="apple-section-header">
+                    <h2>Seamlessly Connect Your Retail Ecosystem</h2>
+                    <p>Integrate with the tools you already use and love</p>
+                </div>
+                
+                <div class="integration-visualization">
+                    <div class="integration-center">
+                        <div class="varai-logo-large">
+                            <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                                <rect width="80" height="80" rx="20" fill="var(--varai-primary)"/>
+                                <text x="40" y="50" font-family="SF Pro Display" font-size="28" font-weight="600" fill="white" text-anchor="middle">V</text>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <div class="integration-connections">
+                        <div class="integration-node node-1">
+                            <div class="integration-logo shopify">Shopify</div>
+                            <div class="connection-line line-1"></div>
+                        </div>
+                        <div class="integration-node node-2">
+                            <div class="integration-logo magento">Magento</div>
+                            <div class="connection-line line-2"></div>
+                        </div>
+                        <div class="integration-node node-3">
+                            <div class="integration-logo woocommerce">WooCommerce</div>
+                            <div class="connection-line line-3"></div>
+                        </div>
+                        <div class="integration-node node-4">
+                            <div class="integration-logo bigcommerce">BigCommerce</div>
+                            <div class="connection-line line-4"></div>
+                        </div>
+                        <div class="integration-node node-5">
+                            <div class="integration-logo salesforce">Salesforce</div>
+                            <div class="connection-line line-5"></div>
+                        </div>
+                        <div class="integration-node node-6">
+                            <div class="integration-logo hubspot">HubSpot</div>
+                            <div class="connection-line line-6"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="integration-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">50+</div>
+                        <div class="stat-label">Integrations</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">99.9%</div>
+                        <div class="stat-label">Uptime</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">5min</div>
+                        <div class="stat-label">Setup Time</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. App Marketplace Preview -->
+        <section class="apple-section apple-marketplace" id="marketplace">
+            <div class="apple-container">
+                <div class="apple-section-header">
+                    <h2>Powerful Apps for Every Need</h2>
+                    <p>Extend your capabilities with our curated app marketplace</p>
+                </div>
+                
+                <div class="marketplace-carousel">
+                    <div class="app-cards-container">
+                        <div class="app-card">
+                            <div class="app-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                                </svg>
+                            </div>
+                            <h4>Virtual Try-On Studio</h4>
+                            <p>Advanced AR technology for realistic frame fitting</p>
+                            <div class="app-rating">★★★★★ 4.9</div>
+                        </div>
+                        
+                        <div class="app-card">
+                            <div class="app-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                </svg>
+                            </div>
+                            <h4>Smart Recommendations</h4>
+                            <p>AI-powered product suggestions based on face analysis</p>
+                            <div class="app-rating">★★★★★ 4.8</div>
+                        </div>
+                        
+                        <div class="app-card">
+                            <div class="app-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 3v18h18"/>
+                                    <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/>
+                                </svg>
+                            </div>
+                            <h4>Analytics Pro</h4>
+                            <p>Advanced insights and reporting for data-driven decisions</p>
+                            <div class="app-rating">★★★★★ 4.7</div>
+                        </div>
+                        
+                        <div class="app-card">
+                            <div class="app-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+                                </svg>
+                            </div>
+                            <h4>Inventory Manager</h4>
+                            <p>Smart inventory tracking and automated reordering</p>
+                            <div class="app-rating">★★★★☆ 4.6</div>
+                        </div>
+                        
+                        <div class="app-card">
+                            <div class="app-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                                </svg>
+                            </div>
+                            <h4>Customer Support Bot</h4>
+                            <p>AI-powered customer service and support automation</p>
+                            <div class="app-rating">★★★★☆ 4.5</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="marketplace-cta">
+                    <a href="marketplace.html" class="apple-btn apple-btn-outline apple-btn-large">
+                        Explore All Apps <span class="arrow">→</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Testimonials -->
+        <section class="apple-section apple-testimonials" id="testimonials">
+            <div class="apple-container">
+                <div class="apple-section-header">
+                    <h2>What Our Customers Are Saying</h2>
+                    <p>Join thousands of satisfied eyewear retailers</p>
+                </div>
+                
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            <p>"VARAi Commerce Studio transformed our business completely. The virtual try-on feature alone increased our online conversions by 52%, and customer satisfaction scores have never been higher."</p>
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">
+                                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMzAiIGZpbGw9IiM2NjdlZWEiLz4KPHRleHQgeD0iMzAiIHk9IjM4IiBmb250LWZhbWlseT0iU0YgUHJvIERpc3BsYXkiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5TPC90ZXh0Pgo8L3N2Zz4K" alt="Sarah Johnson" />
+                            </div>
+                            <div class="author-info">
+                                <div class="author-name">Sarah Johnson</div>
+                                <div class="author-title">CEO, Vision Plus Eyewear</div>
+                            </div>
+                        </div>
+                        <div class="testimonial-metric">
+                            <span class="metric-highlight">+52% Conversion Rate</span>
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            <p>"The AI recommendation engine is incredible. It's like having a personal stylist for every customer. Our return rate dropped by 68% and average order value increased by 34%."</p>
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">
+                                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMzAiIGZpbGw9IiNmMDkzZmIiLz4KPHRleHQgeD0iMzAiIHk9IjM4IiBmb250LWZhbWlseT0iU0YgUHJvIERpc3BsYXkiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5NPC90ZXh0Pgo8L3N2Zz4K" alt="Michael Chen" />
+                            </div>
+                            <div class="author-info">
+                                <div class="author-name">Michael Chen</div>
+                                <div class="author-title">Founder, Optical Innovations</div>
+                            </div>
+                        </div>
+                        <div class="testimonial-metric">
+                            <span class="metric-highlight">-68% Return Rate</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Pricing & Plans -->
+        <section class="apple-section apple-pricing" id="pricing">
+            <div class="apple-container">
+                <div class="apple-section-header">
+                    <h2>Simple, Transparent Pricing</h2>
+                    <p>Choose the plan that fits your business needs</p>
+                </div>
+                
+                <div class="pricing-toggle">
+                    <span class="toggle-label">Monthly</span>
+                    <button class="pricing-switch" onclick="togglePricing()">
+                        <span class="switch-slider"></span>
+                    </button>
+                    <span class="toggle-label">Annual <span class="discount-badge">Save 20%</span></span>
+                </div>
+                
+                <div class="pricing-grid">
+                    <div class="pricing-card">
+                        <div class="pricing-header">
+                            <h3>Starter</h3>
+                            <div class="pricing-price">
+                                <span class="price-amount monthly-price">$99</span>
+                                <span class="price-amount annual-price" style="display: none;">$79</span>
+                                <span class="price-period">/month</span>
+                            </div>
+                            <p class="pricing-description">Perfect for small independent stores</p>
+                        </div>
+                        <div class="pricing-features">
+                            <div class="feature-item">
+                                <span class="feature-check">✓</span>
+                                <span>Virtual Try-On (Basic)</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-check">✓</span>
+                                <span>AI Recommendations</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-check">✓</span>
+                                <span>Basic Analytics</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-check">✓</span>
+                                <span>Email Support</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-check">✓</span>
+                                <span>Up to 1,000 products</span>
+                            </div>
+                        </div>
+                        <div class="pricing-cta">
+                            <a href="#signup" class="apple-btn apple-btn-outline">Get Started</a>
+                        </div>
+                    </div>
+                    
+                    <div class="pricing-card pricing-featured">
+                        <div class="featured-badge">Most Popular</div>
+                        <div class="pricing-header">
+                            <h3>Business</h3>
+                            <div class="pricing-price">
+                                <span class="price-amount monthly-price">$299</span>
+                                <span class="price-amount annual-price" style="display: none;">$239</span>
+                                <span class="price-period">/month</span>
+                            </div>
+                            <p class="pricing-description">Ideal for growing retail chains</p>
+                        </div>
+                        <div class="pricing-features">
+                            <div class="feature-item">
+                                <span class="feature-check">✓</span>
+                                <span>Virtual Try-On (Advanced)</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-check">✓</span>
+                                <span>AI Recommendations Pro</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-check">✓</span>
+                                <span>Advanced Analytics</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-check">✓</span>
+                                <span>Priority Support</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-check">✓</span>
+                                <span>Up to 10,000 products</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-check">✓</span>
+                                <span>Custom Integrations</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-check">✓</span>
+                                <span>White-label Options</span>
+                            </div>
+                        </div>
+                        <div class="pricing-cta">
+                            <a href="#signup" class="apple-btn apple-btn-primary">Get Started</a>
+                        </div>
+                    </div>
+                    
+                    <div class="pricing-card">
+                        <div class="pricing-header">
+                            <h3>Enterprise</h3>
+                            <div class="pricing-price">
+                                <span class="price-amount">Custom</span>
+                            </div>
+                            <p class="pricing-description">For large enterprises with custom needs</p>
+                        </div>
+                        <div class="pricing-features">
+                            <div class="feature-item">
+                                <span class="feature-check">✓</span>
+                                <span>Everything in Business</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-check">✓</span>
+                                <span>Unlimited Products</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-check">✓</span>
+                                <span>Dedicated Account Manager</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-check">✓</span>
+                                <span>Custom Development</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-check">✓</span>
+                                <span>SLA Guarantees</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-check">✓</span>
+                                <span>On-premise Deployment</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-check">✓</span>
+                                <span>24/7 Phone Support</span>
+                            </div>
+                        </div>
+                        <div class="pricing-cta">
+                            <a href="contact.html" class="apple-btn apple-btn-outline">Contact Us</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. Sign-up Section -->
+        <section class="apple-section apple-signup" id="signup">
+            <div class="apple-container">
+                <div class="signup-content">
+                    <h2>Ready to Transform Your Business?</h2>
+                    <p>Join thousands of eyewear retailers already seeing incredible results</p>
+                    
+                    <div class="signup-form-container">
+                        <form class="signup-form" onsubmit="handleSignup(event)">
+                            <div class="form-group">
+                                <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+                                <button type="submit" class="apple-btn apple-btn-primary apple-btn-large">
+                                    Get Started Free
+                                </button>
+                            </div>
+                            <p class="form-disclaimer">
+                                Start your 14-day free trial. No credit card required.
+                            </p>
+                        </form>
+                        
+                        <div class="signup-alternative">
+                            <p>Or</p>
+Schedule a Demo
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="signup-benefits">
+                        <div class="benefit-item">
+                            <span class="benefit-icon">✓</span>
+                            <span>14-day free trial</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">✓</span>
+                            <span>No credit card required</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">✓</span>
+                            <span>Setup in 5 minutes</span>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">✓</span>
+                            <span>24/7 support</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. Footer -->
+        <footer class="apple-footer">
+            <div class="apple-container">
+                <div class="footer-content">
+                    <div class="footer-brand">
+                        <div class="footer-logo">
+                            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                                <rect width="40" height="40" rx="10" fill="var(--varai-primary)"/>
+                                <text x="20" y="27" font-family="SF Pro Display, Inter" font-size="16" font-weight="600" fill="white" text-anchor="middle">V</text>
+                            </svg>
+                            <span>VARAi</span>
+                        </div>
+                        <p class="footer-description">
+                            AI-powered solutions for the modern eyewear retailer. Transform your business with intelligent technology.
+                        </p>
+                        <div class="footer-social">
+                            <a href="#" aria-label="Twitter" class="social-link">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                                </svg>
+                            </a>
+                            <a href="#" aria-label="LinkedIn" class="social-link">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                                </svg>
+                            </a>
+                            <a href="#" aria-label="GitHub" class="social-link">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-links">
+                        <div class="footer-column">
+                            <h4>Products</h4>
+                            <ul>
+                                <li><a href="products.html#virtual-try-on">Virtual Try-On</a></li>
+                                <li><a href="products.html#ai-recommendations">AI Recommendations</a></li>
+                                <li><a href="products.html#analytics">Analytics</a></li>
+                                <li><a href="products.html#integrations">Integrations</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="footer-column">
+                            <h4>Solutions</h4>
+                            <ul>
+                                <li><a href="solutions.html#retail-chains">Retail Chains</a></li>
+                                <li><a href="solutions.html#independent-stores">Independent Stores</a></li>
+                                <li><a href="solutions.html#e-commerce">E-commerce</a></li>
+                                <li><a href="solutions.html#omnichannel">Omnichannel</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="footer-column">
+                            <h4>Resources</h4>
+                            <ul>
+                                <li><a href="resources.html#documentation">Documentation</a></li>
+                                <li><a href="resources.html#api">API Reference</a></li>
+                                <li><a href="resources.html#guides">Guides</a></li>
+                                <li><a href="resources.html#webinars">Webinars</a></li>
+                                <li><a href="resources.html#case-studies">Case Studies</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="footer-column">
+                            <h4>Company</h4>
+                            <ul>
+                                <li><a href="company.html#about">About</a></li>
+                                <li><a href="company.html#careers">Careers</a></li>
+                                <li><a href="company.html#contact">Contact</a></li>
+                                <li><a href="company.html#partners">Partners</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="footer-column">
+                            <h4>Legal</h4>
+                            <ul>
+                                <li><a href="legal.html#privacy">Privacy Policy</a></li>
+                                <li><a href="legal.html#terms">Terms of Service</a></li>
+                                <li><a href="legal.html#cookies">Cookie Policy</a></li>
+                                <li><a href="legal.html#security">Security</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="footer-bottom">
+                    <p>&copy; 2025 VARAi Inc. All rights reserved.</p>
+                    <div class="footer-bottom-links">
+                        <a href="legal.html#privacy">Privacy</a>
+                        <a href="legal.html#terms">Terms</a>
+                        <a href="legal.html#cookies">Cookies</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Demo Modal -->
+    <div id="demoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Watch VARAi in Action</h3>
+                <button class="modal-close" onclick="closeDemoModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="video-container">
+                    <div class="video-placeholder">
+                        <div class="play-button" onclick="playDemoVideo()">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                        </div>
+                        <p>2-minute product demo</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu toggle
+        document.querySelector('.apple-mobile-menu-toggle').addEventListener('click', () => {
+            document.querySelector('.apple-nav').classList.toggle('mobile-open');
+        });
+
+        // Pricing toggle
+        function togglePricing() {
+            const monthlyPrices = document.querySelectorAll('.monthly-price');
+            const annualPrices = document.querySelectorAll('.annual-price');
+            const toggle = document.querySelector('.pricing-switch');
+            
+            toggle.classList.toggle('active');
+            
+            monthlyPrices.forEach(price => {
+                price.style.display = toggle.classList.contains('active') ? 'none' : 'inline';
+            });
+            
+            annualPrices.forEach(price => {
+                price.style.display = toggle.classList.contains('active') ? 'inline' : 'none';
+            });
+        }
+
+        // Demo modal functions
+        function playDemo() {
+            document.getElementById('demoModal').style.display = 'flex';
+        }
+
+        function closeDemoModal() {
+            document.getElementById('demoModal').style.display = 'none';
+        }
+
+        function playDemoVideo() {
+            // In a real implementation, this would start the video
+            alert('Demo video would play here');
+        }
+
+        // Signup form handler
+        function handleSignup(event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            
+            // In a real implementation, this would submit to your backend
+            alert(`Thank you! We'll send setup instructions to ${email}`);
+            
+            // Redirect to dashboard for demo purposes
+            window.location.href = 'dashboard/index.html';
+        }
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections for animations
+        document.querySelectorAll('.apple-section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Floating cards animation in hero
+        function animateFloatingCards() {
+            const cards = document.querySelectorAll('.floating-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.5}s`;
+                card.classList.add('floating');
+            });
+        }
+
+        // Initialize animations when page loads
+        window.addEventListener('load', () => {
+            animateFloatingCards();
+        });
+    </script>
+</body>
+</html>
+                            <a href="contact.html" class="apple-btn apple-btn-outline apple-btn-large">

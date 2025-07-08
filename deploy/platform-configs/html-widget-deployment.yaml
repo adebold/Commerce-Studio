@@ -1,0 +1,69 @@
+# CDN deployment configuration for the HTML Avatar Chat Widget.
+# This document outlines the strategy for deploying the standalone widget
+# (`avatar-chat-widget.js`) to a Content Delivery Network (CDN) for
+# efficient delivery to generic e-commerce sites.
+
+# 1. Asset Preparation:
+# - The core widget file `integrations/html-store/avatar-chat-widget.js`
+#   should be minified and bundled.
+# - Any associated assets (CSS, images) should also be optimized.
+# - This process can be automated using a build tool like Webpack or Rollup.
+
+# Example build command (using a hypothetical build script):
+#   npm run build:html-widget
+
+# 2. CDN Provider Selection:
+# - Choose a CDN provider (e.g., Google Cloud CDN, Amazon CloudFront, Cloudflare).
+# - The choice depends on factors like performance, cost, and existing infrastructure.
+
+# 3. CDN Configuration (Example using Google Cloud CDN):
+
+# 3.1. Create a Backend Bucket:
+# - A Google Cloud Storage bucket is used to store the widget assets.
+#   `gsutil mb gs://commerce-studio-avatar-widget-assets`
+
+# 3.2. Upload Assets:
+# - Upload the built and versioned assets to the bucket.
+#   `gsutil cp ./dist/avatar-chat-widget.v1.0.0.min.js gs://commerce-studio-avatar-widget-assets/`
+#   `gsutil acl ch -u AllUsers:R gs://commerce-studio-avatar-widget-assets/avatar-chat-widget.v1.0.0.min.js`
+
+# 3.3. Configure the CDN:
+# - Set up a Google Cloud CDN backend pointing to the storage bucket.
+# - Configure caching policies. It's crucial to use versioned filenames
+#   to allow for long cache TTLs and efficient cache busting.
+
+# Example gcloud command to create the backend bucket:
+#   gcloud compute backend-buckets create avatar-widget-backend-bucket \
+#     --gcs-bucket-name=commerce-studio-avatar-widget-assets \
+#     --enable-cdn
+
+# 4. Deployment Automation (CI/CD):
+# - This entire process should be automated in a CI/CD pipeline (e.g., using GitHub Actions or Cloud Build).
+# - The pipeline would trigger on changes to the `integrations/html-store` directory.
+
+# Example GitHub Actions workflow step:
+# - name: Deploy HTML Widget to GCS
+#   run: |
+#     npm install
+#     npm run build:html-widget
+#     gcloud auth activate-service-account --key-file=${{ secrets.GCP_SA_KEY }}
+#     gsutil cp ./dist/avatar-chat-widget.${{ github.sha }}.min.js gs://commerce-studio-avatar-widget-assets/
+
+# 5. Usage in HTML Stores:
+# - E-commerce sites would then embed the widget using the CDN URL.
+#   <script src="https://cdn.example.com/avatar-chat-widget.v1.0.0.min.js" defer></script>
+#   <div id="avatar-chat-container"></div>
+#   <script>
+#     document.addEventListener('DOMContentLoaded', function() {
+#       new HtmlAvatarChatWidget({
+#         storeId: 'STORE123',
+#         apiEndpoint: 'https://api.commercestudio.com/v1/chat',
+#         containerSelector: '#avatar-chat-container'
+#       });
+#     });
+#   </script>
+
+# 6. Monitoring:
+# - Monitor CDN logs for traffic patterns and errors.
+# - The backend service that the widget communicates with should have its own
+#   robust monitoring and health checks.

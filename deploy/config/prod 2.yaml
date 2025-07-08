@@ -1,0 +1,74 @@
+# Production Environment Configuration
+environment: prod
+project_id: ml-datadriven-recos
+region: us-central1
+registry: gcr.io/ml-datadriven-recos
+
+# Service configurations
+services:
+  auth-service:
+    image: auth-service
+    memory: 2Gi
+    cpu: 2
+    min_instances: 3
+    max_instances: 10
+    concurrency: 100
+    env_vars:
+      NODE_ENV: production
+      LOG_LEVEL: warn
+      
+  frontend:
+    image: frontend
+    memory: 1Gi
+    cpu: 1
+    min_instances: 3
+    max_instances: 8
+    concurrency: 150
+    env_vars:
+      NODE_ENV: production
+      
+  api-gateway:
+    image: api-gateway
+    memory: 4Gi
+    cpu: 4
+    min_instances: 3
+    max_instances: 15
+    concurrency: 150
+    env_vars:
+      NODE_ENV: production
+      LOG_LEVEL: warn
+
+# Database configuration
+database:
+  connection_pool_size: 20
+  
+# Monitoring
+monitoring:
+  enabled: true
+  log_level: warn
+  alerts_enabled: true
+  sla_monitoring: true
+  
+# Security
+security:
+  allow_unauthenticated: false
+  cors_origins: "https://eyewearml.com,https://app.eyewearml.com"
+  security_headers: true
+  
+# Blue-green deployment
+blue_green:
+  enabled: true
+  health_check_timeout: 600
+  rollback_threshold: 3
+  canary_percentage: 10
+  
+# Backup and disaster recovery
+backup:
+  enabled: true
+  retention_days: 30
+  
+# Performance
+performance:
+  cdn_enabled: true
+  caching_enabled: true
+  compression_enabled: true

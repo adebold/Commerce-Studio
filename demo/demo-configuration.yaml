@@ -1,0 +1,34 @@
+# Demo-Specific Configuration for AI Avatar Chat System
+#
+# This file contains configuration settings for the demo environment, including
+# mock service endpoints and other demo-specific parameters.
+#
+
+# --- Mock NVIDIA Service Endpoints ---
+nvidia_services:
+  omniverse_avatar:
+    endpoint: "http://localhost:8080/nvidia/omniverse/avatar"
+    api_key: "mock-api-key-omniverse"
+  riva_speech:
+    endpoint: "http://localhost:8080/nvidia/riva/speech"
+    api_key: "mock-api-key-riva"
+  merlin_conversation:
+    endpoint: "http://localhost:8080/nvidia/merlin/conversation"
+    api_key: "mock-api-key-merlin"
+
+# --- Demo Data Configuration ---
+product_catalog:
+  path: "demo/sample-data/demo-products.json"
+
+# --- Frontend Configuration ---
+demo_interface:
+  title: "AI Avatar Chat Demo"
+  avatar:
+    initial_message: "Hello! I'm your AI shopping assistant. How can I help you today?"
+    mock_image_url: "https://i.pravatar.cc/150?img=68" # Placeholder avatar image
+
+# --- Feature Flags ---
+features:
+  enable_face_analysis: true
+  enable_voice_input: true
+  enable_product_recommendations: true

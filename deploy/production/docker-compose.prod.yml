@@ -1,0 +1,167 @@
+version: '3.8'
+
+services:
+  # API Gateway
+  api-gateway:
+    image: gcr.io/ml-datadriven-recos/api-gateway:${VERSION:-latest}
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - NODE_ENV=production
+      - REDIS_URL=${REDIS_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - RATE_LIMIT_WINDOW_MS=900000
+      - RATE_LIMIT_MAX_REQUESTS=100
+      - LOG_LEVEL=warn
+    volumes:
+      - ./ssl:/etc/ssl/certs
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - varai-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # AI Discovery Service
+  ai-discovery-service:
+    image: gcr.io/ml-datadriven-recos/ai-discovery-service:${VERSION:-latest}
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=${MONGODB_URI}
+      - VERTEX_AI_PROJECT=${VERTEX_AI_PROJECT}
+      - VERTEX_AI_LOCATION=${VERTEX_AI_LOCATION}
+      - VERTEX_AI_CREDENTIALS=${VERTEX_AI_CREDENTIALS}
+      - REDIS_URL=${REDIS_URL}
+      - LOG_LEVEL=warn
+    networks:
+      - varai-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Face Analysis Service
+  face-analysis-service:
+    image: gcr.io/ml-datadriven-recos/face-analysis-service:${VERSION:-latest}
+    environment:
+      - NODE_ENV=production
+      - REDIS_URL=${REDIS_URL}
+      - MEDIAPIPE_MODEL_PATH=/app/models
+      - LOG_LEVEL=warn
+    volumes:
+      - ./models:/app/models:ro
+    networks:
+      - varai-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Recommendation Service
+  recommendation-service:
+    image: gcr.io/ml-datadriven-recos/recommendation-service:${VERSION:-latest}
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=${MONGODB_URI}
+      - VERTEX_AI_PROJECT=${VERTEX_AI_PROJECT}
+      - VERTEX_AI_LOCATION=${VERTEX_AI_LOCATION}
+      - REDIS_URL=${REDIS_URL}
+      - LOG_LEVEL=warn
+    networks:
+      - varai-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Analytics Service
+  analytics-service:
+    image: gcr.io/ml-datadriven-recos/analytics-service:${VERSION:-latest}
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=${MONGODB_URI}
+      - REDIS_URL=${REDIS_URL}
+      - PUBSUB_PROJECT=${VERTEX_AI_PROJECT}
+      - LOG_LEVEL=warn
+    networks:
+      - varai-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis-data:/data
+    networks:
+      - varai-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Monitoring - Prometheus
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    networks:
+      - varai-network
+    restart: unless-stopped
+
+  # Monitoring - Grafana
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources
+    networks:
+      - varai-network
+    restart: unless-stopped
+
+networks:
+  varai-network:
+    driver: bridge
+
+volumes:
+  redis-data:
+  prometheus-data:
+  grafana-data:

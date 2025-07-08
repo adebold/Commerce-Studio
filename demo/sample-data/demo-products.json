@@ -1,0 +1,38 @@
+[
+  {
+    "id": "prod_001",
+    "name": "Classic Aviator",
+    "style": "Aviator",
+    "price": 150.00,
+    "currency": "USD",
+    "image_url": "https://via.placeholder.com/300x200.png?text=Aviator+Glasses",
+    "description": "A timeless design that never goes out of style. Perfect for a sharp, professional look."
+  },
+  {
+    "id": "prod_002",
+    "name": "Modern Wayfarer",
+    "style": "Wayfarer",
+    "price": 130.00,
+    "currency": "USD",
+    "image_url": "https://via.placeholder.com/300x200.png?text=Wayfarer+Glasses",
+    "description": "A modern take on a classic frame. Ideal for casual and everyday wear."
+  },
+  {
+    "id": "prod_003",
+    "name": "Retro Round",
+    "style": "Round",
+    "price": 120.00,
+    "currency": "USD",
+    "image_url": "https://via.placeholder.com/300x200.png?text=Round+Glasses",
+    "description": "Embrace a vintage vibe with these stylish round frames. Great for a creative, artistic look."
+  },
+  {
+    "id": "prod_004",
+    "name": "Sporty Rectangle",
+    "style": "Rectangle",
+    "price": 160.00,
+    "currency": "USD",
+    "image_url": "https://via.placeholder.com/300x200.png?text=Rectangle+Glasses",
+    "description": "A durable and lightweight frame for an active lifestyle. Designed for comfort and performance."
+  }
+]

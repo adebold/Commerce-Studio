@@ -349,9 +349,18 @@ class LiveDemoServer {
                 directives: {
                     defaultSrc: ["'self'"],
                     styleSrc: ["'self'", "'unsafe-inline'"],
-                    scriptSrc: ["'self'", "'unsafe-inline'"],
+                    scriptSrc: [
+                        "'self'",
+                        "'unsafe-inline'",
+                        "'unsafe-eval'",
+                        "https://cdn.jsdelivr.net",
+                        "https://cdn.socket.io"
+                    ],
                     imgSrc: ["'self'", "data:", "blob:"],
-                    connectSrc: ["'self'", "ws:", "wss:"]
+                    connectSrc: ["'self'", "ws:", "wss:", "https:"],
+                    fontSrc: ["'self'", "https:"],
+                    workerSrc: ["'self'", "blob:"],
+                    childSrc: ["'self'", "blob:"]
                 }
             }
         }));
@@ -450,7 +459,7 @@ class LiveDemoServer {
                     throw new Error('Conversation service not available');
                 }
                 
-                const result = await this.conversationService.processMessage 
+                const result = await this.conversationService.processMessage
                     ? await this.conversationService.processMessage(message, sessionId, context)
                     : await this.conversationService.processConversation(message, sessionId, context);
                 
@@ -469,9 +478,53 @@ class LiveDemoServer {
             }
         });
 
+        // Chat endpoint (unified interface for frontend)
+        this.app.post('/api/chat', async (req, res) => {
+            try {
+                const { message, sessionId, context } = req.body;
+                
+                if (!message) {
+                    return res.status(400).json({
+                        success: false,
+                        error: 'Message is required'
+                    });
+                }
+                
+                if (!this.conversationService) {
+                    throw new Error('Conversation service not available');
+                }
+                
+                // Process the message through the conversation service
+                const result = await this.conversationService.processMessage
+                    ? await this.conversationService.processMessage(message, sessionId || 'default', context)
+                    : await this.conversationService.processConversation(message, sessionId || 'default', context);
+                
+                res.json({
+                    success: true,
+                    response: result.response || result.text || result,
+                    sessionId: sessionId || 'default',
+                    provider: this.primaryServiceProvider,
+                    timestamp: new Date().toISOString()
+                });
+                
+            } catch (error) {
+                console.error('Chat processing error:', error);
+                res.status(500).json({
+                    success: false,
+                    error: error.message,
+                    provider: this.primaryServiceProvider
+                });
+            }
+        });
+
         // Static files
         this.app.use('/static', express.static(path.join(__dirname, '../frontend')));
         this.app.use('/', express.static(path.join(__dirname)));
+        
+        // Serve Socket.IO client library locally
+        this.app.get('/socket.io/socket.io.js', (req, res) => {
+            res.sendFile(path.join(__dirname, 'node_modules/socket.io-client/dist/socket.io.js'));
+        });
         
         // Default route
         this.app.get('/', (req, res) => {

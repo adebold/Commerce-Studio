@@ -1,0 +1,94 @@
+# Monitoring System Configuration
+# This file configures the monitoring system health checks and alert settings
+
+health_checks:
+  api_health:
+    enabled: true
+    endpoint: "http://localhost:8000/health"
+    method: "GET"
+    timeout: 5
+    interval: 60
+    retry_attempts: 3
+    retry_delay: 5
+    alert_level: "CRITICAL"
+    expected_status: 200
+    expected_content: {"status": "ok"}
+    headers: {}
+    
+  database_connectivity:
+    enabled: true
+    connection_string: "${DB_CONNECTION_STRING}"
+    timeout: 5
+    interval: 120
+    retry_attempts: 2
+    retry_delay: 10
+    alert_level: "CRITICAL"
+    
+  disk_usage:
+    enabled: true
+    path: "/"
+    threshold_percent: 90
+    interval: 300
+    alert_level: "WARNING"
+    
+  memory_usage:
+    enabled: true
+    threshold_percent: 85
+    interval: 300
+    alert_level: "WARNING"
+    
+  cpu_usage:
+    enabled: true
+    threshold_percent: 80
+    interval: 300
+    alert_level: "INFO"
+    
+  log_check:
+    enabled: true
+    file_path: "/var/log/application.log"
+    patterns:
+      - pattern: "ERROR"
+        alert_level: "WARNING"
+      - pattern: "FATAL"
+        alert_level: "CRITICAL"
+    interval: 300
+    
+  port_check:
+    enabled: true
+    ports:
+      - port: 8000
+        host: "localhost"
+        alert_level: "CRITICAL"
+      - port: 5432
+        host: "localhost"
+        alert_level: "CRITICAL"
+    interval: 300
+    timeout: 5
+
+alerts:
+  email:
+    enabled: true
+    recipients:
+      - "admin@example.com"
+    smtp_server: "smtp.example.com"
+    smtp_port: 587
+    smtp_username: "${SMTP_USERNAME}"
+    smtp_password: "${SMTP_PASSWORD}"
+    from_address: "alerts@example.com"
+    rate_limiting:
+      max_notifications_per_hour: 10
+      min_interval_seconds: 300
+      
+  slack:
+    enabled: true
+    webhook_url: "${SLACK_WEBHOOK_URL}"
+    channel: "#alerts"
+    rate_limiting:
+      max_notifications_per_hour: 10
+      min_interval_seconds: 300
+      
+  status_updates:
+    enabled: true
+    interval_seconds: 30
+    include_in_log: true
+    format: "📈 Status Update ({time}):\n  - Active alerts: {active_count}\n  - Total alerts: {total_count}\n  - Uptime: {uptime}s\n⚠️  Active alerts by level:\n    - {level_counts}"

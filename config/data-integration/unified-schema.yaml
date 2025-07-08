@@ -1,0 +1,222 @@
+# Unified Data Schema for Cross-Modal Analytics
+# Version: 1.0
+# Date: July 2025
+# Author: AI Agent - Unified Data Infrastructure
+
+specVersion: "1.0"
+info:
+  title: "Unified User Interaction Data Model"
+  description: "A unified data schema to model user interactions across click-based recommendations and avatar chat systems. This schema supports cross-modal analytics, personalization, and user profile generation."
+  version: "1.0"
+
+components:
+  schemas:
+    # -------------------------------------------
+    # Core Unified User Profile
+    # -------------------------------------------
+    UnifiedUserProfile:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: "Unique identifier for the user."
+        profileId:
+          type: string
+          description: "Unique identifier for this unified profile version."
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        
+        # Cross-modal preferences
+        preferences:
+          type: object
+          properties:
+            # Preferences derived from click-stream data
+            clickStreamPreferences:
+              type: object
+              properties:
+                stylePreferences:
+                  type: array
+                  items:
+                    type: string
+                brandPreferences:
+                  type: array
+                  items:
+                    type: string
+                priceRange:
+                  type: object
+                  properties:
+                    min:
+                      type: number
+                    max:
+                      type: number
+                colorPreferences:
+                  type: array
+                  items:
+                    type: string
+            
+            # Preferences derived from conversational data
+            conversationPreferences:
+              type: object
+              properties:
+                mentionedStyles:
+                  type: array
+                  items:
+                    type: string
+                mentionedBrands:
+                  type: array
+                  items:
+                    type: string
+                sentimentIndicators:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      topic:
+                        type: string
+                      sentiment:
+                        type: string # e.g., positive, negative, neutral
+            
+            # Unified, learned preferences
+            learnedPreferences:
+              type: object
+              properties:
+                preferredStyles:
+                  type: array
+                  items:
+                    type: string
+                preferredBrands:
+                  type: array
+                  items:
+                    type: string
+                inferredPriceTier:
+                  type: string # e.g., budget, mid-range, premium
+        
+        # Shared user attributes
+        attributes:
+          type: object
+          properties:
+            faceAnalysis:
+              $ref: "#/components/schemas/FaceAnalysisData"
+            purchaseHistory:
+              type: array
+              items:
+                $ref: "#/components/schemas/PurchaseRecord"
+
+    # -------------------------------------------
+    # Unified Interaction Event
+    # -------------------------------------------
+    UnifiedInteractionEvent:
+      type: object
+      properties:
+        eventId:
+          type: string
+        sessionId:
+          type: string
+        userId:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        
+        # Modality of interaction
+        modality:
+          type: string
+          enum: [click_stream, avatar_chat]
+        
+        # Source platform details
+        source:
+          type: object
+          properties:
+            platform:
+              type: string
+              enum: [shopify, magento, woocommerce, html]
+            storeId:
+              type: string
+        
+        # Event-specific data payload
+        eventData:
+          oneOf:
+            - $ref: "#/components/schemas/ClickStreamEvent"
+            - $ref: "#/components/schemas/AvatarChatEvent"
+
+    # -------------------------------------------
+    # Modality-Specific Event Schemas
+    # -------------------------------------------
+    ClickStreamEvent:
+      type: object
+      properties:
+        eventType:
+          type: string
+          enum: [click, view, hover, scroll, input]
+        elementDetails:
+          type: object
+          properties:
+            elementId:
+              type: string
+            elementType:
+              type: string
+            pageUrl:
+              type: string
+    
+    AvatarChatEvent:
+      type: object
+      properties:
+        turnNumber:
+          type: integer
+        speaker:
+          type: string
+          enum: [user, ai_avatar]
+        message:
+          type: string
+        intent:
+          type: string
+        entities:
+          type: object
+        
+    # -------------------------------------------
+    # Shared Data Structures
+    # -------------------------------------------
+    FaceAnalysisData:
+      type: object
+      properties:
+        analysisId:
+          type: string
+        faceShape:
+          type: string
+        measurementRanges:
+          type: object
+          properties:
+            pupillaryDistance:
+              type: string
+            faceWidth:
+              type: string
+    
+    PurchaseRecord:
+      type: object
+      properties:
+        orderId:
+          type: string
+        productId:
+          type: string
+        price:
+          type: number
+        timestamp:
+          type: string
+          format: date-time
+        
+        # Attribution details
+        attribution:
+          type: object
+          properties:
+            influencedBy:
+              type: array
+              items:
+                type: string
+                enum: [avatar_chat, recommendation_click]
+            lastTouchpoint:
+              type: string
+              enum: [avatar_chat, recommendation_click]

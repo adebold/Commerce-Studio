@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store Locator - VARAi Commerce Studio</title>
+    <link rel="stylesheet" href="css/varai-design-system.css">
+    <link rel="stylesheet" href="css/enterprise-enhancements.css">
+    <link rel="stylesheet" href="css/apple-hero-sections.css">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="js/theme-manager.js" defer></script>
+    <script src="js/enterprise-enhancements.js" defer></script>
+    <script src="js/store-locator.js" defer></script>
+    <!-- Google Maps API will be loaded dynamically by the JavaScript with proper key -->
+</head>
+<body>
+    <header class="varai-navbar">
+        <div class="varai-container">
+            <nav class="varai-flex varai-items-center varai-justify-between">
+                <a href="index.html" class="varai-navbar-brand">VARAi Commerce Studio</a>
+                <button class="varai-mobile-menu-toggle" aria-label="Toggle navigation menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="varai-navbar-nav varai-d-none varai-d-md-flex varai-items-center" style="gap: 2rem;">
+                    <a href="index.html" class="varai-nav-link">Home</a>
+                    <a href="products.html" class="varai-nav-link">Products</a>
+                    <a href="solutions.html" class="varai-nav-link">Solutions</a>
+                    <a href="pricing.html" class="varai-nav-link">Pricing</a>
+                    <a href="store-locator.html" class="varai-nav-link active">Store Locator</a>
+                    <a href="company.html" class="varai-nav-link">Company</a>
+                    <a href="https://visioncraft-store-353252826752.us-central1.run.app" class="varai-nav-link" target="_blank">Demo Store</a>
+                </div>
+                <div class="varai-d-none varai-d-md-flex">
+                    <a href="signup/index.html" class="varai-btn varai-btn-primary">Get Started</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Store Locator Hero Section -->
+        <section class="varai-hero varai-py-20">
+            <div class="varai-container">
+                <div class="varai-text-center varai-mb-12">
+                    <h1 class="varai-mb-6">Find a VARAi Store Near You</h1>
+                    <p class="varai-text-xl varai-mb-8" style="max-width: 600px; margin: 0 auto; opacity: 0.95;">
+                        Discover our retail partners and experience VARAi's AI-powered eyewear technology in person. 
+                        Reserve frames for pickup or schedule consultations at your nearest location.
+                    </p>
+                </div>
+
+                <!-- Store Search Section -->
+                <div class="store-search-hero varai-card varai-p-8 varai-mb-12" style="max-width: 800px; margin: 0 auto;">
+                    <div class="varai-grid varai-grid-cols-1 varai-md-grid-cols-3 varai-gap-4 varai-items-end">
+                        <div class="varai-md-col-span-2">
+                            <label for="location-search" class="varai-label">Enter your location</label>
+                            <input 
+                                type="text" 
+                                id="location-search" 
+                                class="varai-input varai-input-lg" 
+                                placeholder="ZIP code, city, or address"
+                                autocomplete="off"
+                            >
+                            <div id="location-suggestions" class="location-suggestions" style="display: none;"></div>
+                        </div>
+                        <div>
+                            <button id="find-stores-btn" class="varai-btn varai-btn-primary varai-btn-lg varai-w-full">
+                                <span class="btn-text">Find Stores</span>
+                                <span class="btn-loading" style="display: none;">
+                                    <svg class="varai-spinner" width="20" height="20" viewBox="0 0 24 24">
+                                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="32" stroke-dashoffset="32">
+                                            <animate attributeName="stroke-dashoffset" dur="1s" values="32;0" repeatCount="indefinite"/>
+                                        </circle>
+                                    </svg>
+                                    Searching...
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Search Filters -->
+                    <div class="search-filters varai-mt-6 varai-pt-6" style="border-top: 1px solid var(--varai-border);">
+                        <div class="varai-flex varai-flex-wrap varai-gap-4 varai-items-center">
+                            <span class="varai-text-sm varai-font-medium">Filters:</span>
+                            <label class="varai-checkbox-label">
+                                <input type="checkbox" id="filter-bopis" class="varai-checkbox">
+                                <span class="checkmark"></span>
+                                BOPIS Available
+                            </label>
+                            <label class="varai-checkbox-label">
+                                <input type="checkbox" id="filter-open-now" class="varai-checkbox">
+                                <span class="checkmark"></span>
+                                Open Now
+                            </label>
+                            <label class="varai-checkbox-label">
+                                <input type="checkbox" id="filter-eye-exams" class="varai-checkbox">
+                                <span class="checkmark"></span>
+                                Eye Exams
+                            </label>
+                            <select id="radius-select" class="varai-select">
+                                <option value="10">Within 10 miles</option>
+                                <option value="25" selected>Within 25 miles</option>
+                                <option value="50">Within 50 miles</option>
+                                <option value="100">Within 100 miles</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Store Results Section -->
+        <section class="store-results-section varai-py-12">
+            <div class="varai-container">
+                <div class="varai-grid varai-grid-cols-1 varai-lg-grid-cols-2 varai-gap-8">
+                    <!-- Map Container -->
+                    <div class="map-container">
+                        <div class="varai-card varai-p-0" style="height: 600px; overflow: hidden; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+                            <div id="store-map" style="width: 100%; height: 100%; min-height: 600px; background: var(--varai-gray-100); display: flex; align-items: center; justify-content: center; border-radius: 12px;">
+                                <div class="map-placeholder varai-text-center varai-p-8">
+                                    <div class="varai-mb-4">
+                                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--varai-gray-400)" stroke-width="1.5">
+                                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                            <circle cx="12" cy="10" r="3"/>
+                                        </svg>
+                                    </div>
+                                    <p class="varai-text-gray-600">Enter a location to view stores on the map</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Store List Container -->
+                    <div class="store-list-container">
+                        <div class="store-list-header varai-mb-6">
+                            <h2 class="varai-h3 varai-mb-2">Store Locations</h2>
+                            <div id="results-summary" class="varai-text-gray-600" style="display: none;">
+                                <span id="results-count">0</span> stores found
+                            </div>
+                        </div>
+
+                        <div id="store-list" class="store-list">
+                            <!-- Default state -->
+                            <div class="no-results-state varai-text-center varai-py-12">
+                                <div class="varai-mb-4">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--varai-gray-400)" stroke-width="1.5">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                        <circle cx="12" cy="10" r="3"/>
+                                    </svg>
+                                </div>
+                                <h3 class="varai-h4 varai-mb-2">Find Stores Near You</h3>
+                                <p class="varai-text-gray-600">Search for your location to see nearby VARAi retail partners</p>
+                            </div>
+                        </div>
+
+                        <!-- Loading State -->
+                        <div id="loading-state" class="loading-state varai-text-center varai-py-12" style="display: none;">
+                            <div class="varai-mb-4">
+                                <svg class="varai-spinner" width="48" height="48" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10" stroke="var(--varai-gray-300)" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="32" stroke-dashoffset="32">
+                                        <animate attributeName="stroke-dashoffset" dur="1s" values="32;0" repeatCount="indefinite"/>
+                                    </circle>
+                                </svg>
+                            </div>
+                            <p class="varai-text-gray-600">Searching for stores...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BOPIS Modal -->
+        <div id="bopis-modal" class="varai-modal" style="display: none;">
+            <div class="varai-modal-overlay"></div>
+            <div class="varai-modal-content" style="max-width: 600px;">
+                <div class="varai-modal-header">
+                    <h3 class="varai-modal-title">Reserve for Pickup</h3>
+                    <button class="varai-modal-close" aria-label="Close modal">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+                <div class="varai-modal-body">
+                    <div id="bopis-form-container">
+                        <!-- BOPIS form will be dynamically loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="varai-footer">
+        <div class="varai-container">
+            <div class="varai-text-center varai-py-8">
+                <p>&copy; 2024 VARAi Commerce Studio. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        /* Store Locator Specific Styles */
+        .store-search-hero {
+            background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.9) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .location-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid var(--varai-border);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 1000;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .location-suggestion {
+            padding: 12px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--varai-gray-100);
+        }
+
+        .location-suggestion:hover {
+            background: var(--varai-gray-50);
+        }
+
+        .location-suggestion:last-child {
+            border-bottom: none;
+        }
+
+        .store-card {
+            background: white;
+            border: 1px solid var(--varai-border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .store-card:hover {
+            border-color: var(--varai-primary);
+            box-shadow: 0 4px 12px rgba(10, 36, 99, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .store-card.selected {
+            border-color: var(--varai-primary);
+            background: rgba(10, 36, 99, 0.02);
+        }
+
+        .store-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .store-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--varai-foreground);
+            margin: 0;
+        }
+
+        .store-distance {
+            background: var(--varai-primary);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .store-address {
+            color: var(--varai-gray-600);
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .store-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .store-feature {
+            background: var(--varai-gray-100);
+            color: var(--varai-gray-700);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .store-feature.bopis {
+            background: var(--varai-success);
+            color: white;
+        }
+
+        .store-feature.open {
+            background: var(--varai-success);
+            color: white;
+        }
+
+        .store-feature.closed {
+            background: var(--varai-error);
+            color: white;
+        }
+
+        .store-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .store-action-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .store-action-btn.primary {
+            background: var(--varai-primary);
+            color: white;
+        }
+
+        .store-action-btn.primary:hover {
+            background: var(--varai-primary-dark);
+        }
+
+        .store-action-btn.secondary {
+            background: var(--varai-gray-100);
+            color: var(--varai-gray-700);
+        }
+
+        .store-action-btn.secondary:hover {
+            background: var(--varai-gray-200);
+        }
+
+        .varai-spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .varai-lg-grid-cols-2 {
+                grid-template-columns: 1fr;
+            }
+            
+            .map-container {
+                order: 2;
+            }
+            
+            .store-list-container {
+                order: 1;
+            }
+            
+            #store-map {
+                height: 400px !important;
+                min-height: 400px !important;
+            }
+        }
+    </style>
+</body>
+</html>
