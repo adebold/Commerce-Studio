@@ -1,0 +1,34 @@
+steps:
+  # Build and push Tenant Management Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '--no-cache', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/visioncraft/tenant-management:latest', './services/tenant-management']
+    id: 'build-tenant-management'
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/visioncraft/tenant-management:latest']
+    waitFor: ['build-tenant-management']
+
+  # Deploy Tenant Management Service
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'tenant-management'
+      - '--image'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/visioncraft/tenant-management:latest'
+      - '--platform'
+      - 'managed'
+      - '--region'
+      - 'us-central1'
+      - '--allow-unauthenticated'
+      - '--set-env-vars=NODE_ENV=production'
+      - '--set-secrets=DB_USER=DB_USER:latest,DB_PASSWORD=DB_PASSWORD:latest,DB_NAME=DB_NAME:latest,CLOUD_SQL_CONNECTION_NAME=CLOUD_SQL_CONNECTION_NAME:latest'
+      - '--add-cloudsql-instances=ml-datadriven-recos:us-central1:ml-datadriven-recos-postgres'
+      - '--timeout=600'
+      - '--memory=1Gi'
+      - '--cpu=1'
+    waitFor:
+      - 'build-tenant-management'
+
+images:
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/visioncraft/tenant-management:latest'
