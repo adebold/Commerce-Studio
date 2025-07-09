@@ -7,7 +7,7 @@
 
 class VisionCraftClient {
     constructor(baseUrl, apiKey) {
-        this.baseUrl = baseUrl || 'https://eyewear-pipeline-api-395261412442.us-central1.run.app/api/v1';
+        this.baseUrl = baseUrl || 'https://commerce-studio-api-ddtojwjn7a-uc.a.run.app';
         this.apiKey = apiKey;
         this.clientId = null;
     }
@@ -26,6 +26,14 @@ class VisionCraftClient {
      */
     setClientId(clientId) {
         this.clientId = clientId;
+    }
+
+    /**
+     * Set the base URL for the API
+     * @param {string} baseUrl - The base URL
+     */
+    setBaseUrl(baseUrl) {
+        this.baseUrl = baseUrl;
     }
 
     /**

@@ -9,7 +9,8 @@
  */
 
 import { EventEmitter } from 'events';
-import fetch from 'node-fetch';
+import { SpeechClient } from '@google-cloud/speech';
+import { TextToSpeechClient } from '@google-cloud/text-to-speech';
 
 class GoogleSpeechService extends EventEmitter {
   constructor(config = {}) {
@@ -17,9 +18,8 @@ class GoogleSpeechService extends EventEmitter {
     
     // Handle both camelCase and snake_case property names from YAML config
     const normalizedConfig = {
-      endpoint: config.endpoint || config.url || 'https://speech.googleapis.com/v1',
-      apiKey: config.apiKey || config.api_key || process.env.GOOGLE_CLOUD_API_KEY,
       projectId: config.projectId || config.project_id || process.env.GOOGLE_CLOUD_PROJECT_ID,
+      keyFilename: config.keyFilename || process.env.GOOGLE_APPLICATION_CREDENTIALS,
       timeout: config.timeout || 30000,
       retryAttempts: config.retryAttempts || 3,
       ...config
@@ -27,6 +27,8 @@ class GoogleSpeechService extends EventEmitter {
     
     this.config = normalizedConfig;
     this.isInitialized = false;
+    this.speechClient = null;
+    this.ttsClient = null;
     this.speechRecognitionStreams = new Map();
     this.speechSynthesisQueue = new Map();
     
@@ -72,7 +74,7 @@ class GoogleSpeechService extends EventEmitter {
 
   async getServiceHealth() {
     try {
-      if (!this.isInitialized) {
+      if (!this.isInitialized || !this.speechClient) {
         return {
           status: 'unavailable',
           type: 'mock',
@@ -80,40 +82,15 @@ class GoogleSpeechService extends EventEmitter {
         };
       }
 
-      // Test API connectivity
-      const response = await fetch(`${this.config.endpoint}/speech:recognize`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${this.config.apiKey}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          config: {
-            encoding: 'LINEAR16',
-            sampleRateHertz: 16000,
-            languageCode: 'en-US'
-          },
-          audio: {
-            content: '' // Empty for health check
-          }
-        }),
-        timeout: 5000
-      });
-
-      if (response.status === 200 || response.status === 400) { // 400 is expected for empty audio
-        return {
-          status: 'healthy',
-          type: 'live',
-          latency: this.performanceMetrics.recognitionLatency,
-          accuracy: this.performanceMetrics.accuracyScore
-        };
-      } else {
-        return {
-          status: 'degraded',
-          type: 'live',
-          message: `API returned status ${response.status}`
-        };
-      }
+      // Test API connectivity by getting project ID
+      await this.speechClient.getProjectId();
+      
+      return {
+        status: 'healthy',
+        type: 'live',
+        latency: this.performanceMetrics.recognitionLatency,
+        accuracy: this.performanceMetrics.accuracyScore
+      };
     } catch (error) {
       console.error('Google Speech Service health check failed:', error);
       return {
@@ -124,11 +101,19 @@ class GoogleSpeechService extends EventEmitter {
     }
   }
 
+  async processAudio(audioData, options = {}) {
+    const result = await this.recognizeSpeech(audioData, options);
+    return {
+      transcript: result.transcript,
+      confidence: result.confidence
+    };
+  }
+
   async recognizeSpeech(audioData, options = {}) {
     try {
       const startTime = Date.now();
       
-      const requestBody = {
+      const request = {
         config: {
           encoding: options.encoding || this.audioConfig.encoding,
           sampleRateHertz: options.sampleRate || this.audioConfig.sampleRate,
@@ -141,28 +126,14 @@ class GoogleSpeechService extends EventEmitter {
         }
       };
 
-      const response = await fetch(`${this.config.endpoint}/speech:recognize`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${this.config.apiKey}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(requestBody),
-        timeout: this.config.timeout
-      });
-
-      if (!response.ok) {
-        throw new Error(`Google Speech API error: ${response.status} ${response.statusText}`);
-      }
-
-      const result = await response.json();
+      const [response] = await this.speechClient.recognize(request);
       
       // Update performance metrics
       this.performanceMetrics.recognitionLatency = Date.now() - startTime;
       
       // Extract transcript and confidence
-      const transcript = result.results?.[0]?.alternatives?.[0]?.transcript || '';
-      const confidence = result.results?.[0]?.alternatives?.[0]?.confidence || 0;
+      const transcript = response.results?.[0]?.alternatives?.[0]?.transcript || '';
+      const confidence = response.results?.[0]?.alternatives?.[0]?.confidence || 0;
       
       this.performanceMetrics.accuracyScore = confidence;
       
@@ -175,7 +146,7 @@ class GoogleSpeechService extends EventEmitter {
       return {
         transcript,
         confidence,
-        words: result.results?.[0]?.alternatives?.[0]?.words || [],
+        words: response.results?.[0]?.alternatives?.[0]?.words || [],
         latency: this.performanceMetrics.recognitionLatency
       };
     } catch (error) {
@@ -189,7 +160,7 @@ class GoogleSpeechService extends EventEmitter {
     try {
       const startTime = Date.now();
       
-      const requestBody = {
+      const request = {
         input: { text },
         voice: {
           languageCode: options.languageCode || 'en-US',
@@ -204,33 +175,19 @@ class GoogleSpeechService extends EventEmitter {
         }
       };
 
-      const response = await fetch(`${this.config.endpoint}/text:synthesize`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${this.config.apiKey}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(requestBody),
-        timeout: this.config.timeout
-      });
-
-      if (!response.ok) {
-        throw new Error(`Google TTS API error: ${response.status} ${response.statusText}`);
-      }
-
-      const result = await response.json();
+      const [response] = await this.ttsClient.synthesizeSpeech(request);
       
       // Update performance metrics
       this.performanceMetrics.synthesisLatency = Date.now() - startTime;
       
       this.emit('speechSynthesized', {
         text,
-        audioContent: result.audioContent,
+        audioContent: response.audioContent,
         latency: this.performanceMetrics.synthesisLatency
       });
 
       return {
-        audioContent: result.audioContent,
+        audioContent: response.audioContent,
         latency: this.performanceMetrics.synthesisLatency
       };
     } catch (error) {
@@ -242,7 +199,7 @@ class GoogleSpeechService extends EventEmitter {
 
   // Private helper methods
   validateConfiguration() {
-    const required = ['apiKey', 'endpoint'];
+    const required = ['projectId'];
     for (const field of required) {
       if (!this.config[field]) {
         throw new Error(`Missing required configuration: ${field}`);
@@ -252,11 +209,20 @@ class GoogleSpeechService extends EventEmitter {
 
   async authenticate() {
     try {
-      // For Google Cloud, we'll use the API key directly
-      // In production, you might want to use service account authentication
-      if (!this.config.apiKey) {
-        throw new Error('Google Cloud API key is required');
+      // Initialize Google Cloud clients with service account authentication
+      const clientConfig = {
+        projectId: this.config.projectId
+      };
+      
+      if (this.config.keyFilename) {
+        clientConfig.keyFilename = this.config.keyFilename;
       }
+      
+      this.speechClient = new SpeechClient(clientConfig);
+      this.ttsClient = new TextToSpeechClient(clientConfig);
+      
+      // Test authentication by making a simple request
+      await this.speechClient.getProjectId();
       
       return true;
     } catch (error) {

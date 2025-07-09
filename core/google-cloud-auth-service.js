@@ -15,15 +15,20 @@ import { SessionsClient } from '@google-cloud/dialogflow-cx';
 import { TextToSpeechClient } from '@google-cloud/text-to-speech';
 import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
 import { getLoggingService } from './logging-service.js';
+import { getConfigService } from './config-service.js';
 
 class GoogleCloudAuthService extends EventEmitter {
     constructor(config = {}) {
         super();
         
+        // Get centralized configuration
+        const configService = getConfigService();
+        const gcpConfig = configService.isLoaded ? configService.getGoogleCloudConfig() : {};
+        
         this.config = {
-            projectId: config.projectId || process.env.GOOGLE_CLOUD_PROJECT_ID || 'ml-datadriven-recos',
-            keyFilename: config.keyFilename || process.env.GOOGLE_APPLICATION_CREDENTIALS,
-            location: config.location || process.env.GOOGLE_CLOUD_LOCATION || 'us-central1',
+            projectId: config.projectId || gcpConfig.projectId || process.env.GOOGLE_CLOUD_PROJECT_ID || 'eyewearml-conversational-ai',
+            keyFilename: config.keyFilename || gcpConfig.keyFilename || process.env.GOOGLE_APPLICATION_CREDENTIALS,
+            location: config.location || gcpConfig.location || process.env.GOOGLE_CLOUD_LOCATION || 'us-central1',
             scopes: config.scopes || [
                 'https://www.googleapis.com/auth/cloud-platform',
                 'https://www.googleapis.com/auth/dialogflow',
