@@ -1,0 +1,63 @@
+# Development Environment Configuration for Commerce Studio
+# This file centralizes all environment-specific settings
+
+environment:
+  name: development
+  debug: true
+  log_level: debug
+
+# Google Cloud Configuration (centralized)
+google_cloud:
+  project_id: "eyewearml-conversational-ai"  # From your project_config.yaml
+  location: "us-central1"
+  credentials_path: "${GOOGLE_APPLICATION_CREDENTIALS}"  # Path to service account key
+  service_account: "conversational-ai-dev"  # From service_accounts.yaml
+  
+# Dialogflow Configuration
+dialogflow:
+  agent_id: "${DIALOGFLOW_AGENT_ID}"  # To be set in environment
+  location: "us-central1"
+  language_code: "en"
+  session_timeout: 1800  # 30 minutes
+
+# API Configuration
+api:
+  port: 3000
+  cors_origins:
+    - "http://localhost:3000"
+    - "https://*.myshopify.com"
+  rate_limiting:
+    enabled: true
+    max_requests: 100
+    window_minutes: 15
+
+# Logging Configuration
+logging:
+  level: "debug"
+  format: "json"
+  destinations:
+    - console
+    - file
+  file_path: "./logs/development.log"
+
+# Security Configuration
+security:
+  jwt_secret: "${JWT_SECRET}"
+  session_secret: "${SESSION_SECRET}"
+  encryption_key: "${ENCRYPTION_KEY}"
+
+# Feature Flags
+features:
+  face_analysis: true
+  virtual_try_on: true
+  voice_interaction: true
+  analytics: true
+
+# External Services
+external_services:
+  nvidia:
+    enabled: true
+    api_key: "${NVIDIA_API_KEY}"
+  shopify:
+    enabled: true
+    webhook_secret: "${SHOPIFY_WEBHOOK_SECRET}"

@@ -27,6 +27,13 @@ env.json
 config.json
 secrets.json
 
+# Google Cloud service account keys - SECURITY CRITICAL
+service-account*.json
+*-service-account*.json
+key.json
+*-key.json
+credentials/
+
 # IDE and editor files
 .vscode/
 .idea/
@@ -195,6 +202,15 @@ firebase-adminsdk*.json
 *.token
 auth.json
 oauth.json
+
+# Commerce Studio Security - Additional Protection
+.env.secure
+.env.production.secure
+*-credentials.json
+dialogflow-*.json
+commerce-studio-*.json
+*.credentials
+.config/commerce-studio/
 
 # Database dumps and backups
 *.sql

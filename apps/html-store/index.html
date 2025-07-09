@@ -961,5 +961,18 @@
     <script src="js/cart.js"></script>
     <script src="js/ai-features-camera.js"></script>
     <script src="js/ai-search-replacement.js"></script>
+
+    <!-- Consultation Chat Integration -->
+    <div id="consultation-chat-container"></div>
+    <script src="js/consultation-chat.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const chat = new ConsultationChat({
+                apiBaseUrl: 'https://commerce-studio-api-ddtojwjn7a-uc.a.run.app',
+                dialogflowProjectId: 'ml-datadriven-recos',
+                dialogflowAgentId: '1601a958-7e8e-4abe-a0c8-93819aa7594a'
+            });
+        });
+    </script>
 </body>
 </html>

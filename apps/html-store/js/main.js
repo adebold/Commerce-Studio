@@ -31,6 +31,8 @@ document.addEventListener('DOMContentLoaded', function() {
 async function initializeStore() {
     try {
         showLoading(true);
+        visionCraftClient.setApiKey('varai_prod_ak_1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p7q8r9s0t');
+        visionCraftClient.setClientId('test-client');
         await loadProducts();
         displayProducts();
         showLoading(false);

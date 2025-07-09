@@ -1,73 +1,60 @@
 {
-  "name": "commerce-studio",
+  "name": "commerce-studio-consultation",
   "version": "1.0.0",
-  "description": "AI-powered commerce discovery platform",
-  "main": "index.js",
+  "description": "Intelligent eyewear consultation system for Commerce Studio",
+  "type": "module",
+  "main": "scripts/start-consultation-system.js",
   "scripts": {
-    "test": "jest",
-    "test:critical-fixes": "jest --config=tests/critical-fixes/jest.config.critical-fixes.js",
-    "test:critical-fixes:verbose": "jest --config=tests/critical-fixes/jest.config.critical-fixes.js --verbose",
-    "test:avatar-demo": "jest --config=tests/jest.config.avatar-demo.js",
-    "test:avatar-demo:verbose": "jest --config=tests/jest.config.avatar-demo.js --verbose",
-    "test:avatar-demo:script": "./scripts/run-avatar-demo-tests.sh",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "setup:omniverse": "./scripts/setup-nvidia-omniverse.sh",
-    "test:omniverse": "node demo/live-demo/test-omniverse-simple.js",
-    "test:omniverse:full": "node demo/live-demo/test-omniverse.js",
-    "test:github-secrets": "node demo/live-demo/test-github-secrets-integration.js",
-    "demo": "node demo/live-demo/live-demo-server.js",
-    "demo:start": "npm run demo"
+    "start": "node scripts/start-consultation-system.js",
+    "start:test": "node scripts/start-consultation-system.js start --test",
+    "test": "node scripts/start-consultation-system.js test",
+    "health": "node scripts/start-consultation-system.js health",
+    "dev": "nodemon scripts/start-consultation-system.js",
+    "serve:html": "cd apps/html-store && python3 -m http.server 3001",
+    "serve:html:win": "cd apps/html-store && python -m http.server 3001",
+    "setup": "npm install && node scripts/setup-environment.sh",
+    "validate": "node scripts/validate-security.sh"
   },
   "keywords": [
+    "eyewear",
+    "consultation",
     "ai",
-    "commerce",
-    "discovery",
-    "shopify",
-    "woocommerce",
-    "magento"
+    "dialogflow",
+    "virtual-try-on",
+    "ecommerce"
   ],
   "author": "Commerce Studio Team",
   "license": "MIT",
-  "devDependencies": {
-    "@babel/core": "^7.28.0",
-    "@babel/preset-env": "^7.28.0",
-    "@babel/preset-react": "^7.27.1",
-    "@babel/preset-typescript": "^7.27.1",
-    "@jest/globals": "^29.7.0",
-    "@testing-library/jest-dom": "^6.1.4",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^14.5.1",
-    "@types/jest": "^30.0.0",
-    "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0",
-    "jest-environment-node": "^29.7.0",
-    "jest-html-reporters": "^3.1.5",
-    "puppeteer": "^21.5.0",
-    "node-fetch": "^3.3.2"
-  },
   "dependencies": {
-    "@google-cloud/dialogflow-cx": "^5.1.0",
-    "@google-cloud/speech": "^7.1.0",
-    "@google-cloud/text-to-speech": "^6.1.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "socket.io-client": "^4.7.2"
+    "@google-cloud/dialogflow-cx": "^4.0.0",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.1",
+    "helmet": "^7.0.0",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "node-fetch": "^2.7.0",
+    "socket.io": "^4.8.1",
+    "uuid": "^9.0.0"
   },
-  "jest": {
-    "testEnvironment": "jsdom",
-    "setupFilesAfterEnv": [
-      "<rootDir>/tests/setup/critical-fixes-setup.js"
-    ],
-    "testMatch": [
-      "<rootDir>/tests/**/*.test.js",
-      "<rootDir>/apps/**/tests/**/*.test.js"
-    ],
-    "collectCoverageFrom": [
-      "apps/**/frontend/**/*.{js,jsx,ts,tsx}",
-      "apps/**/utils/**/*.{js,jsx,ts,tsx}",
-      "!**/node_modules/**",
-      "!**/coverage/**"
-    ]
-  }
+  "devDependencies": {
+    "@types/node": "^20.4.8",
+    "jest": "^29.6.2",
+    "nodemon": "^3.0.1",
+    "supertest": "^6.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/commerce-studio/consultation-system.git"
+  },
+  "bugs": {
+    "url": "https://github.com/commerce-studio/consultation-system/issues"
+  },
+  "homepage": "https://github.com/commerce-studio/consultation-system#readme"
 }

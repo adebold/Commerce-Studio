@@ -14,10 +14,11 @@ export default class UnifiedDialogflowService {
         this.agentId = config.agentId || process.env.DIALOGFLOW_AGENT_ID;
         this.languageCode = config.languageCode || 'en';
         
-        // Initialize Dialogflow CX client
+        // Initialize Dialogflow CX client with regional endpoint
         this.sessionsClient = new SessionsClient({
             projectId: this.projectId,
-            keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS
+            keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS,
+            apiEndpoint: `${this.location}-dialogflow.googleapis.com`
         });
         
         // Session management
@@ -99,6 +100,10 @@ export default class UnifiedDialogflowService {
             console.error('Dialogflow connection test failed:', error);
             throw new Error(`Dialogflow connection failed: ${error.message}`);
         }
+    }
+
+    async processMessage(message, sessionId = null, context = {}) {
+        return await this.processConversation(message, sessionId, context);
     }
 
     async processConversation(message, sessionId = null, context = {}) {
