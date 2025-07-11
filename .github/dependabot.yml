@@ -1,4 +1,5 @@
 # Dependabot configuration file
+# Optimized to prevent commit spam by grouping dependencies and limiting PRs
 # See: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
 
 version: 2
@@ -8,94 +9,135 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 10
+      day: "monday"
+    open-pull-requests-limit: 3
+    groups:
+      production-dependencies:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "*dev*"
+          - "*test*"
+      development-dependencies:
+        patterns:
+          - "*dev*"
+          - "*test*"
     labels:
       - "dependencies"
       - "python"
 
-  # JavaScript dependencies in root directory
+  # JavaScript dependencies - Apps directory
+  - package-ecosystem: "npm"
+    directory: "/apps"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 3
+    groups:
+      production-dependencies:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "*dev*"
+          - "*test*"
+          - "@types/*"
+      development-dependencies:
+        patterns:
+          - "*dev*"
+          - "*test*"
+          - "@types/*"
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "apps"
+
+  # JavaScript dependencies - Services directory
+  - package-ecosystem: "npm"
+    directory: "/services"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 3
+    groups:
+      production-dependencies:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "*dev*"
+          - "*test*"
+          - "@types/*"
+      development-dependencies:
+        patterns:
+          - "*dev*"
+          - "*test*"
+          - "@types/*"
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "services"
+
+  # JavaScript dependencies - Tests directory
+  - package-ecosystem: "npm"
+    directory: "/tests"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 3
+    groups:
+      test-dependencies:
+        patterns:
+          - "*"
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "testing"
+
+  # JavaScript dependencies - Website directory
+  - package-ecosystem: "npm"
+    directory: "/website"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 3
+    groups:
+      production-dependencies:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "*dev*"
+          - "*test*"
+          - "@types/*"
+      development-dependencies:
+        patterns:
+          - "*dev*"
+          - "*test*"
+          - "@types/*"
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "website"
+
+  # JavaScript dependencies - Root directory (legacy support)
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 10
+      day: "monday"
+    open-pull-requests-limit: 3
+    groups:
+      production-dependencies:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "*dev*"
+          - "*test*"
+          - "@types/*"
+      development-dependencies:
+        patterns:
+          - "*dev*"
+          - "*test*"
+          - "@types/*"
     labels:
       - "dependencies"
       - "javascript"
-
-  # JavaScript dependencies in frontend directory
-  - package-ecosystem: "npm"
-    directory: "/frontend"
-    schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 10
-    labels:
-      - "dependencies"
-      - "javascript"
-      - "frontend"
-
-  # JavaScript dependencies in auth directory
-  - package-ecosystem: "npm"
-    directory: "/auth"
-    schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 10
-    labels:
-      - "dependencies"
-      - "javascript"
-      - "auth"
-
-  # JavaScript dependencies in src/sdk/opticians-catalog directory
-  - package-ecosystem: "npm"
-    directory: "/src/sdk/opticians-catalog"
-    schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 10
-    labels:
-      - "dependencies"
-      - "javascript"
-      - "sdk"
-
-  # JavaScript dependencies in tests/e2e directory
-  - package-ecosystem: "npm"
-    directory: "/tests/e2e"
-    schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 10
-    labels:
-      - "dependencies"
-      - "javascript"
-      - "testing"
-
-  # JavaScript dependencies in tests/integration directory
-  - package-ecosystem: "npm"
-    directory: "/tests/integration"
-    schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 10
-    labels:
-      - "dependencies"
-      - "javascript"
-      - "testing"
-
-  # JavaScript dependencies in src/varai/vertex_ai_integration directory
-  - package-ecosystem: "npm"
-    directory: "/src/varai/vertex_ai_integration"
-    schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 10
-    labels:
-      - "dependencies"
-      - "javascript"
-      - "varai"
-
-  # JavaScript dependencies in src/webhook directory
-  - package-ecosystem: "npm"
-    directory: "/src/webhook"
-    schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 10
-    labels:
-      - "dependencies"
-      - "javascript"
-      - "webhook"
+      - "root"
