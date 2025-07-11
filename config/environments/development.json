@@ -1,7 +1,0 @@
-{
-  "environment": "development",
-  "version": "1.0.0",
-  "debug": true,
-  "log_level": "DEBUG",
-  "feature_flags": {}
-}
