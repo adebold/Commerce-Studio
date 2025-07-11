@@ -1,80 +1,101 @@
+# Dependabot configuration file
+# See: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
 version: 2
 updates:
-  # Root level package.json
+  # Python dependencies in root directory
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "python"
+
+  # JavaScript dependencies in root directory
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 3
-    groups:
-      production-dependencies:
-        patterns:
-          - "*"
-        exclude-patterns:
-          - "@types/*"
-          - "eslint*"
-          - "jest*"
-          - "typescript*"
-      development-dependencies:
-        patterns:
-          - "@types/*"
-          - "eslint*"
-          - "jest*"
-          - "typescript*"
-          - "prettier*"
-          - "nodemon*"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "javascript"
 
-  # Apps directory
+  # JavaScript dependencies in frontend directory
   - package-ecosystem: "npm"
-    directory: "/apps"
+    directory: "/frontend"
     schedule:
       interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 2
-    groups:
-      app-dependencies:
-        patterns:
-          - "*"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "frontend"
 
-  # Services directory
+  # JavaScript dependencies in auth directory
   - package-ecosystem: "npm"
-    directory: "/services"
+    directory: "/auth"
     schedule:
       interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 2
-    groups:
-      service-dependencies:
-        patterns:
-          - "*"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "auth"
 
-  # Tests directory
+  # JavaScript dependencies in src/sdk/opticians-catalog directory
   - package-ecosystem: "npm"
-    directory: "/tests"
+    directory: "/src/sdk/opticians-catalog"
     schedule:
       interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 2
-    groups:
-      test-dependencies:
-        patterns:
-          - "*"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "sdk"
 
-  # Website directory
+  # JavaScript dependencies in tests/e2e directory
   - package-ecosystem: "npm"
-    directory: "/website"
+    directory: "/tests/e2e"
     schedule:
       interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 2
-    groups:
-      website-dependencies:
-        patterns:
-          - "*"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "testing"
 
-# Global settings
-reviewers:
-  - "adebold"
-assignees:
-  - "adebold"
+  # JavaScript dependencies in tests/integration directory
+  - package-ecosystem: "npm"
+    directory: "/tests/integration"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "testing"
+
+  # JavaScript dependencies in src/varai/vertex_ai_integration directory
+  - package-ecosystem: "npm"
+    directory: "/src/varai/vertex_ai_integration"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "varai"
+
+  # JavaScript dependencies in src/webhook directory
+  - package-ecosystem: "npm"
+    directory: "/src/webhook"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "webhook"
