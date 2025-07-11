@@ -1,0 +1,15 @@
+feat(eyewear-catalog): implement React frontend for Shopify app
+
+Add complete React frontend implementation for the Eyewear Catalog Shopify app with:
+- Dashboard page with sync status, statistics, and progress tracking
+- Product sync interface with filtering and search capabilities
+- Settings configuration for sync options and scheduling
+- Sync history page with detailed logs and status
+- Authentication flow using Shopify OAuth
+- Reusable components for status indicators and progress bars
+- API integration with authentication handling
+- Shopify Polaris UI components for consistent styling
+
+This frontend provides an intuitive interface for store owners to manage
+their eyewear product catalog syncing between the eyewear database and 
+their Shopify store.

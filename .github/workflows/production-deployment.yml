@@ -1,0 +1,413 @@
+name: Production Deployment Pipeline
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+
+env:
+  GCP_PROJECT_ID: ml-datadriven-recos
+  GCP_REGION: us-central1
+  REGISTRY: gcr.io
+  ARTIFACT_REGISTRY: us-central1-docker.pkg.dev
+  # NVIDIA API Configuration
+  NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+  NVIDIA_OMNIVERSE_API_KEY: ${{ secrets.NVIDIA_OMNIVERSE_API_KEY }}
+  # Google Cloud API Keys
+  GOOGLE_CLOUD_API_KEY: ${{ secrets.GOOGLE_CLOUD_API_KEY }}
+
+jobs:
+  # Security and Quality Gate
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run security audit
+        run: npm audit --audit-level=high
+        
+      - name: Run Snyk security scan
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high
+          
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  # Code Quality and Testing
+  quality-gate:
+    runs-on: ubuntu-latest
+    needs: security-scan
+    strategy:
+      matrix:
+        platform: [shopify, magento, woocommerce, html]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run linting
+        run: npm run lint
+        
+      - name: Run unit tests
+        run: npm run test:unit
+        env:
+          PLATFORM: ${{ matrix.platform }}
+          
+      - name: Run integration tests
+        run: npm run test:integration:${{ matrix.platform }}
+        env:
+          PLATFORM: ${{ matrix.platform }}
+          
+      - name: Generate test coverage
+        run: npm run test:coverage
+        
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage/lcov.info
+          flags: ${{ matrix.platform }}
+
+  # Build AI Discovery Services
+  build-services:
+    runs-on: ubuntu-latest
+    needs: quality-gate
+    strategy:
+      matrix:
+        service: [ai-discovery-service, face-analysis-service, recommendation-service, analytics-service, api-gateway]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          
+      - name: Configure Docker for GCR
+        run: gcloud auth configure-docker
+        
+      - name: Build and push container image
+        run: |
+          # Determine service directory
+          case ${{ matrix.service }} in
+            "ai-discovery-service")
+              SERVICE_DIR="apps/shopify"
+              DOCKERFILE="apps/shopify/Dockerfile.ai-service"
+              ;;
+            "face-analysis-service")
+              SERVICE_DIR="apps/shopify"
+              DOCKERFILE="apps/shopify/Dockerfile.face-service"
+              ;;
+            "recommendation-service")
+              SERVICE_DIR="apps/shopify"
+              DOCKERFILE="apps/shopify/Dockerfile.recommendation-service"
+              ;;
+            "analytics-service")
+              SERVICE_DIR="apps/shopify"
+              DOCKERFILE="apps/shopify/Dockerfile.analytics-service"
+              ;;
+            "api-gateway")
+              SERVICE_DIR="api-gateway"
+              DOCKERFILE="api-gateway/Dockerfile"
+              ;;
+          esac
+          
+          # Build image
+          docker build \
+            -t ${{ env.REGISTRY }}/${{ env.GCP_PROJECT_ID }}/${{ matrix.service }}:${{ github.sha }} \
+            -t ${{ env.REGISTRY }}/${{ env.GCP_PROJECT_ID }}/${{ matrix.service }}:latest \
+            -f $DOCKERFILE \
+            $SERVICE_DIR
+            
+      - name: Scan container for vulnerabilities
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.REGISTRY }}/${{ env.GCP_PROJECT_ID }}/${{ matrix.service }}:${{ github.sha }}
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          
+      - name: Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+          
+      - name: Push container image
+        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+        run: |
+          docker push ${{ env.REGISTRY }}/${{ env.GCP_PROJECT_ID }}/${{ matrix.service }}:${{ github.sha }}
+          docker push ${{ env.REGISTRY }}/${{ env.GCP_PROJECT_ID }}/${{ matrix.service }}:latest
+
+  # Build Platform Widgets
+  build-widgets:
+    runs-on: ubuntu-latest
+    needs: quality-gate
+    strategy:
+      matrix:
+        platform: [shopify, magento, woocommerce, html]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Build ${{ matrix.platform }} widget
+        run: npm run build:widget:${{ matrix.platform }}
+        env:
+          NODE_ENV: production
+          PLATFORM: ${{ matrix.platform }}
+          BUILD_ID: ${{ github.sha }}
+          
+      - name: Optimize assets
+        run: npm run optimize:assets:${{ matrix.platform }}
+        
+      - name: Upload widget artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: widget-${{ matrix.platform }}-${{ github.sha }}
+          path: dist/widgets/${{ matrix.platform }}/
+          retention-days: 30
+
+  # Deploy to Staging
+  deploy-staging:
+    runs-on: ubuntu-latest
+    needs: [build-services, build-widgets]
+    if: github.ref == 'refs/heads/main'
+    environment: staging
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        
+      - name: Download widget artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist/widgets/
+          pattern: widget-*-${{ github.sha }}
+          
+      - name: Deploy services to staging
+        run: |
+          chmod +x deploy/scripts/deploy.sh
+          ./deploy/scripts/deploy.sh staging ${{ github.sha }}
+          
+      - name: Upload widgets to staging CDN
+        run: |
+          # Upload to staging CDN bucket
+          gsutil -m cp -r dist/widgets/* gs://varai-cdn-staging/widgets/${{ github.sha }}/
+          
+          # Set cache headers
+          gsutil -m setmeta -h "Cache-Control:public, max-age=3600" \
+            gs://varai-cdn-staging/widgets/${{ github.sha }}/**/*.js
+          gsutil -m setmeta -h "Cache-Control:public, max-age=3600" \
+            gs://varai-cdn-staging/widgets/${{ github.sha }}/**/*.css
+            
+      - name: Run staging smoke tests
+        run: npm run test:smoke:staging
+        env:
+          STAGING_API_URL: https://api-staging.varai.ai
+          STAGING_WIDGET_URL: https://cdn-staging.varai.ai/widgets/${{ github.sha }}
+          
+      - name: Notify staging deployment
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          channel: '#deployments'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+        if: always()
+
+  # Production Deployment (Manual Approval Required)
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: deploy-staging
+    if: startsWith(github.ref, 'refs/tags/v')
+    environment:
+      name: production
+      url: https://api.varai.ai
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        
+      - name: Download widget artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist/widgets/
+          pattern: widget-*-${{ github.sha }}
+          
+      - name: Deploy to production with blue-green
+        run: |
+          chmod +x deploy/blue-green/deploy.sh
+          ./deploy/blue-green/deploy.sh prod ${{ github.sha }}
+          
+      - name: Upload widgets to production CDN
+        run: |
+          # Upload to production CDN bucket
+          gsutil -m cp -r dist/widgets/* gs://varai-cdn-production/widgets/${{ github.sha }}/
+          
+          # Set long-term cache headers for production
+          gsutil -m setmeta -h "Cache-Control:public, max-age=31536000" \
+            gs://varai-cdn-production/widgets/${{ github.sha }}/**/*.js
+          gsutil -m setmeta -h "Cache-Control:public, max-age=31536000" \
+            gs://varai-cdn-production/widgets/${{ github.sha }}/**/*.css
+            
+          # Update latest symlink
+          gsutil -m cp -r gs://varai-cdn-production/widgets/${{ github.sha }}/* \
+            gs://varai-cdn-production/widgets/latest/
+            
+      - name: Run production health checks
+        run: npm run test:health:production
+        env:
+          PRODUCTION_API_URL: https://api.varai.ai
+          PRODUCTION_WIDGET_URL: https://cdn.varai.ai/widgets/latest
+          
+      - name: Update deployment documentation
+        run: |
+          # Create deployment record
+          cat > deployment-record.json <<EOF
+          {
+            "version": "${{ github.ref_name }}",
+            "commit": "${{ github.sha }}",
+            "timestamp": "$(date -Iseconds)",
+            "environment": "production",
+            "services": [
+              "ai-discovery-service",
+              "face-analysis-service", 
+              "recommendation-service",
+              "analytics-service",
+              "api-gateway"
+            ],
+            "widgets": ["shopify", "magento", "woocommerce", "html"],
+            "deployed_by": "${{ github.actor }}",
+            "deployment_type": "blue-green"
+          }
+          EOF
+          
+          # Upload to deployment tracking
+          gsutil cp deployment-record.json \
+            gs://varai-deployments/production/deployment-${{ github.sha }}.json
+            
+      - name: Notify production deployment
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          channel: '#production-deployments'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+        if: always()
+            
+      - name: Create GitHub release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: AI Discovery Release ${{ github.ref_name }}
+          body: |
+            ## AI Discovery Production Release ${{ github.ref_name }}
+            
+            ### Services Deployed
+            - AI Discovery Service
+            - Face Analysis Service  
+            - Recommendation Service
+            - Analytics Service
+            - API Gateway
+            
+            ### Platform Widgets
+            - Shopify App Integration
+            - Magento Extension
+            - WooCommerce Plugin
+            - HTML Widget
+            
+            ### Deployment Details
+            - Commit: ${{ github.sha }}
+            - Deployment Type: Blue-Green
+            - CDN: Global distribution enabled
+            - Monitoring: Full observability stack
+            
+            ### Health Check Results
+            All services passing health checks and performance SLAs.
+          draft: false
+          prerelease: false
+
+  # Rollback Job (Manual Trigger)
+  rollback-production:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    environment:
+      name: production
+      url: https://api.varai.ai
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        
+      - name: Execute rollback
+        run: |
+          chmod +x deploy/blue-green/rollback.sh
+          ./deploy/blue-green/rollback.sh prod "manual_rollback_${{ github.run_id }}"
+          
+      - name: Notify rollback
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          channel: '#production-deployments'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+        if: always()
