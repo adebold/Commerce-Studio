@@ -1,0 +1,80 @@
+version: 2
+updates:
+  # Root level package.json
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 3
+    groups:
+      production-dependencies:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "@types/*"
+          - "eslint*"
+          - "jest*"
+          - "typescript*"
+      development-dependencies:
+        patterns:
+          - "@types/*"
+          - "eslint*"
+          - "jest*"
+          - "typescript*"
+          - "prettier*"
+          - "nodemon*"
+
+  # Apps directory
+  - package-ecosystem: "npm"
+    directory: "/apps"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 2
+    groups:
+      app-dependencies:
+        patterns:
+          - "*"
+
+  # Services directory
+  - package-ecosystem: "npm"
+    directory: "/services"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 2
+    groups:
+      service-dependencies:
+        patterns:
+          - "*"
+
+  # Tests directory
+  - package-ecosystem: "npm"
+    directory: "/tests"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 2
+    groups:
+      test-dependencies:
+        patterns:
+          - "*"
+
+  # Website directory
+  - package-ecosystem: "npm"
+    directory: "/website"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 2
+    groups:
+      website-dependencies:
+        patterns:
+          - "*"
+
+# Global settings
+reviewers:
+  - "adebold"
+assignees:
+  - "adebold"
