@@ -1,0 +1,49 @@
+steps:
+  # Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build',
+      '-t', 'gcr.io/ml-datadriven-recos/brillen-amsterdam-demo:v1',
+      '-t', 'gcr.io/ml-datadriven-recos/brillen-amsterdam-demo:latest',
+      '.'
+    ]
+    dir: 'stores/brillen-amsterdam-demo'
+
+  # Push the Docker image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/ml-datadriven-recos/brillen-amsterdam-demo:v1']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/ml-datadriven-recos/brillen-amsterdam-demo:latest']
+
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'brillen-amsterdam-demo'
+      - '--image=gcr.io/ml-datadriven-recos/brillen-amsterdam-demo:v1'
+      - '--region=us-central1'
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+      - '--memory=1Gi'
+      - '--cpu=1'
+      - '--concurrency=80'
+      - '--max-instances=10'
+      - '--min-instances=0'
+      - '--timeout=300'
+      - '--set-env-vars=NODE_ENV=production'
+      - '--set-env-vars=STORE_NAME=Brillen Amsterdam'
+      - '--set-env-vars=STORE_LANGUAGE=nl-NL'
+      - '--set-env-vars=STORE_COUNTRY=Netherlands'
+      - '--set-env-vars=STORE_CURRENCY=EUR'
+      - '--set-env-vars=CONSULTATION_SERVICE_URL=https://consultation-service-ml-datadriven-recos.us-central1.run.app'
+      - '--set-env-vars=I18N_SERVICE_URL=https://internationalization-service-ml-datadriven-recos.us-central1.run.app'
+      - '--set-env-vars=TENANT_ID=brillen-amsterdam-demo'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: 'E2_HIGHCPU_8'
+
+timeout: '1200s'

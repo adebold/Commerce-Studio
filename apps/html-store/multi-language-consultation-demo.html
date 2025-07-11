@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Language Eyewear Consultation - European Expansion Demo</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👓</text></svg>">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="css/multi-language-consultation.css">
+    
+    <!-- Socket.IO Client -->
+    <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
+    
+    <!-- Meta tags for European markets -->
+    <meta name="description" content="Advanced multi-language eyewear consultation supporting Dutch, German, Spanish, Portuguese, French, and English for European market expansion">
+    <meta name="keywords" content="eyewear consultation, multi-language, Netherlands, Germany, Spain, Portugal, France, Ireland, brillen, lunettes, gafas, óculos">
+    <meta name="author" content="Commerce Studio">
+    
+    <!-- Open Graph meta tags -->
+    <meta property="og:title" content="Multi-Language Eyewear Consultation">
+    <meta property="og:description" content="Find the perfect eyewear with our AI-powered consultation in your preferred language">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://example.com/consultation-preview.jpg">
+    
+    <!-- Language detection script -->
+    <script>
+        // Detect user's preferred language for European markets
+        function detectLanguage() {
+            // Check URL parameter first
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlLang = urlParams.get('lang');
+            if (urlLang) return urlLang;
+            
+            // Check browser language
+            const browserLang = navigator.language || navigator.userLanguage;
+            
+            // Map browser languages to supported languages
+            const langMap = {
+                'nl': 'nl-NL',
+                'nl-NL': 'nl-NL',
+                'nl-BE': 'nl-NL',
+                'de': 'de-DE',
+                'de-DE': 'de-DE',
+                'de-AT': 'de-DE',
+                'de-CH': 'de-DE',
+                'es': 'es-ES',
+                'es-ES': 'es-ES',
+                'pt': 'pt-PT',
+                'pt-PT': 'pt-PT',
+                'fr': 'fr-FR',
+                'fr-FR': 'fr-FR',
+                'fr-BE': 'fr-FR',
+                'fr-CH': 'fr-FR',
+                'en-IE': 'en-IE',
+                'en-GB': 'en-IE',
+                'en': 'en-US',
+                'en-US': 'en-US'
+            };
+            
+            // Default to Dutch for Netherlands market priority
+            return langMap[browserLang] || 'nl-NL';
+        }
+        
+        // Set document language
+        document.documentElement.lang = detectLanguage();
+    </script>
+    
+    <style>
+        /* Page-specific styling */
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            margin: 0;
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 0 20px;
+        }
+        
+        .market-info {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 800px;
+            color: white;
+            text-align: center;
+        }
+        
+        .market-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .market-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .market-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.1rem;
+        }
+        
+        .market-card p {
+            margin: 0;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .footer {
+            background: rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            color: white;
+            margin-top: 30px;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .feature {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header p {
+                font-size: 1rem;
+            }
+            
+            .market-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🌍 Multi-Language Eyewear Consultation</h1>
+        <p>European Market Expansion Demo - Commerce Studio</p>
+    </div>
+    
+    <div class="main-content">
+        <div class="market-info">
+            <h2>🇪🇺 European Market Coverage</h2>
+            <p>Our consultation service supports 7 European languages with market-specific adaptations</p>
+            
+            <div class="market-grid">
+                <div class="market-card">
+                    <h3>🇳🇱 Netherlands</h3>
+                    <p>15 stores planned<br>Dutch language priority</p>
+                </div>
+                <div class="market-card">
+                    <h3>🇩🇪 Germany</h3>
+                    <p>25 stores planned<br>German language support</p>
+                </div>
+                <div class="market-card">
+                    <h3>🇪🇸 Spain</h3>
+                    <p>12 stores planned<br>Spanish language support</p>
+                </div>
+                <div class="market-card">
+                    <h3>🇵🇹 Portugal</h3>
+                    <p>8 stores planned<br>Portuguese language support</p>
+                </div>
+                <div class="market-card">
+                    <h3>🇫🇷 France</h3>
+                    <p>18 stores planned<br>French language support</p>
+                </div>
+                <div class="market-card">
+                    <h3>🇮🇪 Ireland</h3>
+                    <p>6 stores planned<br>English (Irish) variant</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <span class="feature-icon">🗣️</span>
+                <h3>Auto Language Detection</h3>
+                <p>Automatically detects user's preferred language based on browser settings and location</p>
+            </div>
+            <div class="feature">
+                <span class="feature-icon">📱</span>
+                <h3>Real-time Chat</h3>
+                <p>Socket.IO powered real-time communication with typing indicators and instant responses</p>
+            </div>
+            <div class="feature">
+                <span class="feature-icon">📷</span>
+                <h3>Face Analysis</h3>
+                <p>Upload your photo for AI-powered face analysis and personalized eyewear recommendations</p>
+            </div>
+            <div class="feature">
+                <span class="feature-icon">🎨</span>
+                <h3>Cultural Adaptation</h3>
+                <p>UI adapts to each market with flag colors, cultural preferences, and local terminology</p>
+            </div>
+        </div>
+        
+        <!-- Consultation Container -->
+        <div id="consultation-container" class="consultation-container">
+            <!-- Multi-language consultation component will be loaded here -->
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>&copy; 2025 Commerce Studio - European Expansion Demo</p>
+        <p>Powered by multi-language internationalization service</p>
+    </div>
+    
+    <!-- Load multi-language consultation script -->
+    <script src="js/multi-language-consultation.js"></script>
+    
+    <!-- Demo initialization script -->
+    <script>
+        // Override default initialization with demo-specific settings
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get parameters from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const language = urlParams.get('lang') || detectLanguage();
+            const tenant = urlParams.get('tenant') || 'brillen-amsterdam-demo';
+            const userId = urlParams.get('user') || `demo-user-${Date.now()}`;
+            
+            // Set document language attribute for styling
+            document.querySelector('.consultation-container').setAttribute('data-language', language);
+            
+            // Initialize consultation with demo settings
+            window.consultation = new MultiLanguageConsultation({
+                tenantId: tenant,
+                userId: userId,
+                language: language,
+                consultationServiceUrl: 'https://consultation-service-YOUR_PROJECT_ID.us-central1.run.app',
+                i18nServiceUrl: 'https://internationalization-service-YOUR_PROJECT_ID.us-central1.run.app'
+            });
+            
+            // Add demo-specific event listeners
+            setupDemoFeatures();
+        });
+        
+        function setupDemoFeatures() {
+            // Add language switching demo
+            const marketCards = document.querySelectorAll('.market-card');
+            marketCards.forEach(card => {
+                card.addEventListener('click', (e) => {
+                    const countryCode = e.currentTarget.querySelector('h3').textContent;
+                    let language = 'en-US';
+                    
+                    // Map country flags to languages
+                    if (countryCode.includes('🇳🇱')) language = 'nl-NL';
+                    else if (countryCode.includes('🇩🇪')) language = 'de-DE';
+                    else if (countryCode.includes('🇪🇸')) language = 'es-ES';
+                    else if (countryCode.includes('🇵🇹')) language = 'pt-PT';
+                    else if (countryCode.includes('🇫🇷')) language = 'fr-FR';
+                    else if (countryCode.includes('🇮🇪')) language = 'en-IE';
+                    
+                    // Update URL and reload with new language
+                    const newUrl = new URL(window.location);
+                    newUrl.searchParams.set('lang', language);
+                    window.location.href = newUrl.toString();
+                });
+                
+                // Add click cursor
+                card.style.cursor = 'pointer';
+                card.title = 'Click to switch to this language';
+            });
+            
+            // Add demo message examples
+            addDemoMessages();
+        }
+        
+        function addDemoMessages() {
+            // Add some demo buttons for quick testing
+            const demoButtons = document.createElement('div');
+            demoButtons.innerHTML = `
+                <div style="margin: 20px 0; text-align: center;">
+                    <p style="color: white; margin-bottom: 10px;">Quick Demo Messages:</p>
+                    <button onclick="sendDemoMessage('recommend')" style="margin: 5px; padding: 8px 12px; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 4px; cursor: pointer;">Ask for Recommendations</button>
+                    <button onclick="sendDemoMessage('virtual')" style="margin: 5px; padding: 8px 12px; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 4px; cursor: pointer;">Virtual Try-On</button>
+                    <button onclick="sendDemoMessage('price')" style="margin: 5px; padding: 8px 12px; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 4px; cursor: pointer;">Price Information</button>
+                </div>
+            `;
+            
+            document.querySelector('.main-content').appendChild(demoButtons);
+        }
+        
+        function sendDemoMessage(type) {
+            const messages = {
+                'recommend': 'Can you recommend some eyewear for me?',
+                'virtual': 'I want to try on some glasses virtually',
+                'price': 'What are the prices for your eyewear?'
+            };
+            
+            const messageInput = document.getElementById('message-input');
+            if (messageInput && window.consultation) {
+                messageInput.value = messages[type];
+                window.consultation.sendMessage();
+            }
+        }
+    </script>
+</body>
+</html>

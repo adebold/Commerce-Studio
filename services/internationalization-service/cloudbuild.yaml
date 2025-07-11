@@ -3,7 +3,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'build',
-      '-t', 'gcr.io/$PROJECT_ID/internationalization-service:$COMMIT_SHA',
+      '-t', 'gcr.io/$PROJECT_ID/internationalization-service:v1',
       '-t', 'gcr.io/$PROJECT_ID/internationalization-service:latest',
       '.'
     ]
@@ -11,7 +11,7 @@ steps:
 
   # Push the container image to Container Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/internationalization-service:$COMMIT_SHA']
+    args: ['push', 'gcr.io/$PROJECT_ID/internationalization-service:v1']
 
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/$PROJECT_ID/internationalization-service:latest']
@@ -21,7 +21,7 @@ steps:
     entrypoint: gcloud
     args: [
       'run', 'deploy', 'internationalization-service',
-      '--image', 'gcr.io/$PROJECT_ID/internationalization-service:$COMMIT_SHA',
+      '--image', 'gcr.io/$PROJECT_ID/internationalization-service:v1',
       '--platform', 'managed',
       '--region', 'us-central1',
       '--allow-unauthenticated',
@@ -29,13 +29,12 @@ steps:
       '--memory', '512Mi',
       '--cpu', '1',
       '--max-instances', '10',
-      '--set-env-vars', 'NODE_ENV=production,PORT=3008',
-      '--service-account', 'commerce-studio-sa@$PROJECT_ID.iam.gserviceaccount.com'
+      '--set-env-vars', 'NODE_ENV=production'
     ]
 
 # Store images in Container Registry
 images:
-  - 'gcr.io/$PROJECT_ID/internationalization-service:$COMMIT_SHA'
+  - 'gcr.io/$PROJECT_ID/internationalization-service:v1'
   - 'gcr.io/$PROJECT_ID/internationalization-service:latest'
 
 # Build options
