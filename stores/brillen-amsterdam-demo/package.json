@@ -1,0 +1,46 @@
+{
+  "name": "brillen-amsterdam-demo",
+  "version": "1.0.0",
+  "description": "Dutch eyewear store demo showcasing Commerce Studio multi-language capabilities",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "build": "echo 'Static HTML store - no build required'",
+    "test": "echo 'Tests not implemented yet'"
+  },
+  "keywords": [
+    "eyewear",
+    "dutch",
+    "netherlands",
+    "amsterdam",
+    "multilingual",
+    "commerce-studio",
+    "demo"
+  ],
+  "author": "Commerce Studio",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "helmet": "^7.1.0",
+    "cors": "^2.8.5",
+    "compression": "^1.7.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/commerce-studio/brillen-amsterdam-demo"
+  },
+  "config": {
+    "language": "nl-NL",
+    "market": "Netherlands",
+    "city": "Amsterdam",
+    "currency": "EUR",
+    "timezone": "Europe/Amsterdam"
+  }
+}
