@@ -38,6 +38,7 @@ import {
   Brightness7 as LightModeIcon,
   Notifications as NotificationsIcon,
   AccountCircle as AccountCircleIcon,
+  Recommend as RecommendIcon,
 } from '@mui/icons-material';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
@@ -79,7 +80,9 @@ interface NavigationDrawerProps {
   onThemeToggle: () => void;
 }
 
-interface MainDashboardProps {}
+interface MainDashboardProps {
+  onNavigate?: (section: string) => void;
+}
 
 // Sample data for charts - moved to constants for better performance
 const SALES_DATA = [
@@ -323,7 +326,7 @@ const NavigationDrawer = memo<NavigationDrawerProps>(({
 NavigationDrawer.displayName = 'NavigationDrawer';
 
 // Main dashboard component with comprehensive optimization
-const MainDashboard: React.FC<MainDashboardProps> = memo(() => {
+const MainDashboard: React.FC<MainDashboardProps> = memo(({ onNavigate }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mode, setMode] = useState<'light' | 'dark'>('light');
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
@@ -340,6 +343,7 @@ const MainDashboard: React.FC<MainDashboardProps> = memo(() => {
     { text: 'Analytics', icon: <AnalyticsIcon />, active: false, id: 'analytics' },
     { text: 'Orders', icon: <ShoppingCartIcon />, active: false, id: 'orders' },
     { text: 'Customers', icon: <PeopleIcon />, active: false, id: 'customers' },
+    { text: 'Recommendations', icon: <RecommendIcon />, active: false, id: 'recommendations' },
     { text: 'Settings', icon: <SettingsIcon />, active: false, id: 'settings' },
   ], []);
 
@@ -354,8 +358,12 @@ const MainDashboard: React.FC<MainDashboardProps> = memo(() => {
 
   const handleMenuItemClick = useCallback((item: MenuItem) => {
     // Handle navigation logic
-    console.log('Navigate to:', item.id);
-  }, []);
+    if (onNavigate) {
+      onNavigate(item.id);
+    } else {
+      console.log('Navigate to:', item.id);
+    }
+  }, [onNavigate]);
 
   const handleMetricClick = useCallback((metricType: string) => {
     // Handle metric drill-down
