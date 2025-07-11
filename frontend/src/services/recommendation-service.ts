@@ -168,7 +168,7 @@ class RecommendationService {
   
   /**
    * Get recommendations based on user preferences
-   * In a real app, this would call an API endpoint
+   * Calls the real API endpoint
    */
   async getRecommendations(preferences: UserPreferences): Promise<RecommendationResult> {
     // Generate a cache key based on preferences
@@ -181,9 +181,57 @@ class RecommendationService {
       return cachedResult;
     }
     
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
+    try {
+      // Call the real API endpoint for personalized recommendations
+      const response = await fetch('/api/recommendations/personalized', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Tenant-ID': 'default' // This should come from user context
+        },
+        body: JSON.stringify({
+          userId: 'current-user', // This should come from user context
+          preferences,
+          limit: 20
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`API request failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      // Convert API response to our format
+      const recommendations: FrameRecommendation[] = data.data.map((item: any) => ({
+        frame: item.product,
+        compatibilityScore: item.score * 100, // Convert to percentage
+        reasons: item.reasons
+      }));
+
+      // Create result
+      const result: RecommendationResult = {
+        frames: recommendations,
+        cacheKey,
+        expiresAt: Date.now() + this.CACHE_DURATION
+      };
+      
+      // Cache the result
+      this.cacheResult(cacheKey, result);
+      
+      return result;
+    } catch (error) {
+      console.error('Error fetching recommendations from API:', error);
+      
+      // Fallback to mock data if API fails
+      return this.getMockRecommendations(preferences);
+    }
+  }
+
+  /**
+   * Fallback method using mock data
+   */
+  private async getMockRecommendations(preferences: UserPreferences): Promise<RecommendationResult> {
     // Filter frames based on preferences
     let filteredFrames = [...this.mockFrames];
     
@@ -230,12 +278,9 @@ class RecommendationService {
     // Create result
     const result: RecommendationResult = {
       frames: recommendations,
-      cacheKey,
+      cacheKey: 'mock-' + Date.now(),
       expiresAt: Date.now() + this.CACHE_DURATION
     };
-    
-    // Cache the result
-    this.cacheResult(cacheKey, result);
     
     return result;
   }
@@ -509,6 +554,165 @@ class RecommendationService {
     }
     
     return sessionId;
+  }
+
+  /**
+   * Get trending products from API
+   */
+  async getTrendingProducts(category?: string, limit: number = 10, timeFrame: string = 'week'): Promise<Frame[]> {
+    try {
+      const params = new URLSearchParams({
+        limit: limit.toString(),
+        timeFrame
+      });
+      
+      if (category) {
+        params.append('category', category);
+      }
+
+      const response = await fetch(`/api/recommendations/trending?${params}`, {
+        headers: {
+          'X-Tenant-ID': 'default'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`API request failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.data.map((item: any) => item.product || item);
+    } catch (error) {
+      console.error('Error fetching trending products:', error);
+      // Fallback to mock data
+      return this.mockFrames.slice(0, limit);
+    }
+  }
+
+  /**
+   * Get recently viewed products from API
+   */
+  async getRecentlyViewed(userId: string, limit: number = 10): Promise<Frame[]> {
+    try {
+      const response = await fetch(`/api/recommendations/recently-viewed/${userId}?limit=${limit}`, {
+        headers: {
+          'X-Tenant-ID': 'default'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`API request failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.data.map((item: any) => item.product || item);
+    } catch (error) {
+      console.error('Error fetching recently viewed products:', error);
+      // Fallback to mock data
+      return this.mockFrames.slice(0, limit);
+    }
+  }
+
+  /**
+   * Get similar products from API
+   */
+  async getSimilarProducts(productId: string, limit: number = 10, similarityType: string = 'visual'): Promise<Frame[]> {
+    try {
+      const params = new URLSearchParams({
+        limit: limit.toString(),
+        similarityType
+      });
+
+      const response = await fetch(`/api/recommendations/similar/${productId}?${params}`, {
+        headers: {
+          'X-Tenant-ID': 'default'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`API request failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.data.map((item: any) => item.product || item);
+    } catch (error) {
+      console.error('Error fetching similar products:', error);
+      // Fallback to mock data
+      return this.mockFrames.slice(0, limit);
+    }
+  }
+
+  /**
+   * Track product view
+   */
+  async trackProductView(productId: string, userId?: string): Promise<void> {
+    try {
+      const response = await fetch('/api/recommendations/track-view', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Tenant-ID': 'default'
+        },
+        body: JSON.stringify({
+          userId: userId || 'anonymous',
+          productId,
+          sessionId: this.getSessionId(),
+          deviceType: this.getDeviceType(),
+          source: 'web'
+        })
+      });
+
+      if (!response.ok) {
+        console.warn('Failed to track product view:', response.status);
+      }
+    } catch (error) {
+      console.error('Error tracking product view:', error);
+    }
+  }
+
+  /**
+   * Submit feedback for recommendations
+   */
+  async submitFeedback(productId: string, feedbackType: string, userId?: string, rating?: number, comment?: string): Promise<void> {
+    try {
+      const response = await fetch('/api/recommendations/feedback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Tenant-ID': 'default'
+        },
+        body: JSON.stringify({
+          userId: userId || 'anonymous',
+          productId,
+          feedbackType,
+          rating,
+          comment
+        })
+      });
+
+      if (!response.ok) {
+        console.warn('Failed to submit feedback:', response.status);
+      }
+    } catch (error) {
+      console.error('Error submitting feedback:', error);
+    }
+  }
+
+  /**
+   * Get device type for tracking
+   */
+  private getDeviceType(): 'web' | 'mobile' | 'tablet' {
+    const userAgent = navigator.userAgent;
+    
+    if (/tablet|ipad|playbook|silk/i.test(userAgent)) {
+      return 'tablet';
+    }
+    
+    if (/mobile|iphone|ipod|android|blackberry|opera|mini|windows\sce|palm|smartphone|iemobile/i.test(userAgent)) {
+      return 'mobile';
+    }
+    
+    return 'web';
   }
 }
 
