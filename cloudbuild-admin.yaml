@@ -1,7 +1,0 @@
-steps:
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-f', 'deploy/staging/Dockerfile.admin', '-t', 'gcr.io/ml-datadriven-recos/varai-admin-staging:latest', '.']
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/ml-datadriven-recos/varai-admin-staging:latest']
-images:
-- 'gcr.io/ml-datadriven-recos/varai-admin-staging:latest'
